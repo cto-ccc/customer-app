@@ -1,0 +1,6 @@
+{
+  "appId": "com.countrychicken.customerapp",
+  "appName": "countrychicken-customer-app",
+  "webDir": "build",
+  "bundledWebRuntime": false
+}
