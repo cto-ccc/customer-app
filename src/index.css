@@ -5,9 +5,50 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #f9f8f8;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.MuiButton-contained {
+  background-color: #a4243d !important;
+  text-transform: none !important;
+  color: white !important;
+}
+
+.MuiButton-outlined {
+  border-color: #a4243d !important;
+  text-transform: none !important;
+  color: #a4243d !important;
+}
+
+.MuiRadio-root {
+  align-self: flex-start !important;
+}
+
+/* .MuiButtonBase-root:hover {
+  background-color: white !important;
+  color: black !important;
+  border:1px solid #a4243d !important
+} */
+
+.switch-wrapper {
+  position: relative;
+}
+
+.switch-wrapper > div {
+  position: absolute;
+}
+
+
+
+.recipie-iframe  iframe {
+  display: block;   
+  background: black;   
+  border: none;         
+  width: 40vw;
+  height: 20vw;
 }

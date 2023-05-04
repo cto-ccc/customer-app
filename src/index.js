@@ -3,12 +3,33 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter } from 'react-router-dom';
+import { App as CapApp } from '@capacitor/app';
+import ScrollToTop from './components/ScrollToTop';
+
+
+CapApp.addListener('backButton', ({ canGoBack }) => {
+
+  const urlArray = window.location.href.split("/")
+
+  // if (urlArray[urlArray.length - 1] === 'auth') {
+  //   CapApp.exitApp();
+  //   return
+  // }
+
+  if(canGoBack){
+    window.history.back();
+  } else {
+    CapApp.exitApp();
+  }
+})
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <BrowserRouter>
+    <ScrollToTop />
     <App />
-  </React.StrictMode>
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function
