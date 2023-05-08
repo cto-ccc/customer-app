@@ -265,7 +265,7 @@ function Delivery() {
     <motion.div
       initial={{opacity:0}} 
       animate={{opacity:1}}>
-    <Box sx={{padding:'4vw', maxWidth:'500px', marginTop:'5vh'}}>
+    <Box sx={{padding:'4vw', maxWidth:'600px', marginTop:'5vh'}}>
 
     {
       loading ? <ComponentLoader /> :
@@ -469,7 +469,9 @@ function Delivery() {
             {
               timeSlots.map((item) => {
                 return (
-                  <MenuItem key={item.id} disabled={filteredSlots.indexOf(item.id) == -1} value={item.id}>{item.time}</MenuItem>
+                  <MenuItem key={item.id} disabled={filteredSlots.indexOf(item.id) == -1} value={item.id}>
+                    {item.time} {filteredSlots.indexOf(item.id) == -1 ? '(Not Available)' : null}
+                  </MenuItem>
                 )
               })
             }

@@ -10,6 +10,7 @@ import Warrior from '../assets/warrior.png'
 import TenderChicken from '../assets/tender-chicken.png'
 import PicklesLogo from '../assets/pickle.png'
 import EggsLogo from '../assets/eggs.png'
+import ThirtyEggsLogo from '../assets/thirty-eggs.png'
 
 let userDataCache = null
 
@@ -19,13 +20,49 @@ const imgMap = {
   'TenderChicken' : TenderChicken,
   'Warrior' : Warrior,
   'PicklesLogo' : PicklesLogo,
-  'EggsLogo' : EggsLogo
+  'EggsLogo' : EggsLogo,
+  'ThirtyEggsLogo' : ThirtyEggsLogo
+}
+
+export const getCustomizedProducts = () => {
+  return ['C009', 'C013', 'C017', 'C029', 'C021']
 }
 
 
 export const getImgMap = () => {
   return imgMap
 }
+
+export const getRecepieVideos = () => {
+  return [
+    {
+      url : 'https://www.youtube.com/embed/F6l2E631Hd0',
+      id : 1
+    },
+    {
+      url : 'https://www.youtube.com/embed/52tKR3RkHro',
+      id : 2
+    },
+    {
+      url : 'https://www.youtube.com/embed/t__O2836Pak',
+      id : 3
+    },
+    {
+      url : 'https://www.youtube.com/embed/nXgtsknIPvY',
+      id : 4
+    },
+    {
+      url : 'https://www.youtube.com/embed/SPfE1gXBRhc',
+      id : 5
+    },
+    {
+      url : 'https://www.youtube.com/embed/F6l2E631Hd0',
+      id : 6
+    }
+  ]
+}
+
+
 
 export const setUserData = (async(userData) => {
   const userCollRef = collection(db, 'users')

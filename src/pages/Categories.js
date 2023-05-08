@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button'
 import Skeleton from '@mui/material/Skeleton'
@@ -14,6 +14,9 @@ import Kadaknath from '../assets/kadaknath.png'
 import Warrior from '../assets/warrior.png'
 import TenderChicken from '../assets/tender-chicken.png'
 import ComponentLoader from '../components/ComponentLoader';
+import { getCustomizedProducts, getImgMap } from '../services/api';
+import Drawer from '@mui/material/Drawer';
+
 
 const styles = {
   productItem : {
@@ -30,7 +33,7 @@ const styles = {
   },
   productImg : {
     width:'100%',
-    height:'200px',
+    height:'250px',
     borderRadius:'5px 5px 0 0'
   },
   productDescCont : {
@@ -56,155 +59,206 @@ const styles = {
     display:'flex',
     justifyContent:'space-between'
   },
+  activeExtra : {
+    background : 'wheat',
+    color:'#a4243d',
+    borderRadius:'10px',
+    padding:'7px 15px',
+    cursor:'pointer',
+    boxShadow:'1px 1px 5px 3px #eaeaea'
+  },
+  inactiveExtra : {
+    padding:'8px 15px',
+    cursor:'pointer'
+  },
+  disabled : {
+    opacity:'0.5',
+    pointerEvents:'none'
+  },
+  discountCont : {
+    background:'#a4243d',
+    color:'white',
+    top:'10px',
+    fontSize:'13px',
+    boxShadow:'0 0 5px -1px white',
+    padding:'5px 8px',
+    width:'min-content',
+    position:'absolute',
+    width:'auto',
+    borderRadius:'0 3px 3px 0'
+  },
+  prodName : {
+    textAlign:'left', 
+    marginBottom:'5px', 
+    fontWeight:'450', 
+    fontSize:'20px',
+    cursor:'pointer',
+    "&:hover": {
+      color:'#a4243d'
+    }
+  }
 }
 
 function Categories() {
 
   const location = useLocation()
   const navigate = useNavigate()
-  const { updateCart, cartData } = useContext(CommonContext)
-  const [loading, setLoading]    = useState(true)
-  const [products, setProducts]  = useState([])
+  const {isDesktop, cartData, updateCart} = useContext(CommonContext)
 
-  const [chicksData, setChicksData] = useState([{
-    name : 'Tender Country Chicken',
-    price : 649,
-    mrp : 928,
-    id : 'C009',
-    qty : '1 Kg',
-    imgUrl : TenderChicken,
-    description : 
-    'Tender Country Chicken, also known as the Telangana Potti Kallu, a delectable choice for meat-lovers looking for a tender and flavorful dining experience. This unique breed of desi chicken is known for its soft meat, which is more tender than other country chickens. Our chickens are raised in a free-range environment, ensuring they are free from antibiotics, hormones, and other harmful additives. This not only ensures that you enjoy healthy and delicious meat but also helps support ethical and sustainable farming practices. The Tender Country Chicken is versatile and can be used in many different dishes, from classic roast chicken to spicy biriyani and pulusu. Its soft texture and rich flavor make it an excellent choice for any recipe that requires tender, juicy meat.'
-  },
-  {
-    name : 'Classic Country Chicken',
-    price : 699,
-    mrp : 999,
-    id : 'C013',
-    qty : '1 Kg',
-    imgUrl : Warrior,
-    description: 
-    'Introducing Classic Country Chicken, also known as Andhra Punju Kodi, a type of fighter breed chicken that is sure to excite your taste buds. Classic Country Chicken  is packed with protein and essential vitamins such as Vitamin D and Niacin, which play a crucial role in maintaining strong and healthy DNA. Classic Country Chicken is known for its unique taste and texture. While it may be tough, the meat is also incredibly juicy, making for a satisfying dining experience. With a low fat content and medium rigidity, this chicken is aged for 5-8 months, allowing it to develop a rich and distinct flavor. Make your favourite natu kodi dishes:  andhra natu kodi pulusu, roast and curry with Classic Country Chicken'
-  },
-  {
-    name : 'Mysore Country Chicken',
-    price : 499,
-    qty : '1 Kg',
-    mrp:714,
-    id : 'C017',
-    imgUrl : MysoreQueen,
-    description:
-    'Introducing the Queen of Country Chicken also known as Mysore Natu Kodi. Sourced from the finest egg-laying females, this exquisite breed of chicken is aged 12-24 months, offering a unique and robust flavor profile that is rich in protein, aromatic, and incredibly flavorsome. Queen of Country Chicken has tough and rigid texture, providing an exceptional dining experience that caters to a variety of culinary creations. Raised completely free-range, from antibiotics and steroids for a natural and wholesome taste you can trust. Delight your taste buds by preparing the traditional Natu Kodi Pulusu, a comforting Chicken Soup, or a flavorful Chicken Pulav.'
-  },
-  {
-    name : 'Warrior Chicken',
-    price : 1799,
-    mrp:2572,
-    qty : '1 Kg',
-    id : 'C029',
-    imgUrl : Warrior,
-    description:
-    'Introducing the legendary Warrior Chicken, also known as the Pandem Natu Kodi, raised with utmost care and luxury, this bird is a true fighter. Raised for up to 24 months, these birds are the healthiest country chickens out there and are used in the ancient Indian tradition of cockfighting. Our Warrior Chickens are completely free-range and raised without antibiotics or steroids, ensuring that the meat you consume is pure, healthy and natural. Packed with essential nutrients, these birds are rich in Vitamin D, B12, iron and calcium, providing you with a well-rounded and nutritious meal. The meat of the Warrior Chicken is tough, but it is also extremely juicy and flavorful. It is perfect for traditional Indian recipes like Natu Kodi Pulusu and Natu Kodi Fry, which require the use of robust and flavorful meat. These recipes allow you to experience the unique texture and taste of Warrior Chicken in all its glory.'
-  },
-  {
-    name : 'Kadaknath Country Chicken',
-    price : 999,
-    mrp:1428,
-    qty : '1 Kg',
-    id : 'C021',
-    imgUrl : Kadaknath,
-    description:
-    'Introducing the Kadaknath Country Chicken, also known as Kali Masi, a unique and flavorful bird known for its black-colored meat. Enriched with essential vitamins and minerals, this chicken is a healthy and nutritious choice for those looking for a wholesome meal. Our Kadaknath Chickens are completely free-range and raised without antibiotics or steroids, ensuring that the meat you consume is pure and natural. Packed with 18 amino acids, high iron content, and vitamins B1, C, B6, B12, B2, and E, this chicken has 25% more protein and less fat, making it an ideal choice for those who want to maintain a healthy weight. Moreover, Kadaknath Chicken has been known to benefit those with PCOD and cardiac issues. The meat of this chicken is  juicy and hard. Whether you are planning to prepare Kadaknath Chicken in the form of curry, fry, or roast, this bird is sure to delight your taste buds with its distinctive flavor and texture.'
-  }
-])
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const [eggsData, setEggsData] = useState([{
-    name : 'Brown Eggs',
-    price : 79,
-    mrp:149,
-    id : 'C041',
-    qty : '6 Pack',
-    imgUrl : EggsLogo
-  },
-  {
-    name : 'Brown Eggs',
-    mrp : 450,
-    price:269,
-    id : 'C042',
-    qty : '30 Pack',
-    imgUrl : EggsLogo
-  },
-  {
-    name : 'Country Eggs',
-    mrp : 149,
-    price:99,
-    id : 'C043',
-    qty : '6 Pack',
-    imgUrl : EggsLogo
-  },
-  {
-    name : 'Country Eggs',
-    price : 499,
-    mrp:699,
-    id : 'C044',
-    qty : '30 Pack',
-    imgUrl : EggsLogo
-  }])
+  const [anchor, setAnchor] = useState(false)
+  const [selectedItem, setSelectedItem] = useState(null)
+  const [skinType, setSkinType] = useState('withskin')
+  const [flavourType, setFlavourType] = useState('normal')
+  const [cutType, setCutType] = useState('medium')
 
-  const [picklesData, setPicklesData] = useState([{
-    name : 'Country Chicken Pickle (Boneless)',
-    mrp : 650,
-    price:599,
-    qty:'500 GM',
-    id : 'C045',
-    imgUrl : PicklesLogo
-  },
-  {
-    name : 'Country Chicken Pickle (With Bone)',
-    mrp : 550,
-    price:499,
-    qty:'500 GM',
-    id : 'C046',
-    imgUrl : PicklesLogo
-  }])
 
   async function addToCart(item) {
-    updateCart(item, true)
+    if (getCustomizedProducts().includes(item.id)) {
+      setAnchor(true)
+      setSelectedItem(item)
+    } else {
+      updateCart(item, true)
+    }
   }
 
-  async function modifyCart(item, isIncrease) {
-    updateCart(item, isIncrease)
-  } 
+  const toggleDrawer = (open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setAnchor(open)
+  }
+
+  const modifySkinType = (type) => {
+    setSkinType(type)
+    if (type == 'skinless') {
+      setFlavourType('normal')
+    }
+  }
+
+  const addItemFromExtras = () => {
+    let activeItem = selectedItem
+    activeItem.extras = {
+      skinType    : skinType,
+      flavourType : flavourType,
+      cutType     : cutType
+    }
+    updateCart(activeItem, true)
+    setSelectedItem(null)
+    setSkinType('withskin')
+    setFlavourType('normal')
+    setCutType('medium')
+    setAnchor(false)
+  }
+
+  const list = (anchor) => (
+    <Box sx={{padding:'4vw'}}>
+      <Box sx={{fontSize:'20px', fontWeight:'600', mb:2}}>
+        Customize your order
+      </Box>
+      <Box sx={{display:'flex', flexDirection:'column'}}>
+        <Box>
+          Chicken Type
+        </Box>
+       <Box sx={{display:'flex', padding:'15px 0 20px 0', borderBottom:'1px solid #eaeaea', mb:3}}>
+          <Box sx={{mr:3}} style={skinType == 'withskin' ? styles.activeExtra : styles.inactiveExtra}
+            onClick={() => modifySkinType('withskin')}>
+            With Skin
+          </Box>
+          <Box style={skinType == 'skinless' ? styles.activeExtra : styles.inactiveExtra}
+            onClick={() => modifySkinType('skinless')}>
+            Skinless
+          </Box>
+       </Box>
+      </Box>
+
+      <Box sx={{display:'flex', flexDirection:'column'}}
+        style={skinType == 'withskin' ? null : styles.disabled}>
+        <Box>
+          Chicken Flavour
+        </Box>
+        <Box sx={{display:'flex', padding:'15px 0 20px 0', borderBottom:'1px solid #eaeaea', mb:3}}>
+          <Box style={flavourType == 'normal' ? styles.activeExtra : styles.inactiveExtra}
+            onClick={() => setFlavourType('normal')}>
+            Normal
+          </Box>
+          <Box sx={{mr:3}} style={flavourType == 'smoketurmeric' ? styles.activeExtra : styles.inactiveExtra}
+            onClick={() => setFlavourType('smoketurmeric')}>
+            Smoked & Turmeric
+          </Box>
+       </Box>
+      </Box>
+
+      <Box sx={{display:'flex', flexDirection:'column'}}>
+        <Box>
+          Pieces Cut
+        </Box>
+        <Box sx={{display:'flex', padding:'15px 0 20px 0', borderBottom:'1px solid #eaeaea', mb:4}}>
+          <Box sx={{mr:3}} style={cutType == 'small' ? styles.activeExtra : styles.inactiveExtra}
+            onClick={() => setCutType('small')}>
+            Small
+          </Box>
+          <Box style={cutType == 'medium' ? styles.activeExtra : styles.inactiveExtra}
+            onClick={() => setCutType('medium')}>
+            Medium
+          </Box>
+          <Box style={cutType == 'biryani' ? styles.activeExtra : styles.inactiveExtra}
+            onClick={() => setCutType('biryani')}>
+            Biryani Cut
+          </Box>
+       </Box>
+        
+      </Box>
+
+      <Box sx={{mt:3, display:'flex', justifyContent:'flex-end'}}>
+        <Button variant='contained'
+          onClick={() => addItemFromExtras()}>
+          Add Item
+        </Button>
+      </Box>
+
+    </Box>
+  )
 
   
   useEffect(() => {
     
-    if (location.state == 'chicken') setProducts(chicksData)
-    else if (location.state == 'eggs') setProducts(eggsData)
-    else if (location.state == 'pickles') setProducts(picklesData)
-
+   setProducts(location.state.data)
     setTimeout(() => {
       setLoading(false)
     }, 1000)
   }, [])
 
   return (
-    <Box sx={{padding:'4vw', marginTop:'5vh'}}>
+    <Box sx={{padding:'4vw', marginTop:'5vh', paddingBottom:'8vh'}}>
       {
         loading ? 
         <ComponentLoader /> : 
         <Box>
+          <Box sx={{color:'#a4243d', fontSize:'20px', ml:2,mb:1, fontWeight:'bold'}}>
+            {location.state.title}
+          </Box>
           <Grid container>
             {
               products.map((chick) => {
               return <Grid xs={12} sm={6} md={4} lg={3} style={styles.productGridCont} key={chick.id}>
                 <Box style={styles.productItem}>
-                  <Box sx={{textAlign:'center', height:'200px'}}>
-                    <img src={chick.imgUrl} style={styles.productImg}/>
+                  <Box sx={{textAlign:'center', height:'250px', position:'relative', cursor:'pointer'}}
+                    onClick={() => navigate('/itemDetail', {state : chick})}>
+                    <Box sx={styles.discountCont}>
+                      ₹ {chick.mrp - chick.price}/- Off
+                    </Box>
+                    <img src={getImgMap()[chick.imgUrl]} style={styles.productImg}/>
                   </Box>
                   <div style={styles.productDescCont}>
-                    <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'20px'}}>
+                    <Box sx={styles.prodName}
+                      onClick={() => navigate('/itemDetail', {state : chick})}>
                       {chick.name}
+                    </Box>
+                    <Box sx={{textAlign:'left', marginBottom:'5px',fontSize:'11px'}}>
+                      ({chick.style})
                     </Box>
                     <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
                       {chick.qty}
@@ -219,9 +273,8 @@ function Categories() {
                         <Box sx={{border:'1px solid #dddddd', 
                                   display:'flex', 
                                   borderRadius:'5px', 
-                                  boxShadow:'0px 2px 5px 5px #eaeaea', 
                                   background:'white', border:'1px solid #c3c3c3'}}>
-                          <Box onClick={() => modifyCart(chick, false)}
+                          <Box onClick={() => updateCart(chick, false)}
                             sx={{padding:'5px 15px 5px 15px', fontSize:'20px', cursor:'pointer'}}>
                             -
                           </Box>
@@ -231,7 +284,7 @@ function Categories() {
                                     background:'#a4243d !important', color:'white'}}>
                             {cartData[chick.id].count}
                           </Box>
-                          <Box  onClick={() => modifyCart(chick, true)}
+                          <Box  onClick={() => updateCart(chick, true)}
                             sx={{padding:'5px 15px 5px 15px', fontSize:'20px', cursor:'pointer'}}>
                             +
                           </Box>
@@ -252,21 +305,16 @@ function Categories() {
           </Grid>
         </Box>
       }
-
-    {/* {
-      cartData && cartData.totalCount ?
-      <Box sx={{display:'flex', justifyContent:'center'}}>
-        <Box style={styles.cartViewCont}>
-          <Box>
-            {cartData.totalCount} Items | ₹ {cartData.totalAmount}
-          </Box>
-          <Box  onClick={() => navigate(`/cart`)}>
-            View Cart
-          </Box>
-        </Box>
-      </Box> : null
-    } */}
       
+      <React.Fragment key={'bottom'}>
+        <Drawer
+          anchor={isDesktop ? 'right' : 'bottom'}
+          open={anchor}
+          onClose={toggleDrawer(false)}
+        >
+          {list('bottom')}
+        </Drawer>
+      </React.Fragment>
     </Box>
   )
 }

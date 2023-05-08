@@ -106,8 +106,8 @@ function Profile() {
             <Box>
               {
                 orders.map((item, index) => {
-                  return <Paper sx={{display:'flex', flexDirection:'column', margin:'10px 0', padding:'10px', cursor:'pointer'}}
-                  onClick={() => navigate('/orderDetails', {state : item})} key={index}>
+                  return <Paper sx={{display:'flex', flexDirection:'column', margin:'10px 0', padding:'10px'}}
+                   key={index}>
                  
                  <Box mb={1} sx={{fontWeight:'bold'}}>
                     {item.products[0]?.name.charAt(0).toUpperCase() + item.products[0]?.name.substr(1).toLowerCase()}
@@ -125,7 +125,8 @@ function Profile() {
                   <Box mb={1}>
                     Status : {item.order_status}
                   </Box>   
-                  <Box sx={{textAlign:'right', borderTop:'1px solid #eaeaea', paddingTop:'10px', color:'#a4243d'}}>
+                  <Box sx={{textAlign:'right', borderTop:'1px solid #eaeaea', paddingTop:'10px', color:'#a4243d', cursor:'pointer'}}
+                    onClick={() => navigate('/orderDetails', {state : item})}>
                     {
                       item.status == 'DELIVERED' ? 
                       'View Order' : 'Track Order'

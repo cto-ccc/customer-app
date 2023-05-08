@@ -6,14 +6,20 @@ import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
 import ComponentLoader from '../components/ComponentLoader'
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import Eggs from '../assets/eggs.png'
 import HomeBanner1 from '../assets/banner1.jpeg'
 import HomeBanner2 from '../assets/banner2.jpeg'
 import HomeBanner3 from '../assets/banner3.jpeg'
-import HomeBanner4 from '../assets/banner4.jpg'
-import HomeBanner5 from '../assets/banner5.jpg'
 
+import HomeBanner4 from '../assets/desk-banner1.png'
+import HomeBanner5 from '../assets/desk-banner2.png'
+import HomeBanner6 from '../assets/desk-banner3.png'
+import OfferBanner1 from '../assets/offer-banner1.png'
+import OfferBanner2 from '../assets/offer-banner2.png'
+
+import Marinates from '../assets/marinates.png'
 import CccLogo from '../assets/ccc-logo.png'
 import RaisedByNature from '../assets/raised-by-nature.png'
 
@@ -27,6 +33,10 @@ import Warrior from '../assets/warrior.png'
 import TenderChicken from '../assets/tender-chicken.png'
 import PicklesLogo from '../assets/pickle.png'
 import EggsLogo from '../assets/eggs.png'
+import ThirtyEggsLogo from '../assets/thirty-eggs.png'
+
+import CatFreeRange from '../assets/cat-freerange.png'
+import CatVillageBirds from '../assets/cat-villagebirds.png'
 
 import User from '../assets/user.png'
 import HomeLogo from '../assets/home-logo.png'
@@ -55,7 +65,7 @@ import Drawer from '@mui/material/Drawer';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import * as React from 'react';
-import { getLanding } from '../services/api';
+import { getCustomizedProducts, getImgMap, getLanding } from '../services/api';
 import { Capacitor } from '@capacitor/core';
 import Footer from '../Footer';
 
@@ -114,7 +124,7 @@ const styles = {
     background:'white',
     borderRadius:'5px',
     width:'230px',
-    height:'315px',
+    height:'330px',
     // marginRight:'25px',
     boxShadow:'0px 0px 5px 2px #eaeaea'
   },
@@ -122,13 +132,18 @@ const styles = {
   productCatTitle : {
     padding:'5vw 6vw 5px', 
     fontSize:'20px', 
-    fontWeight:'500'
+    fontWeight:'500',
+    display:'flex',
+    justifyContent:'space-between',
+    alignItems:'baseline',
+    color:'#a4243d'
   },
 
   productCatTitleDesk : {
     padding:'35px 30px 5px 30px', 
     fontSize:'20px', 
-    fontWeight:'500'
+    fontWeight:'500',
+    color:'#a4243d'
   },
 
 
@@ -150,7 +165,7 @@ const styles = {
 
   productDescCont : {
     padding:'15px',
-    height:'105px',
+    height:'120px',
     textAlign:'left',
     alignItems:'center',
     background:'#ffebeb',
@@ -167,14 +182,14 @@ const styles = {
   },
   bannerImg: {
     width:'-webkit-fill-available',
-    margin:'20px',
-    borderRadius:'10px',
+    // margin:'20px',
+    // borderRadius:'10px',
     height:'18vh'
   },
   bannerImgDesk: {
     width:'-webkit-fill-available',
-    margin:'25px',
-    borderRadius:'10px',
+    // margin:'25px',
+    // borderRadius:'10px',
     height:'40vh'
   },
   incCont : {
@@ -198,26 +213,37 @@ const styles = {
     cursor:'pointer'
   },
   posterImg : {
-    width:'70px',
-    marginBottom:'10px'
+    width:'100px',
+    marginBottom:'10px',
+    boxShadow:'0 0 5px 0px #b3b1b1',
+    borderRadius:'2px'
+  },
+  posterImgDesk : {
+    width:'75%',
+    marginBottom:'10px',
+    boxShadow:'0 0 5px 0px #b3b1b1',
+    borderRadius:'2px'
   },
   posterCont : {
-    padding:'10px 0',
+    padding:'10px',
     textAlign:'center',
-    width:'25%',
+    width:'300px',
     background:'#ffebeb',
     borderRadius:'10px',
-    boxShadow:'0px 0px 10px 0px #eaeaea'
+    boxShadow:'0px 0px 10px 0px #eaeaea',
+    margin:'0 5px'
   },
 
   posterContDesk : {
-    padding:'10px 0',
+    padding:'10px 5px',
     textAlign:'center',
-    width:'200px',
+    width:'225px',
     height:'165px',
-    background:'#ffebeb',
+    color:'#a4243d',
+    fontWeight:'bold',
+    // background:'#ffebeb',
     // borderRadius:'10px',
-    boxShadow:'0px 0px 10px 0px #eaeaea',
+    // boxShadow:'0px 0px 10px 0px #eaeaea',
     display:'flex',
     flexDirection:'column',
     justifyContent:'center',
@@ -269,6 +295,52 @@ const styles = {
     alignItems:'center',
     color:'#a4243d',
     marginLeft:'10px'
+  },
+  offerImgDesk : {
+    height:'150px',
+    width:'450px',
+    marginRight:'20px',
+    borderRadius:'3px'
+  },
+  offerImg : {
+    height:'150px',
+    width:'100%',
+    // marginRight:'20px',
+    borderRadius:'3px'
+  },
+  prodName : {
+    textAlign:'left', 
+    marginBottom:'3px', 
+    fontWeight:'450', 
+    fontSize:'15px', 
+    cursor:'pointer',
+    "&:hover": {
+      color:'#a4243d'
+    }
+  },
+  prodImgCont : {
+    textAlign:'center', 
+    height:'180px',
+    cursor:'pointer',
+    position:'relative'
+  },
+  discountCont : {
+    background:'#a4243d',
+    color:'white',
+    top:'10px',
+    fontSize:'13px',
+    boxShadow:'0 0 5px -1px white',
+    padding:'5px 8px',
+    width:'min-content',
+    position:'absolute',
+    width:'auto',
+    borderRadius:'0 3px 3px 0'
+  },
+  topCatCont : {
+    display:'flex', width:'100vw', overflowX:'scroll', marginBottom:'20px'
+  },
+  topCatContDesk : {
+    display:'flex', justifyContent:'center', padding:'0 10px', marginBottom:'6vw'
   }
 }
 
@@ -291,15 +363,6 @@ function Home() {
   const [picklesData, setPicklesData] = useState([])
   const [eggsData, setEggsData] = useState([])
   const [latLong, setLatLong] = useState(null)
-
-  const imgMap = {
-    'MysoreQueen' : MysoreQueen,
-    'Kadaknath' : Kadaknath,
-    'TenderChicken' : TenderChicken,
-    'Warrior' : Warrior,
-    'PicklesLogo' : PicklesLogo,
-    'EggsLogo' : EggsLogo
-  }
 
   const printCurrentPosition = async() => {
 
@@ -334,8 +397,7 @@ function Home() {
   }
 
   async function addToCart(item) {
-    const customizedProducts = ['C009', 'C013', 'C017', 'C029', 'C021']
-    if (customizedProducts.includes(item.id)) {
+    if (getCustomizedProducts().includes(item.id)) {
       setAnchor(true)
       setSelectedItem(item)
     } else {
@@ -417,7 +479,7 @@ function Home() {
           </Box>
           <Box sx={{mr:3}} style={flavourType == 'smoketurmeric' ? styles.activeExtra : styles.inactiveExtra}
             onClick={() => setFlavourType('smoketurmeric')}>
-            Smoked & Turmeric
+            Smoked & Turmeric (+ ₹10/-)
           </Box>
        </Box>
       </Box>
@@ -510,45 +572,66 @@ function Home() {
             pagination={{
               dynamicBullets: true,
             }}
-            autoplay={{delay:2500, disableOnInteraction: false}}
+            autoplay={{delay:3500, disableOnInteraction: false}}
             modules={[Pagination, Autoplay]}
             className="mySwiper"
           >
             <SwiperSlide>
-              <img src={isDesktop ? HomeBanner4 : HomeBanner2} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
+              <img src={isDesktop ? HomeBanner4 : HomeBanner1} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
             </SwiperSlide>
             <SwiperSlide>
-              <img src={isDesktop ? HomeBanner5 : HomeBanner3} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
+              <img src={isDesktop ? HomeBanner5 : HomeBanner2} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
             </SwiperSlide>
-            {
-              isDesktop ? null : 
-              <SwiperSlide>
-                <img src={HomeBanner1} style={styles.bannerImg} />
-              </SwiperSlide>
-            }
-            
+            <SwiperSlide>
+              <img src={isDesktop ? HomeBanner6 : HomeBanner3} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
+            </SwiperSlide>
           </Swiper>
         </Box>
         
-        <Box sx={{padding:'0vw 6vw 20px 6vw', fontSize:'20px', fontWeight:'bold'}}>
+        <Box sx={{padding: isDesktop ? '2vw 3vw 2vw 9vw' : '20px 4vw' , fontSize:'20px', fontWeight:'bold'}}>
           Top Categories
         </Box>
-        <Box sx={{display:'flex', justifyContent:'space-around', padding:'0 10px', marginBottom:'30px', maxWidth:'950px'}}>
-          <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} onClick={() => navigate('/categories', {state:'chicken'})}>
-            <img src={PosterCock} style={styles.posterImg} />
-            Chicken
+        <Box sx={isDesktop ? styles.topCatContDesk : styles.topCatCont}>
+          <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
+            onClick={() => navigate('/categories', {state:{title : 'Free Range Birds', data: chickenData}})}>
+            <img src={CatFreeRange} style={isDesktop ? styles.posterImgDesk : styles.posterImg} />
+            Free Range Birds
           </Box>
-          <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} onClick={() => navigate('/categories', {state:'eggs'})}>
-            <img src={PosterEggs} style={styles.posterImg}/>
+          <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
+            onClick={() => navigate('/categories', {state:{title : 'Village Birds', data: chickenData}})}>
+            <img src={CatVillageBirds} style={isDesktop ? styles.posterImgDesk : styles.posterImg} />
+            Village Birds
+          </Box>
+          <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
+            onClick={() => navigate('/categories', {state:{title : 'Eggs', data: eggsData}})}>
+            <img src={EggsLogo} style={isDesktop ? styles.posterImgDesk : styles.posterImg}/>
             Eggs
           </Box>
-          <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} onClick={() => navigate('/categories', {state:'pickles'})}>
-            <img src={PosterPickle} style={styles.posterImg}/>
+          <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
+            onClick={() => navigate('/categories', {state:{title : 'Pickles', data: picklesData}})}>
+            <img src={PicklesLogo} style={isDesktop ? styles.posterImgDesk : styles.posterImg}/>
             Pickles
+          </Box>
+          <Box style={isDesktop ? styles.posterContDesk : styles.posterCont}>
+            <img src={Marinates} style={isDesktop ? styles.posterImgDesk :  styles.posterImg}/>
+            Marinates
           </Box>
         </Box>
 
-        <Box style={isDesktop ? styles.productCatTitleDesk : styles.productCatTitle}>
+        <Grid container sx={{display:'flex', justifyContent:'center'}}>
+          <Grid xs={12} lg={6} sx={{textAlign:'right'}}>
+            <img src={OfferBanner1} style={isDesktop ? styles.offerImgDesk : styles.offerImg} />
+          </Grid>
+          {
+            Capacitor.getPlatform() == 'web' ? 
+              <Grid xs={12} lg={6}>
+                <img src={OfferBanner2} style={isDesktop ? styles.offerImgDesk : styles.offerImg}/>
+              </Grid> : null
+          }
+        </Grid> 
+        
+
+        {/* <Box style={isDesktop ? styles.productCatTitleDesk : styles.productCatTitle}>
           Featured Items
         </Box>
         <Box style={isDesktop ? styles.productCatContDesk : styles.productCatCont}>
@@ -556,12 +639,12 @@ function Home() {
               featuredData.map((chick) => {
               return (
                 <Box style={isDesktop ? styles.productItemDesk : styles.productItem} key={chick.id}>
-                  <Box sx={{textAlign:'center', height:'180px'}}
+                  <Box sx={styles.prodImgCont}
                     onClick={() => navigate('/itemDetail', {state : chick})}>
-                    <img src={imgMap[chick.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
+                    <img src={getImgMap()[chick.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
                   </Box>
                   <div style={styles.productDescCont}>
-                    <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px', cursor:'pointer'}}
+                    <Box sx={styles.prodName}
                       onClick={() => navigate('/itemDetail', {state : chick})}>
                       {chick.name}
                     </Box>
@@ -577,7 +660,6 @@ function Home() {
                         <Box sx={{border:'1px solid #dddddd', 
                                   display:'flex', 
                                   borderRadius:'5px', 
-                                   
                                   background:'white', border:'1px solid #c3c3c3'}}>
                           <Box onClick={() => modifyCart(chick, false)}
                             sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
@@ -605,25 +687,41 @@ function Home() {
                 </Box>)
               })
             }
-        </Box>
+        </Box> */}
 
 
         <Box style={isDesktop ? styles.productCatTitleDesk : styles.productCatTitle}>
-          Chicken
+          <Box>
+            Chicken
+          </Box>
+          {
+            isDesktop ? null : 
+            <Box sx={{fontSize:'15px', display:'flex', alignItems:'center', color:'black'}}
+              onClick={() => navigate('/categories', {state:chickenData})}>
+              View All
+              <ArrowForwardIosIcon sx={{fontSize:'15px' }}/>
+            </Box>
+          }
         </Box>
         <Box style={isDesktop ? styles.productCatContDesk : styles.productCatCont}>
         {
           chickenData.map((item) => {
           return (
             <Box style={isDesktop ? styles.productItemDesk : styles.productItem} key={item.id}>
-              <Box sx={{textAlign:'center', height:'180px'}}
+              <Box sx={styles.prodImgCont}
                 onClick={() => navigate('/itemDetail', {state : item})}>
-                <img src={imgMap[item.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
+                <Box sx={styles.discountCont}>
+                  ₹ {item.mrp - item.price}/- Off
+                </Box>
+                <img src={getImgMap()[item.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
               </Box>
               <div style={styles.productDescCont}>
-                <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px', cursor:'pointer'}}
+                <Box sx={styles.prodName}
                   onClick={() => navigate('/itemDetail', {state : item})}>
                   {item.name}
+                </Box>
+                <Box sx={{textAlign:'left', marginBottom:'5px',fontSize:'12px'}}>
+                  ({item.style})
                 </Box>
                 <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
                   {item.qty}
@@ -669,19 +767,32 @@ function Home() {
 
 
         <Box style={isDesktop ? styles.productCatTitleDesk : styles.productCatTitle}>
-          Eggs
+          <Box>
+            Eggs
+          </Box>
+          {
+            isDesktop ? null : 
+            <Box sx={{fontSize:'15px', display:'flex', alignItems:'center', color:'black'}}
+              onClick={() => navigate('/categories', {state:eggsData})}>
+              View All
+              <ArrowForwardIosIcon sx={{fontSize:'15px' }}/>
+            </Box>
+          }
         </Box>
         <Box style={isDesktop ? styles.productCatContDesk : styles.productCatCont}>
             {
               eggsData.map((item) => {
               return (
                 <Box style={isDesktop ? styles.productItemDesk : styles.productItem} key={item.id}>
-                  <Box sx={{textAlign:'center', height:'180px'}}
+                  <Box sx={styles.prodImgCont}
                     onClick={() => navigate('/itemDetail', {state : item})}>
-                    <img src={imgMap[item.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
+                    <Box sx={styles.discountCont}>
+                      ₹ {item.mrp - item.price}/- Off
+                    </Box>
+                    <img src={getImgMap()[item.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
                   </Box>
                   <div style={styles.productDescCont}>
-                    <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px', cursor:'pointer'}}
+                    <Box sx={styles.prodName}
                       onClick={() => navigate('/itemDetail', {state : item})}>
                       {item.name}
                     </Box>
@@ -728,19 +839,32 @@ function Home() {
         </Box>
 
         <Box style={isDesktop ? styles.productCatTitleDesk : styles.productCatTitle}>
-          Pickles
+          <Box>
+            Pickles
+          </Box>     
+          {
+            isDesktop ? null : 
+            <Box sx={{fontSize:'15px', display:'flex', alignItems:'center', color:'black'}}
+              onClick={() => navigate('/categories', {state:picklesData})}>
+              View All
+              <ArrowForwardIosIcon sx={{fontSize:'15px' }}/>
+            </Box>
+          }
         </Box>
         <Box style={isDesktop ? styles.productCatContDesk : styles.productCatCont}>
             {
               picklesData.map((item) => {
               return (
                 <Box style={isDesktop ? styles.productItemDesk : styles.productItem} key={item.id}>
-                  <Box sx={{textAlign:'center', height:'180px'}}
+                  <Box sx={styles.prodImgCont}
                     onClick={() => navigate('/itemDetail', {state : item})}>
-                    <img src={imgMap[item.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
+                    <Box sx={styles.discountCont}>
+                      ₹ {item.mrp - item.price}/- Off
+                    </Box>
+                    <img src={getImgMap()[item.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
                   </Box>
                   <div style={styles.productDescCont}>
-                    <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px', cursor:'pointer'}}
+                    <Box sx={styles.prodName}
                       onClick={() => navigate('/itemDetail', {state : item})}>
                       {item.name}
                     </Box>
@@ -828,19 +952,17 @@ function Home() {
         }
       </div>
       }
-
-
     </Box>
     
-      <React.Fragment key={'bottom'}>
-        <Drawer
-          anchor={isDesktop ? 'right' : 'bottom'}
-          open={anchor}
-          onClose={toggleDrawer(false)}
-        >
-          {list('bottom')}
-        </Drawer>
-      </React.Fragment>
+    <React.Fragment key={'bottom'}>
+      <Drawer
+        anchor={isDesktop ? 'right' : 'bottom'}
+        open={anchor}
+        onClose={toggleDrawer(false)}
+      >
+        {list('bottom')}
+      </Drawer>
+    </React.Fragment>
 
     </motion.div>
   )

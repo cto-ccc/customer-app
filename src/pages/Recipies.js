@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
 import ComponentLoader from '../components/ComponentLoader';
 import { Grid } from '@mui/material';
+import { getRecepieVideos } from '../services/api';
 
 
 const styles = {
@@ -19,32 +20,7 @@ function Recipeies() {
 
   const [loading, setLoading] = useState(false)
 
-  const [videoData, setVideoData] = useState([
-    {
-      url : 'https://www.youtube.com/embed/F6l2E631Hd0',
-      id : 1
-    },
-    {
-      url : 'https://www.youtube.com/embed/52tKR3RkHro',
-      id : 2
-    },
-    {
-      url : 'https://www.youtube.com/embed/t__O2836Pak',
-      id : 3
-    },
-    {
-      url : 'https://www.youtube.com/embed/nXgtsknIPvY',
-      id : 4
-    },
-    {
-      url : 'https://www.youtube.com/embed/SPfE1gXBRhc',
-      id : 5
-    },
-    {
-      url : 'https://www.youtube.com/embed/F6l2E631Hd0',
-      id : 6
-    }
-  ])
+
   
   useEffect(() => {
 
@@ -62,7 +38,7 @@ function Recipeies() {
           </Box>
            <Grid container>
            {
-            videoData.map((video, index) => {
+            getRecepieVideos().map((video, index) => {
               return(
               <Grid xs={12} sm={12} md={6} lg={6}  key={index}>
                   <Box key={index} style={styles.productItem}>

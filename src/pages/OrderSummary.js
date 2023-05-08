@@ -86,12 +86,14 @@ function OrderSummary() {
       paymentMode    : location.state.paymentMode,
       customerId     : await getCustomerId(),
       deliveryDate   : location.state.delDate,
-      deliverySlot   : location.state.delSlotId
+      deliverySlot   : location.state.delSlotId,
+      totalDiscount  : location.state.totalDiscount
     } 
 
     let ordersObj = JSON.parse(JSON.stringify(location.state.itemDetails))
     delete ordersObj.totalAmount
     delete ordersObj.totalCount
+    delete ordersObj.totalDiscount
     orderData.orderTitle  = ordersObj[Object.keys(ordersObj)[0]].name
 
     orderData.itemDetails = Object.values(ordersObj)
@@ -106,7 +108,7 @@ function OrderSummary() {
   }
 
   return (
-    <Box sx={{padding:'4vw', maxWidth:'500px', marginTop:'5vh'}}>
+    <Box sx={{padding:'4vw', maxWidth:'600px', marginTop:'5vh'}}>
       {
         loading ? 
         <ComponentLoader /> : 
@@ -122,7 +124,7 @@ function OrderSummary() {
       {
           Object.keys(location.state.itemDetails).map((item, index) => {
             return <Box key={index} >{
-              item == 'totalCount' || item == 'totalAmount' ? 
+              item == 'totalCount' || item == 'totalAmount' || item == 'totalDiscount' ? 
               null : 
               <Box key={index} style={styles.cartCont} 
                 sx={{borderBottom: index != (Object.keys(location.state.itemDetails).length - 3) ? '1px solid #eaeaea' :  null}}>

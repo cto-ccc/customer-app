@@ -9,24 +9,39 @@ import DownloadApple from './assets/download-apple.png'
 import DownloadGoogle from './assets/download-google.png'
 import CccLogo from './assets/ccc-logo.png'
 import RaisedByNature from './assets/raised-by-nature.png'
-
+import FooterBg from './assets/footer-bg.png'
+import { useContext } from 'react';
+import { CommonContext } from './contexts/CommonContext';
 
 const styles = {
   whyccc: {
-    background:'black',
-    color:'white',
+    color:'black',
     display:'flex',
     padding:'2vw',
     textAlign:'center',
-    flexDirection:'column'
+    flexDirection:'column',
+    background:`url(${FooterBg})`, 
+    backgroundSize:'cover',
+    padding:'80px 0 10px 0px'
+  },
+  whycccDesk : {
+    color:'black',
+    display:'flex',
+    padding:'2vw',
+    textAlign:'center',
+    flexDirection:'column',
+    background:`url(${FooterBg})`, 
+    backgroundSize:'cover',
+    padding:'80px 0 0px 0px',
+    height:'550px'
   },
   contentCont : {
-
+    
   },
   storeIcon : {
     width:'200px',
     height:'70px',
-    border:'1px solid white',
+    // border:'1px solid white',
     borderRadius:'20px' 
   },
   extraImg : {
@@ -37,15 +52,18 @@ const styles = {
 }
 
 function Footer() {
+
+  const {isDesktop} = useContext(CommonContext)
+
   return (
-    <Box style={styles.whyccc}>
-      <Box sx={{height:'250px', background:'black'}}>
-         <Box sx={{background:'black', height:'250px', display:'flex', flexDirection:'column', backgroundSize:'cover', alignItems:'center', justifyContent:'center'}}>
+    <Box style={isDesktop ? styles.whycccDesk : styles.whyccc}>
+      <Box sx={{height:'150px', }}>
+         <Box sx={{ height:'150px', display:'flex', flexDirection:'column', backgroundSize:'cover', alignItems:'center', justifyContent:'center'}}>
           <img src={CccLogo} style={styles.extraImg} />
           <img src={RaisedByNature} style={styles.extraImg}/>
         </Box>
       </Box>
-    <Grid container spacing={2} sx={{width:'100%', marginTop:'25px'}}>
+    <Grid container spacing={2} sx={{width:'100%', marginTop:'30px'}}>
 
       <Grid xs={12} sm={4} md={2} lg={2}>
         <div style={styles.contentCont}>
@@ -143,9 +161,9 @@ function Footer() {
       </Grid>
       <Grid xs={12} sm={12} md={12} lg={12} mt={3}>
         <div style={styles.contentCont}>
-          <div>
+          <Box sx={{color:'white', marginTop:'70px'}}>
             2023 Country Chicken Co. All rights reserved.
-          </div>
+          </Box>
         </div>
       </Grid>
     </Grid>

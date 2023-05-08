@@ -39,15 +39,18 @@ export const CommonProvider = (props) => {
       if (newCartData[itemData.id].count == 0) delete newCartData[itemData.id]
     } else {
       itemData.count = 1
+      if (itemData.style) itemData.name = itemData.name + ` (${itemData.style})`
       newCartData[itemData.id] = itemData
     }
 
     if (isIncrease) {
-      newCartData.totalCount  = (newCartData.totalCount || 0) + 1
-      newCartData.totalAmount = (newCartData.totalAmount || 0) + itemData.price
+      newCartData.totalCount    = (newCartData.totalCount || 0) + 1
+      newCartData.totalAmount   = (newCartData.totalAmount || 0) + itemData.price
+      newCartData.totalDiscount = (newCartData.totalDiscount || 0) + (itemData.mrp - itemData.price)
     } else {
-      newCartData.totalCount  = newCartData.totalCount - 1
-      newCartData.totalAmount = newCartData.totalAmount - itemData.price
+      newCartData.totalCount    = newCartData.totalCount - 1
+      newCartData.totalAmount   = newCartData.totalAmount - itemData.price
+      newCartData.totalDiscount = newCartData.totalDiscount - (itemData.mrp - itemData.price)
     }
     setCartData({...newCartData})
     await Preferences.set({key: 'cartData', value: JSON.stringify(newCartData)})
