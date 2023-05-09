@@ -33,7 +33,7 @@ const styles = {
   },
   productImg : {
     width:'100%',
-    height:'250px',
+    height:'180px',
     borderRadius:'5px 5px 0 0'
   },
   productDescCont : {
@@ -85,6 +85,7 @@ const styles = {
     width:'min-content',
     position:'absolute',
     width:'auto',
+    right:'0',
     borderRadius:'0 3px 3px 0'
   },
   prodName : {
@@ -105,7 +106,6 @@ function Categories() {
   const navigate = useNavigate()
   const {isDesktop, cartData, updateCart} = useContext(CommonContext)
 
-  const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
 
   const [anchor, setAnchor] = useState(false)
@@ -224,8 +224,6 @@ function Categories() {
 
   
   useEffect(() => {
-    
-   setProducts(location.state.data)
     setTimeout(() => {
       setLoading(false)
     }, 1000)
@@ -242,10 +240,10 @@ function Categories() {
           </Box>
           <Grid container>
             {
-              products.map((chick) => {
+              location.state.data.map((chick) => {
               return <Grid xs={12} sm={6} md={4} lg={3} style={styles.productGridCont} key={chick.id}>
                 <Box style={styles.productItem}>
-                  <Box sx={{textAlign:'center', height:'250px', position:'relative', cursor:'pointer'}}
+                  <Box sx={{textAlign:'center', height:'250px', position:'relative', cursor:'pointer', display:'flex', alignItems:'center' }}
                     onClick={() => navigate('/itemDetail', {state : chick})}>
                     <Box sx={styles.discountCont}>
                       ₹ {chick.mrp - chick.price}/- Off
@@ -257,16 +255,18 @@ function Categories() {
                       onClick={() => navigate('/itemDetail', {state : chick})}>
                       {chick.name}
                     </Box>
-                    <Box sx={{textAlign:'left', marginBottom:'5px',fontSize:'11px'}}>
-                      ({chick.style})
-                    </Box>
+                    {
+                      chick.style ? 
+                        <Box sx={{textAlign:'left', marginBottom:'5px',fontSize:'11px'}}>
+                          ({chick.style})
+                        </Box> : null
+                    }
                     <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
                       {chick.qty}
                     </Box>
                     <Box sx={{textAlign:'left', marginBottom:'5px', fontSize:'20px', display:'flex', alignItems:'end'}}>
                     ₹ {chick.price} <Box sx={{fontSize:'15px', marginLeft:'5px', opacity:'0.5'}}><s>₹ {chick.mrp}</s></Box> 
                     </Box>
-
                     {
                       cartData && cartData[chick.id] && cartData[chick.id].count ?
                       <Box style={styles.incCont}>

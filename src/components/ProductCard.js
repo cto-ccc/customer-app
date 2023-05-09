@@ -25,7 +25,7 @@ const styles = {
   },
   productImg : {
     width:'100%',
-    height:'250px',
+    height:'180px',
     borderRadius:'5px 5px 0 0'
   },
   productDescCont : {
@@ -85,7 +85,7 @@ function ProductCard(props) {
       props.products.map((chick) => {
       return <Grid xs={12} sm={12} md={4} lg={5} style={styles.productGridCont} key={chick.id}>
         <Box style={styles.productItem}>
-          <Box sx={{textAlign:'center', height:'250px', position:'relative', cursor:'pointer'}}
+          <Box sx={{textAlign:'center', height:'250px', position:'relative', cursor:'pointer', display:'flex', alignItems:'center'}}
             onClick={() => navigate('/itemDetail', {state : chick})}>
             <Box sx={styles.discountCont}>
               ₹ {chick.mrp - chick.price}/- Off

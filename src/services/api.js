@@ -11,6 +11,7 @@ import TenderChicken from '../assets/tender-chicken.png'
 import PicklesLogo from '../assets/pickle.png'
 import EggsLogo from '../assets/eggs.png'
 import ThirtyEggsLogo from '../assets/thirty-eggs.png'
+import ClassicCountry from '../assets/classic-country.png'
 
 let userDataCache = null
 
@@ -21,7 +22,8 @@ const imgMap = {
   'Warrior' : Warrior,
   'PicklesLogo' : PicklesLogo,
   'EggsLogo' : EggsLogo,
-  'ThirtyEggsLogo' : ThirtyEggsLogo
+  'ThirtyEggsLogo' : ThirtyEggsLogo,
+  'ClassicCountry' : ClassicCountry
 }
 
 export const getCustomizedProducts = () => {

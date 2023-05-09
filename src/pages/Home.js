@@ -9,9 +9,9 @@ import ComponentLoader from '../components/ComponentLoader'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import Eggs from '../assets/eggs.png'
-import HomeBanner1 from '../assets/banner1.jpeg'
-import HomeBanner2 from '../assets/banner2.jpeg'
-import HomeBanner3 from '../assets/banner3.jpeg'
+import HomeBanner1 from '../assets/banner1.png'
+import HomeBanner2 from '../assets/banner2.png'
+import HomeBanner3 from '../assets/banner3.png'
 
 import HomeBanner4 from '../assets/desk-banner1.png'
 import HomeBanner5 from '../assets/desk-banner2.png'
@@ -19,13 +19,12 @@ import HomeBanner6 from '../assets/desk-banner3.png'
 import OfferBanner1 from '../assets/offer-banner1.png'
 import OfferBanner2 from '../assets/offer-banner2.png'
 
-import Marinates from '../assets/marinates.png'
+import Marinates from '../assets/cat-marinates.png'
+import CatEggs from '../assets/cat-eggs.png'
+import CatPickles from '../assets/cat-pickle.png'
 import CccLogo from '../assets/ccc-logo.png'
 import RaisedByNature from '../assets/raised-by-nature.png'
 
-import PosterCock from '../assets/poster-cock.png'
-import PosterEggs from '../assets/poster-eggs.png'
-import PosterPickle from '../assets/poster-pickles.png'
 
 import MysoreQueen from '../assets/mysore-queen.png'
 import Kadaknath from '../assets/kadaknath.png'
@@ -153,12 +152,12 @@ const styles = {
     justifyContent:'center'
   },
   productImg : {
-    height:'180px',
-    width:'220px',
+    height:'160px',
+    width:'250px',
     borderRadius:'5px 5px 0 0'
   },
   productImgDesk : {
-    height:'180px',
+    height:'170px',
     width:'230px',
     borderRadius:'5px 5px 0 0'
   },
@@ -322,7 +321,10 @@ const styles = {
     textAlign:'center', 
     height:'180px',
     cursor:'pointer',
-    position:'relative'
+    position:'relative',
+    display:'flex',
+    alignItems:'flex-end',
+    justifyContent:'center'
   },
   discountCont : {
     background:'#a4243d',
@@ -334,7 +336,8 @@ const styles = {
     width:'min-content',
     position:'absolute',
     width:'auto',
-    borderRadius:'0 3px 3px 0'
+    right:'0',
+    borderRadius:'3px 0 0 3px'
   },
   topCatCont : {
     display:'flex', width:'100vw', overflowX:'scroll', marginBottom:'20px'
@@ -604,12 +607,12 @@ function Home() {
           </Box>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
             onClick={() => navigate('/categories', {state:{title : 'Eggs', data: eggsData}})}>
-            <img src={EggsLogo} style={isDesktop ? styles.posterImgDesk : styles.posterImg}/>
+            <img src={CatEggs} style={isDesktop ? styles.posterImgDesk : styles.posterImg}/>
             Eggs
           </Box>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
             onClick={() => navigate('/categories', {state:{title : 'Pickles', data: picklesData}})}>
-            <img src={PicklesLogo} style={isDesktop ? styles.posterImgDesk : styles.posterImg}/>
+            <img src={CatPickles} style={isDesktop ? styles.posterImgDesk : styles.posterImg}/>
             Pickles
           </Box>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont}>
@@ -629,65 +632,6 @@ function Home() {
               </Grid> : null
           }
         </Grid> 
-        
-
-        {/* <Box style={isDesktop ? styles.productCatTitleDesk : styles.productCatTitle}>
-          Featured Items
-        </Box>
-        <Box style={isDesktop ? styles.productCatContDesk : styles.productCatCont}>
-            {
-              featuredData.map((chick) => {
-              return (
-                <Box style={isDesktop ? styles.productItemDesk : styles.productItem} key={chick.id}>
-                  <Box sx={styles.prodImgCont}
-                    onClick={() => navigate('/itemDetail', {state : chick})}>
-                    <img src={getImgMap()[chick.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
-                  </Box>
-                  <div style={styles.productDescCont}>
-                    <Box sx={styles.prodName}
-                      onClick={() => navigate('/itemDetail', {state : chick})}>
-                      {chick.name}
-                    </Box>
-                    <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
-                      {chick.qty}
-                    </Box>
-                    <Box sx={{textAlign:'left', marginBottom:'5px', fontSize:'16px', display:'flex', alignItems:'end'}}>
-                    ₹ {chick.price} <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.5'}}><s>₹ {chick.mrp}</s></Box> 
-                    </Box>
-                    {
-                      cartData && cartData[chick.id] && cartData[chick.id].count ?
-                      <Box style={styles.incCont}>
-                        <Box sx={{border:'1px solid #dddddd', 
-                                  display:'flex', 
-                                  borderRadius:'5px', 
-                                  background:'white', border:'1px solid #c3c3c3'}}>
-                          <Box onClick={() => modifyCart(chick, false)}
-                            sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
-                            -
-                          </Box>
-                          <Box sx={{padding:'5px 10px', 
-                                    borderRight:'1px solid #bababa', 
-                                    borderLeft:'1px solid #bababa', fontSize:'15px',
-                                    background:'#a4243d !important', color:'white'}}>
-                            {cartData[chick.id].count}
-                          </Box>
-                          <Box  onClick={() => modifyCart(chick, true)}
-                            sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
-                            +
-                          </Box>
-                        </Box>
-                      </Box> : 
-                      <Box sx={{textAlign:'right'}}>
-                        <Button variant="contained" style={styles.mainBtn} size='small' onClick={() => addToCart(chick)}>
-                          Add To Cart
-                        </Button>
-                      </Box>
-                    }
-                  </div>
-                </Box>)
-              })
-            }
-        </Box> */}
 
 
         <Box style={isDesktop ? styles.productCatTitleDesk : styles.productCatTitle}>
@@ -697,7 +641,7 @@ function Home() {
           {
             isDesktop ? null : 
             <Box sx={{fontSize:'15px', display:'flex', alignItems:'center', color:'black'}}
-              onClick={() => navigate('/categories', {state:chickenData})}>
+              onClick={() => navigate('/categories', {state: {data : chickenData}})}>
               View All
               <ArrowForwardIosIcon sx={{fontSize:'15px' }}/>
             </Box>
@@ -773,7 +717,7 @@ function Home() {
           {
             isDesktop ? null : 
             <Box sx={{fontSize:'15px', display:'flex', alignItems:'center', color:'black'}}
-              onClick={() => navigate('/categories', {state:eggsData})}>
+              onClick={() => navigate('/categories', {state:{data : eggsData}})}>
               View All
               <ArrowForwardIosIcon sx={{fontSize:'15px' }}/>
             </Box>
@@ -845,7 +789,7 @@ function Home() {
           {
             isDesktop ? null : 
             <Box sx={{fontSize:'15px', display:'flex', alignItems:'center', color:'black'}}
-              onClick={() => navigate('/categories', {state:picklesData})}>
+              onClick={() => navigate('/categories', {state:{data : picklesData}})}>
               View All
               <ArrowForwardIosIcon sx={{fontSize:'15px' }}/>
             </Box>

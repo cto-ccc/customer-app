@@ -8,7 +8,7 @@ import { motion } from 'framer-motion'
 import { AuthContext } from '../contexts/AuthContext';
 import ComponentLoader from '../components/ComponentLoader';
 import { getImgMap } from '../services/api';
-import CartOffer from '../assets/banner1.jpeg'
+import CartOffer from '../assets/cart-offer.png'
 import Grid from '@mui/material/Unstable_Grid2';
 import ProductCard from '../components/ProductCard';
 
@@ -120,8 +120,8 @@ function Cart() {
           Cart Items
         </Box>
         {
-          (!cartData || Object.keys(cartData).length < 3) ?
-          <Box style={styles.shadowBox}>
+          (!cartData || Object.keys(cartData).length < 4) ?
+          <Box sx={{background:'white', padding:'20px', mt:2}}>
             No items in your cart
           </Box> : 
           <Grid container rowSpacing={2} columnSpacing={4}>

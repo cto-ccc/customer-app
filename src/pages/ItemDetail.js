@@ -23,7 +23,10 @@ const styles = {
   },
   productGridContDesk : {
     padding:'20px',
-    position:'relative'
+    position:'relative',
+    background:'white',
+    height:'min-content',
+    margin:'10px'
   },
   subLabel: {
     fontWeight:'500'
@@ -195,7 +198,7 @@ function ItemDetail() {
               </Box>
             <img src={getImgMap()[location.state.imgUrl]} style={styles.prodImg}/>
           </Grid>
-          <Grid xs={12} sm={12} md={5} lg={5} style={isDesktop ? styles.productGridContDesk : styles.productGridCont}>
+          <Grid xs={12} sm={12} md={6} lg={6} style={isDesktop ? styles.productGridContDesk : styles.productGridCont}>
             <Box sx={{fontSize:'20px', fontWeight:'600', mt:2, mb:1, color:'#a4243d'}}>
               {location.state.name} {location.state.style ? `(${location.state.style})` : null}
             </Box>
