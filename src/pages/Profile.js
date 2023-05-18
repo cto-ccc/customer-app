@@ -6,7 +6,7 @@ import { getFirebaseError } from '../services/error-codes';
 import { AuthContext } from '../contexts/AuthContext';
 import  ComponentLoader from '../components/ComponentLoader'
 import { CommonContext } from '../contexts/CommonContext';
-import { getUserProductOrders, getUserProfileData } from '../services/api';
+import { getUiProductsData, getUserProductOrders, getUserProfileData } from '../services/api';
 import { Paper } from '@mui/material';
 
 const styles = {
@@ -26,7 +26,7 @@ function Profile() {
   const [orders, setOrders] = useState([])
   const { logout } = useContext(AuthContext)
   const { showLoader, hideLoader, showAlert, showSnackbar } = useContext(CommonContext)
-
+  const [specifications, setSpecifications] = useState({})
 
   useEffect(() => {
     getUserProfile()
@@ -43,21 +43,13 @@ function Profile() {
   }
 
   const getUserOrders = async() => {
-    // getOrdersById(await getUserId()).then((response) => {
-    //   console.log(response)
-    //   setOrders(response)
-    //   setLoading(false)
-    // }).catch((error) => {
-    //   console.log(error)
-    //   setLoading(false)
-    //   showAlert(getFirebaseError(error))
-    // })
+
     const userData = {
       customerId : await getCustomerId()
     }
 
     getUserProductOrders(userData).then((response) => {
-      setOrders(response)
+      setOrders(getUiProductsData(response))
       setLoading(false)
     }).catch((error) => {
       console.log(error)
@@ -76,7 +68,7 @@ function Profile() {
         </Box>
         <Box style={styles.shadowBox}>
           <Box sx={{display:'flex', flexDirection:'column', padding:'10px'}}>
-            <Box sx={{marginBottom:'5px', fontSize:'20px', fontWeight:'bold'}}>
+            <Box sx={{marginBottom:'5px', fontSize:'20px', fontWeight:'bold', textTransform:'capitalize'}}>
               {profileData.f_name} {profileData.l_name}
             </Box>
             <Box sx={{marginBottom:'5px'}}>
@@ -110,7 +102,7 @@ function Profile() {
                    key={index}>
                  
                  <Box mb={1} sx={{fontWeight:'bold'}}>
-                    {item.products[0]?.name.charAt(0).toUpperCase() + item.products[0]?.name.substr(1).toLowerCase()}
+                    {item.uiProducts && item.uiProducts[0]?.name.charAt(0).toUpperCase() + item.uiProducts[0]?.name.substr(1).toLowerCase()}
                   </Box>
                   {/* <Box mb={1} sx={{fontWeight:'bold'}}>
                     {item.itemDetails.totalCount}
@@ -122,13 +114,16 @@ function Profile() {
                     {/* {new Date(item.timeStamp).toLocaleString()} */}
                     {item.order_date}
                   </Box>
-                  <Box mb={1}>
+                  <Box mb={1} sx={{textTransform:'capitalize'}}>
+                    Order ID : {item.order_id}
+                  </Box>  
+                  <Box mb={1} sx={{textTransform:'capitalize'}}>
                     Status : {item.order_status}
                   </Box>   
                   <Box sx={{textAlign:'right', borderTop:'1px solid #eaeaea', paddingTop:'10px', color:'#a4243d', cursor:'pointer'}}
                     onClick={() => navigate('/orderDetails', {state : item})}>
                     {
-                      item.status == 'DELIVERED' ? 
+                      item.order_status == 'delivered' ? 
                       'View Order' : 'Track Order'
                     }
                   </Box>          

@@ -17,7 +17,7 @@ const Alert = React.forwardRef(function Alert(
 const styles = {
   loader : {
     position : 'absolute',
-    width : '100vw',
+    width : '100%',
     height : '100vh',
     background : 'white',
     opacity:0.6,

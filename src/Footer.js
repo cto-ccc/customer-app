@@ -12,6 +12,7 @@ import RaisedByNature from './assets/raised-by-nature.png'
 import FooterBg from './assets/footer-bg.png'
 import { useContext } from 'react';
 import { CommonContext } from './contexts/CommonContext';
+import { useNavigate } from 'react-router-dom';
 
 const styles = {
   whyccc: {
@@ -53,6 +54,8 @@ const styles = {
 
 function Footer() {
 
+  const navigate = useNavigate()
+
   const {isDesktop} = useContext(CommonContext)
 
   return (
@@ -65,28 +68,43 @@ function Footer() {
       </Box>
     <Grid container spacing={2} sx={{width:'100%', marginTop:'30px'}}>
 
-      <Grid xs={12} sm={4} md={2} lg={2}>
+      <Grid xs={12} sm={4} md={3} lg={3}>
         <div style={styles.contentCont}>
           <Box sx={{display:'flex', flexDirection:'column'}}>
             <Box sx={{fontSize:'20px', fontWeight:'bold', marginBottom:'10px', textAlign:'start', marginLeft:'4vw'}}>
               Resources
             </Box>
             <Box sx={{marginLeft:'4vw'}}>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
+                onClick={() => navigate('/aboutUs')}>
                 About Us
               </Box>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
+                onClick={() => navigate('/recipies')}>
                 Our Recipies
               </Box>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
+                onClick={() => navigate('/contactUs')}>
                 Contact Us
+              </Box>
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
+                onClick={() => navigate('/termsAndConditions')}>
+                Terms And Conditions
+              </Box>
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
+                onClick={() => navigate('/privacyPolicy')}>
+                Privacy Policy
+              </Box>
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
+                onClick={() => navigate('/refundPolicy')}>
+                Cancellation / Refund Policy
               </Box>
             </Box>
           </Box>
         </div>
       </Grid>
 
-      <Grid xs={12} sm={4} md={4} lg={4}>
+      <Grid xs={12} sm={4} md={3} lg={3}>
         <div style={styles.contentCont}>
           <Box sx={{display:'flex', flexDirection:'column'}}>
             <Box sx={{fontSize:'20px', fontWeight:'bold', marginBottom:'10px', textAlign:'start', marginLeft:'4vw'}}>
@@ -113,7 +131,7 @@ function Footer() {
         </div>
       </Grid>
 
-      <Grid xs={12} sm={4} md={3} lg={3}>
+      <Grid xs={12} sm={4} md={2} lg={2}>
         <div style={styles.contentCont}>
           <Box sx={{display:'flex', flexDirection:'column'}}>
             <Box sx={{fontSize:'20px', fontWeight:'bold', marginBottom:'10px', textAlign:'start', marginLeft:'4vw'}}>
@@ -142,7 +160,7 @@ function Footer() {
       </Grid>
 
 
-      <Grid xs={12} sm={4} md={3} lg={3}>
+      <Grid xs={12} sm={4} md={2} lg={2}>
         <div style={styles.contentCont}>
           <Box sx={{display:'flex', flexDirection:'column'}}>
             <Box sx={{fontSize:'20px', fontWeight:'bold', marginBottom:'10px', textAlign:'start', marginLeft:'4vw'}}>

@@ -5,6 +5,8 @@ import Button from '@mui/material/Button'
 import React, { useContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CommonContext } from '../contexts/CommonContext';
+import { LocalNotifications } from '@capacitor/local-notifications';
+import ItemsSummary from '../components/ItemsSummary';
 
 const styles = {
   loadImg : {
@@ -37,8 +39,14 @@ function OrderStatus() {
 
 
   useEffect(() => {
+    console.log("===========", location.state)
     clearCart()
     setTimeout(() => {
+      LocalNotifications.schedule({notifications : [{
+        title : 'CountryChickenCo',
+        body : 'Your order has been placed successfully !',
+        id : location.state.orderId
+      }]})
       setShowLoading(false)
     }, 3000)
   }, [])
@@ -71,7 +79,7 @@ function OrderStatus() {
                   Order ID
                 </Box>
                 <Box>
-                  {location.state.orderId}
+                  {location.state.orderId.orderId}
                 </Box>
               </Box>
 
@@ -80,22 +88,18 @@ function OrderStatus() {
                   Status
                 </Box>
                 <Box>
-                  Confirmed
+                  Pending
                 </Box>
               </Box>
 
-              <Box sx={{display:'flex', marginBottom:'10px', justifyContent:'space-between'}}>
-                <Box sx={{width:'40%', marginBottom:'5px'}}>
-                  Delivery in
-                </Box>
-                <Box>
-                  60 Mins
-                </Box>
+              <Box sx={{margin:'10px 0'}}>
+                <ItemsSummary  itemDetails={location.state.orderData.itemDetails} />
               </Box>
 
+   
               <Button variant='outlined'
                 onClick={() => navigate('/profile')}>
-                View Order Details
+                View All Orders
               </Button>
             </Box>
             <Button variant='contained' onClick={() => goHome()}>

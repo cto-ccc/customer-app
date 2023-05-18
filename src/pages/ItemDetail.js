@@ -194,7 +194,7 @@ function ItemDetail() {
         {/* <Box sx={{padding:'10px', border:'1px solid #eaeaea', boxShadow:'0 0 5px 5px #eaeaea'}}> */}
           <Grid xs={12} sm={12} md={5} lg={5} style={isDesktop ? styles.productGridContDesk : styles.productGridCont}>
               <Box sx={styles.discountCont}>
-                ₹ {location.state.mrp - location.state.price}/- Off
+                {Math.trunc(((location.state.mrp - location.state.price) / location.state.mrp) * 100)}% Off
               </Box>
             <img src={getImgMap()[location.state.imgUrl]} style={styles.prodImg}/>
           </Grid>
@@ -216,7 +216,7 @@ function ItemDetail() {
                 <s>₹ {location.state.mrp}</s> 
               </Box>
               <Box sx={{fontSize:'13px', marginLeft:'5px'}}>
-                (₹ {location.state.mrp - location.state.price}/- Off)
+                ({Math.trunc(((location.state.mrp - location.state.price) / location.state.mrp) * 100)}% Off)
               </Box>
             </Box>
             <Box mb={2} mt={1}>

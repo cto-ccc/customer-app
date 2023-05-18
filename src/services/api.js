@@ -27,9 +27,8 @@ const imgMap = {
 }
 
 export const getCustomizedProducts = () => {
-  return ['C009', 'C013', 'C017', 'C029', 'C021']
+  return ['C009', 'C013', 'C017', 'C029', 'C021',  'CC009', 'CC013', 'CC017', 'CC029', 'CC021']
 }
-
 
 export const getImgMap = () => {
   return imgMap
@@ -62,6 +61,79 @@ export const getRecepieVideos = () => {
       id : 6
     }
   ]
+}
+
+export const getTimeSlots = () => {
+  return [
+    {
+      id : 7,
+      time : '7:30 AM - 8:30AM',
+      pranaId : 4
+    },
+    {
+      id : 8,
+      time : '8:30 AM - 9:30AM',
+      pranaId : 5
+    },
+    {
+      id : 9,
+      time : '9:30 AM - 10:30AM',
+      pranaId : 6
+    },
+    {
+      id : 17,
+      time : '5:30 PM - 6:30PM',
+      pranaId : 7
+    },
+    {
+      id : 18,
+      time : '6:30 PM - 7:30PM',
+      pranaId : 8
+    },
+    {
+      id : 19,
+      time : '7:30 PM - 8:30PM',
+      pranaId : 9
+    },
+    {
+      id : 20,
+      time : '8:30 PM - 9:30PM',
+      pranaId : 10
+    }
+  ]
+}
+
+
+export const getDeliveryCharge = () => {
+  return 1
+}
+
+export const getUiProductsData = (products) => {
+
+  if (products.length) {
+
+    products.forEach((order, index) => {
+
+      const tempSpecifications = {}
+
+      order.products.forEach((item) => {
+        if (item.parent_code) {
+
+          if (tempSpecifications[item.parent_code]) tempSpecifications[item.parent_code].push(item)
+          else tempSpecifications[item.parent_code] = [item]              
+        } else {
+
+          if (order.uiProducts) order.uiProducts.push(item)
+          else order.uiProducts = [item]
+        }
+      })
+
+      order.specifications = tempSpecifications
+    })
+  } else {
+    return []
+  }
+  return products
 }
 
 
@@ -180,38 +252,29 @@ export const getLanding = (async(userData) => {
   })
 })
 
-
-
-
-export const deleteUserApi = ((userData, groupName) => { 
-  const userCollRef = collection(db, 'users')
-
-  //TODO - should handle error responses properly
-  unRegisterToken(userData.deviceToken, [groupName]).then(async()=> {
-    console.log("Removing device from notifications : ", userData.deviceToken, groupName)
-  }).catch(async(error) => {
-    console.log("Some unexpected error occured")
+export const getCategoryData = (async(key) => {
+  return new Promise(async(resolve, reject) => {
+    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/getCategoryData`, {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      "body": JSON.stringify({id : key})
+    }).then((response) => response.json())
+    .then(function(data) { 
+      if (data.error) {
+        reject(data)
+      } else
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
+    })
   })
-
-  if (userData.groups.length == 1) {
-    return new Promise((resolve, reject)=> {
-      deleteDoc(doc(userCollRef, userData.mobileNo)).then((querySnapshot) => {
-        resolve(userData)
-      }).catch((error)=> {
-        reject(error)
-      })
-    })
-  } else {
-    return new Promise((resolve, reject)=> {
-      updateDoc(doc(userCollRef, userData.mobileNo), {groups : arrayRemove(groupName)}).then((querySnapshot) => {
-        resolve({})
-      }).catch((error)=> {
-        reject(error)
-      })
-    })
-  }
-
 })
+
 
 // Should remove id and fetch from cookie
 export const getUserData = (async(id, verifyToken) => {
@@ -388,119 +451,6 @@ export const unRegisterToken = (async(tokenId, groups) => {
 })
 
 
-
-
-export const getAlerts = (async(fromTs, toTs, groups) => {
-  return new Promise((resolve, reject) => {
-    getDocs(query( collection(db, `alerts`),
-                   where('timeStamp', '<', toTs),
-                   where('timeStamp', '>', fromTs),
-                   orderBy('timeStamp', 'desc')
-                 )
-            ).then((querySnapshot) => {
-      let eventItems = []
-      querySnapshot.forEach((doc) => {
-        if (groups.includes(doc.data().topic))
-          eventItems.push(doc.data())      
-      })
-      resolve(eventItems)
-    }).catch(()=> {
-      reject([])
-    })
-  })
-})
-
-export const createNewGroup = (async(groupData) => {
-  const groupCollRef = collection(db, 'groups')
-  const groupId = doc(groupCollRef).id
-  groupData.groupId = groupId
-  return new Promise((resolve, reject)=> {
-    setDoc(doc(groupCollRef, groupId), groupData).then((querySnapshot) => {
-      resolve({})
-    }).catch((error)=> {
-      reject(error)
-    })
-  })
-})
-
-export const getGroups = (async() => {
-  return new Promise((resolve, reject) => {
-    getDocs(query(collection(db, `groups`))).then((querySnapshot) => {
-      let eventItems = []
-      querySnapshot.forEach((doc) => {
-        eventItems.push(doc.data())      
-      })
-      resolve(eventItems)
-    }).catch((error)=> {
-      reject(error)
-    })
-  })
-})
-
-export const getUsersByGroup = (async(groupId) => {
-  return new Promise((resolve, reject) => {
-    getDocs(query(collection(db, `users`),  where("groups", "array-contains", groupId))).then((querySnapshot) => {
-      let eventItems = []
-      querySnapshot.forEach((doc) => {
-        eventItems.push(doc.data())      
-      })
-      resolve(eventItems)
-    }).catch((error)=> {
-      reject(error)
-    })
-  })
-})
-
-export const editAlertApi = (async(alertData) => {
-    const alertCollRef = collection(db, 'alerts')
-    return new Promise((resolve, reject)=> {
-      updateDoc(doc(alertCollRef, alertData.uid), {body : alertData.newBody}).then((querySnapshot) => {
-        resolve({})
-      }).catch((error)=> {
-        reject(error)
-      })
-    })
-})
-
-
-export const saveVideosApi = (async(videos) => {
-  const globalCollRef = collection(db, 'globals')
-    return new Promise((resolve, reject)=> {
-      updateDoc(doc(globalCollRef,'globals'), {videoLinks : videos}).then((querySnapshot) => {
-        resolve({})
-      }).catch((error)=> {
-        console.log(error)
-        reject(error)
-      })
-    })
-})
-
-export const getGlobals = (async() => {
-  return new Promise((resolve, reject) => {
-    getDocs(query(collection(db, `globals`))).then((querySnapshot) => {
-      let eventItems = []
-      querySnapshot.forEach((doc) => {
-        eventItems.push(doc.data())      
-      })
-      resolve(eventItems[0])
-    }).catch((error)=> {
-      reject(error)
-    })
-  })
-})
-
-export const updateBannerLinks = (async(bannerLinks) => {
-  const globalCollRef = collection(db, 'globals')
-    return new Promise((resolve, reject)=> {
-      updateDoc(doc(globalCollRef,'globals'), {bannerLinks : bannerLinks}).then((querySnapshot) => {
-        resolve({})
-      }).catch((error)=> {
-        console.log(error)
-        reject(error)
-      })
-    })
-})
-
 export const checkAppUpdates = (async(versionData) => {
   return new Promise(async(resolve, reject) => {
     const appUpdateResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/appVersionCheck`, {
@@ -536,18 +486,6 @@ export const addNewAddress = (async(data) => {
   })
 })
 
-// export const createNewOrder = (async(orderData) => {
-//   const orderCollRef = collection(db, 'orders')
-//   const orderId = doc(orderCollRef).id
-//   orderData.orderId = orderId
-//   return new Promise((resolve, reject)=> {
-//     setDoc(doc(orderCollRef, orderId), orderData).then((querySnapshot) => {
-//       resolve({})
-//     }).catch((error)=> {
-//       reject(error)
-//     })
-//   })
-// })
 
 export const getAllUserAddress = (async(userId) => {
   return new Promise((resolve, reject) => {

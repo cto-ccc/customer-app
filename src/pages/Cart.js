@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'
 import { AuthContext } from '../contexts/AuthContext';
 import ComponentLoader from '../components/ComponentLoader';
-import { getImgMap } from '../services/api';
+import { getDeliveryCharge, getImgMap } from '../services/api';
 import CartOffer from '../assets/cart-offer.png'
 import Grid from '@mui/material/Unstable_Grid2';
 import ProductCard from '../components/ProductCard';
@@ -20,7 +20,7 @@ const styles = {
   },
   cartImg : {
     width : '60px',
-    height : '60px',
+    height : '40px',
     borderRadius:'10px',
     marginRight:'10px',
     border:'1px solid #eaeaea'
@@ -199,7 +199,7 @@ function Cart() {
                   Delivery Charge
                 </Box>
                 <Box>
-                  ₹ 35
+                  ₹ {getDeliveryCharge()}
                 </Box>
               </Box>
             </Box>
@@ -209,7 +209,7 @@ function Cart() {
                   Total Amount
                 </Box>
                 <Box sx={{fontWeight:'bold'}}>
-                  ₹ {cartData.totalAmount + 35} 
+                  ₹ {cartData.totalAmount + getDeliveryCharge()} 
                 </Box>
               </Box>
             </Box>

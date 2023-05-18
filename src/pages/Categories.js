@@ -5,7 +5,7 @@ import Skeleton from '@mui/material/Skeleton'
 import { useState, useContext, useEffect } from 'react';
 import { CommonContext, CommonProvider } from '../contexts/CommonContext';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import EggsLogo from '../assets/eggs.png'
 import PicklesLogo from '../assets/pickle.png'
 
@@ -14,7 +14,7 @@ import Kadaknath from '../assets/kadaknath.png'
 import Warrior from '../assets/warrior.png'
 import TenderChicken from '../assets/tender-chicken.png'
 import ComponentLoader from '../components/ComponentLoader';
-import { getCustomizedProducts, getImgMap } from '../services/api';
+import { getCategoryData, getCustomizedProducts, getImgMap } from '../services/api';
 import Drawer from '@mui/material/Drawer';
 
 
@@ -104,6 +104,7 @@ function Categories() {
 
   const location = useLocation()
   const navigate = useNavigate()
+  const { id }   = useParams()
   const {isDesktop, cartData, updateCart} = useContext(CommonContext)
 
   const [loading, setLoading] = useState(true)
@@ -114,6 +115,9 @@ function Categories() {
   const [flavourType, setFlavourType] = useState('normal')
   const [cutType, setCutType] = useState('medium')
 
+  const [title, setTitle] = useState('')
+  const [categoryData, setCategoryData] = useState([])
+
 
   async function addToCart(item) {
     if (getCustomizedProducts().includes(item.id)) {
@@ -123,6 +127,15 @@ function Categories() {
       updateCart(item, true)
     }
   }
+
+  const getProductData = async() => {
+    const resp = await getCategoryData(id)
+    setTitle(resp.title)
+    setCategoryData(resp.data)
+    setLoading(false)
+    console.log(resp)
+  }
+  
 
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -224,9 +237,7 @@ function Categories() {
 
   
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000)
+    getProductData()
   }, [])
 
   return (
@@ -236,17 +247,17 @@ function Categories() {
         <ComponentLoader /> : 
         <Box>
           <Box sx={{color:'#a4243d', fontSize:'20px', ml:2,mb:1, fontWeight:'bold'}}>
-            {location.state.title}
+            {title}
           </Box>
           <Grid container>
             {
-              location.state.data.map((chick) => {
+              categoryData.map((chick) => {
               return <Grid xs={12} sm={6} md={4} lg={3} style={styles.productGridCont} key={chick.id}>
                 <Box style={styles.productItem}>
                   <Box sx={{textAlign:'center', height:'250px', position:'relative', cursor:'pointer', display:'flex', alignItems:'center' }}
                     onClick={() => navigate('/itemDetail', {state : chick})}>
                     <Box sx={styles.discountCont}>
-                      ₹ {chick.mrp - chick.price}/- Off
+                      {Math.trunc(((chick.mrp - chick.price) / chick.mrp) * 100)}% Off
                     </Box>
                     <img src={getImgMap()[chick.imgUrl]} style={styles.productImg}/>
                   </Box>

@@ -62,10 +62,22 @@ function OrderDetails() {
           </Box>
 
           {
-            location.state.products.map((item, index) => {
+            location.state.uiProducts.map((item, index) => {
               return <Box key={index} sx={{display:'flex'}} mb={1}>
-                <Box sx={{width:'50%'}}>
-                  {item.name}
+                <Box sx={{width:'50%', textTransform:'capitalize'}}>
+                  {item.name.toLowerCase()}
+                  
+                  {/* <Box>
+                    {Object.keys(location.state.specifications).length > 0 ? 
+                     Object.keys(location.state.specifications[item.product_code]).map((spec, index) => {
+                        return <Box sx={{fontSize:'12px', textTransform:'capitalize'}} key={index}>
+                          <li>
+                            {location.state.specifications[item.product_code][spec].name.toLowerCase()}
+                          </li>
+                          </Box>
+                      }) : null
+                    }
+                  </Box> */}
                 </Box>
                 <Box sx={{width:'15%'}}>
                   {item.price}
@@ -89,7 +101,7 @@ function OrderDetails() {
             </Box>
             <Box sx={{width:'15%', textAlign:'center'}}>
               {
-                location.state.products.length
+                location.state.uiProducts.length
               }
             </Box>
             <Box sx={{width:'20%'}}>
@@ -101,7 +113,15 @@ function OrderDetails() {
         </Paper>   
         
         <Paper sx={{padding:'15px', fontSize:'17px'}}>
-        <Box sx={{display:'flex', marginBottom:'5px'}}>
+          <Box sx={{display:'flex', marginBottom:'5px'}}>
+            <Box sx={{width:'40%'}}>
+              Order ID
+            </Box>
+            <Box>
+              : {location.state.order_id}
+            </Box>
+          </Box>
+          <Box sx={{display:'flex', marginBottom:'5px'}}>
             <Box sx={{width:'40%'}}>
               Order Date
             </Box>
@@ -113,7 +133,7 @@ function OrderDetails() {
             <Box sx={{width:'40%'}}>
               Order Status
             </Box>
-            <Box>
+            <Box sx={{textTransform:'capitalize'}}>
             : {location.state.order_status}
             </Box>
           </Box>
@@ -125,27 +145,14 @@ function OrderDetails() {
               : {location.state.paymentMode == 'cash_on_delivery' ? 'Cash on delivery' : 'Online'}
             </Box>
           </Box>
-          <Box sx={{display:'flex'}}>
-            <Box sx={{width:'40%'}}>
-              Delivery status 
-            </Box>
-            {
-              location.state.deliveryDetails ? 
-              <Box>
+       
 
-              </Box> : 
-              <Box>
-                : Not assigned
-              </Box>
-            }
-          </Box>
-
-          <Box sx={{display:'flex'}}>
-            <Box sx={{width:'40%'}}>
+          <Box sx={{display:'flex', flexDirection:'column'}}>
+            <Box sx={{width:'60%', marginTop:'10px'}}>
               Delivery Address 
             </Box>
-            <Box sx={{width:'60%', marginLeft:'15px'}}>
-              {
+            <Box sx={{width:'100%', marginTop:'2px'}}>
+              { location.state.shippingAddressDataa.length > 0 &&
                 location.state.shippingAddressDataa[0].contact_person_name + ', ' 
                 +  location.state.shippingAddressDataa[0].address + ', ' 
                 +  location.state.shippingAddressDataa[0].city + ', '
@@ -153,8 +160,21 @@ function OrderDetails() {
                 + location.state.shippingAddressDataa[0].zip
               }
             </Box>
-
           </Box>
+
+          {
+            location.state.deliveryPersonInfo ? 
+            <Box sx={{display:'flex', mt:1}}>
+            <Box sx={{width:'40%'}}>
+              Delivered By 
+            </Box>
+              <Box>
+                : {location.state.deliveryPersonInfo[0].firstName + ' ' + location.state.deliveryPersonInfo[0].lastName}
+              </Box>
+            </Box> : null
+          }
+
+  
 
         </Paper>
         </Box>

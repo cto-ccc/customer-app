@@ -5,10 +5,11 @@ import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import { useLocation } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext';
-import { createNewOrder } from '../services/api';
+import { createNewOrder, getDeliveryCharge, getTimeSlots } from '../services/api';
 import { CommonContext } from '../contexts/CommonContext';
 import { getFirebaseError } from '../services/error-codes';
 import ComponentLoader from '../components/ComponentLoader';
+import ItemsSummary from '../components/ItemsSummary';
 
 const styles = {
   cartCont : {
@@ -36,46 +37,14 @@ function OrderSummary() {
   const { showLoader, hideLoader, showAlert, showSnackbar } = useContext(CommonContext)
   const [loading, setLoading] = useState(true)
 
-  const [timeSlots, setTimeSlots] = useState([
-    {
-      id : 7,
-      time : '7:30 AM - 8:30AM'
-    },
-    {
-      id : 8,
-      time : '8:30 AM - 9:30AM'
-    },
-    {
-      id : 9,
-      time : '9:30 AM - 10:30AM'
-    },
-    {
-      id : 17,
-      time : '5:30 PM - 6:30PM'
-    },
-    {
-      id : 18,
-      time : '6:30 PM - 7:30PM'
-    },
-    {
-      id : 19,
-      time : '7:30 PM - 8:30PM'
-    },
-    {
-      id : 20,
-      time : '8:30 PM - 9:30PM'
-    }
-  ])
-
   useEffect(() => {
-    console.log("===", location.state)
     setTimeout(() => {
       setLoading(false)
     }, 1000)
   }, [])
 
   const placeOrder = async() => {
-
+    window.scrollTo(0,0)
     let orderData = {
       userId         : await getUserId(),
       timeStamp      : Date.now(),
@@ -86,7 +55,7 @@ function OrderSummary() {
       paymentMode    : location.state.paymentMode,
       customerId     : await getCustomerId(),
       deliveryDate   : location.state.delDate,
-      deliverySlot   : location.state.delSlotId,
+      deliverySlot   : getTimeSlots().filter((slot) => slot.id == location.state.delSlotId)[0].pranaId,
       totalDiscount  : location.state.totalDiscount
     } 
 
@@ -99,7 +68,7 @@ function OrderSummary() {
     orderData.itemDetails = Object.values(ordersObj)
     showLoader()
     createNewOrder(orderData).then((response) => {
-      navigate('/orderStatus', {state:response, replace:true})
+      navigate('/orderStatus', {state:{orderId : response, orderData : orderData}, replace:true})
       hideLoader()
     }).catch((error) => {
       hideLoader()
@@ -120,44 +89,7 @@ function OrderSummary() {
       <Box sx={{margin:'20px 0 10px 5px', fontSize:'18px',color:'#a4243d', marginTop:'20px'}}>
         Item Details
       </Box>
-      <Box style={styles.shadowBox}> 
-      {
-          Object.keys(location.state.itemDetails).map((item, index) => {
-            return <Box key={index} >{
-              item == 'totalCount' || item == 'totalAmount' || item == 'totalDiscount' ? 
-              null : 
-              <Box key={index} style={styles.cartCont} 
-                sx={{borderBottom: index != (Object.keys(location.state.itemDetails).length - 3) ? '1px solid #eaeaea' :  null}}>
-                <Box sx={{width:'70%'}}>
-                  {location.state.itemDetails[item].name} ({location.state.itemDetails[item].qty})
-                  {
-                    location.state.itemDetails[item].extras ? 
-                    <Box sx={{display:'flex', flexDirection:'column'}}>
-                      <li> 
-                        {location.state.itemDetails[item].extras.skinType}
-                      </li>
-                      <li> 
-                        {location.state.itemDetails[item].extras.flavourType} Flavour
-                      </li>
-                      <li> 
-                        {location.state.itemDetails[item].extras.cutType} Cut
-                      </li>
-                    </Box> : null
-                  }
-                </Box>
-                
-                <Box sx={{width:'10%'}}>
-                  x {location.state.itemDetails[item].count}
-                </Box>
-                <Box sx={{width:'20%', textAlign:'center'}}>
-                  ₹ {location.state.itemDetails[item].price * location.state.itemDetails[item].count}
-                </Box>
-              </Box>
-            }
-            </Box>
-          })
-        }
-        </Box>
+      <ItemsSummary itemDetails={location.state.itemDetails} />
 
         <Box sx={{margin:'30px 0 10px 5px', fontSize:'18px', color:'#a4243d'}}>
           Delivery Details
@@ -178,7 +110,7 @@ function OrderSummary() {
                 Slot 
               </Box>
               <Box>
-                : {timeSlots.filter((slot) => slot.id == location.state.delSlotId)[0].time}
+                : {getTimeSlots().filter((slot) => slot.id == location.state.delSlotId)[0].time}
               </Box>
             </Box>
 
@@ -218,7 +150,7 @@ function OrderSummary() {
               Delivery Fee 
             </Box>
             <Box>
-              ₹ 35
+              ₹ {getDeliveryCharge()}
             </Box>
           </Box>
           
@@ -227,7 +159,7 @@ function OrderSummary() {
               To Pay
             </Box>
             <Box sx={{fontWeight:'bold'}}>
-              ₹ {location.state.itemDetails.totalAmount + 35}
+              ₹ {location.state.itemDetails.totalAmount + getDeliveryCharge()}
             </Box>
           </Box>
         </Box> 

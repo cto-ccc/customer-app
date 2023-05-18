@@ -18,6 +18,10 @@ import Header from './Header';
 import CartHolder from './CartHolder';
 import AboutUs from '../pages/AboutUs';
 import Recipies from '../pages/Recipies';
+import ContactUs from '../pages/ContactUs';
+import TermsAndConditions from '../pages/TermsAndConditions';
+import PrivacyPolicy from '../pages/PrivacyPolicy';
+import RefundPolicy from '../pages/RefundPolicy';
 
 function AnimatedRoutes() {
   
@@ -33,7 +37,7 @@ function AnimatedRoutes() {
       
           <Route element={<CartHolder />}>
             <Route path="/" element={<Home />}/>
-            <Route path="/categories" element={<Categories />}/>
+            <Route path="/categories/:id" element={<Categories />}/>
             <Route path="/itemDetail" element={<ItemDetail />}/>
           </Route>
           
@@ -49,6 +53,10 @@ function AnimatedRoutes() {
 
           <Route path="/aboutUs" element={<AboutUs />}/>
           <Route path="/recipies" element={<Recipies />}/>
+          <Route path="/contactUs" element={<ContactUs />}/>
+          <Route path="/termsAndConditions" element={<TermsAndConditions />}/>
+          <Route path="/privacyPolicy" element={<PrivacyPolicy />}/>
+          <Route path="/refundPolicy" element={<RefundPolicy />}/>
         </Route>
 
       </Route>

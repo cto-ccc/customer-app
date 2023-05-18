@@ -39,7 +39,7 @@ export const CommonProvider = (props) => {
       if (newCartData[itemData.id].count == 0) delete newCartData[itemData.id]
     } else {
       itemData.count = 1
-      if (itemData.style) itemData.name = itemData.name + ` (${itemData.style})`
+      // if (itemData.style) itemData.name = itemData.name + ` (${itemData.style})`
       newCartData[itemData.id] = itemData
     }
 

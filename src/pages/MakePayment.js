@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import { useLocation, useNavigate, useHistory } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { getFirebaseError } from '../services/error-codes';
-import { createNewOrder } from '../services/api';
+import { createNewOrder, getDeliveryCharge, getTimeSlots } from '../services/api';
 import { Checkout } from 'capacitor-razorpay';
 import PaymentFailed from '../assets/payment-failed.png'
 
@@ -32,7 +32,7 @@ function MakePayment() {
 
   const payWithRazorpay = async(orderId) => {
     const options = {
-      key         : 'rzp_test_VjbGWNJTuAx7EB',
+      key         : `${process.env.REACT_APP_RAZORPAY_KEY}`,
       amount      : location.state.itemDetails.totalAmount,
       description : 'Buy Fresh Chicken Online',
       image       : 'https://countrychickenco.in/download/logo/icon.png',
@@ -48,7 +48,7 @@ function MakePayment() {
     }
     try {
       let data = (await Checkout.open(options))
-      placeOrder(data.razorpay_payment_id)
+      placeOrder(data.response.razorpay_payment_id)
       //Handle payment success
       console.log("Payment success", data)
     } catch (error) {
@@ -71,18 +71,19 @@ function MakePayment() {
       customerId     : await getCustomerId(),
       txnId          : txnId,
       deliveryDate   : location.state.delDate,
-      deliverySlot   : location.state.delSlotId
+      deliverySlot   : getTimeSlots().filter((slot) => slot.id == location.state.delSlotId)[0].pranaId
     } 
 
     let ordersObj = JSON.parse(JSON.stringify(location.state.itemDetails))
     delete ordersObj.totalAmount
     delete ordersObj.totalCount
+    delete ordersObj.totalDiscount
     orderData.orderTitle  = ordersObj[Object.keys(ordersObj)[0]].name
 
     orderData.itemDetails = Object.values(ordersObj)
     showLoader()
     createNewOrder(orderData).then((response) => {
-      navigate('/orderStatus', {state:response, replace:true})
+      navigate('/orderStatus', {state:{orderId : response, orderData : orderData}, replace:true})
       hideLoader()
     }).catch((error) => {
       hideLoader()
@@ -98,7 +99,7 @@ function MakePayment() {
         "accept"        : "application/json"
       },
       "body": JSON.stringify({
-        amount   : location.state.itemDetails.totalAmount,
+        amount   : location.state.itemDetails.totalAmount + getDeliveryCharge(),
         currency : "INR",
         receipt  : "Country Chicken Co Payment"
       })

@@ -150,15 +150,15 @@ const styles = {
     display:'flex',
     alignItems:'center',
     justifyContent:'center'
-  },
+  },  
   productImg : {
-    height:'160px',
-    width:'250px',
+    height:'180px',
+    width:'320px',
     borderRadius:'5px 5px 0 0'
   },
   productImgDesk : {
-    height:'170px',
-    width:'230px',
+    height:'180px',
+    width:'320px',
     borderRadius:'5px 5px 0 0'
   },
 
@@ -323,7 +323,7 @@ const styles = {
     cursor:'pointer',
     position:'relative',
     display:'flex',
-    alignItems:'flex-end',
+    alignItems:'center',
     justifyContent:'center'
   },
   discountCont : {
@@ -361,10 +361,7 @@ function Home() {
 
   const [selectedItem, setSelectedItem] = useState(null)
 
-  const [featuredData, setFeaturedData] = useState([])
-  const [chickenData, setChickenData] = useState([])
-  const [picklesData, setPicklesData] = useState([])
-  const [eggsData, setEggsData] = useState([])
+  const [itemsData, setItemsData] = useState([])
   const [latLong, setLatLong] = useState(null)
 
   const printCurrentPosition = async() => {
@@ -377,17 +374,13 @@ function Home() {
       }
     }
 
-    console.log('Current position:', coordinates)
     setLatLong({
       lat : coordinates.coords.latitude,
       lng : coordinates.coords.longitude
     })
 
     getLanding({latLong : `${coordinates.coords.latitude},${coordinates.coords.longitude}`}).then((resp) => {
-      setChickenData(resp.chickenData)
-      setEggsData(resp.eggsData)
-      setPicklesData(resp.picklesData)
-      setFeaturedData(resp.featuredData)
+      setItemsData(resp)
       setLoading(false)
     }).catch((err) => {
       setLoading(false)
@@ -401,8 +394,8 @@ function Home() {
 
   async function addToCart(item) {
     if (getCustomizedProducts().includes(item.id)) {
-      setAnchor(true)
       setSelectedItem(item)
+      setAnchor(true)
     } else {
       updateCart(item, true)
     }
@@ -435,7 +428,9 @@ function Home() {
   }
 
   const addItemFromExtras = () => {
+    
     let activeItem = selectedItem
+   
     activeItem.extras = {
       skinType    : skinType,
       flavourType : flavourType,
@@ -475,14 +470,14 @@ function Home() {
         <Box>
           Chicken Flavour
         </Box>
-        <Box sx={{display:'flex', padding:'15px 0 20px 0', borderBottom:'1px solid #eaeaea', mb:3}}>
+        <Box sx={{display:'flex', padding:'15px 0 20px 0', borderBottom:'1px solid #eaeaea', mb:3, alignItems:'center'}}>
           <Box style={flavourType == 'normal' ? styles.activeExtra : styles.inactiveExtra}
             onClick={() => setFlavourType('normal')}>
             Normal
           </Box>
-          <Box sx={{mr:3}} style={flavourType == 'smoketurmeric' ? styles.activeExtra : styles.inactiveExtra}
+          <Box sx={{display:'flex', alignItems:'center'}} style={flavourType == 'smoketurmeric' ? styles.activeExtra : styles.inactiveExtra}
             onClick={() => setFlavourType('smoketurmeric')}>
-            Smoked & Turmeric (+ ₹10/-)
+            Smoked & Turmeric <Box sx={{fontSize:'15px', marginLeft:'5px'}}>(+ ₹15/-)</Box>  
           </Box>
        </Box>
       </Box>
@@ -596,22 +591,22 @@ function Home() {
         </Box>
         <Box sx={isDesktop ? styles.topCatContDesk : styles.topCatCont}>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
-            onClick={() => navigate('/categories', {state:{title : 'Free Range Birds', data: chickenData}})}>
+            onClick={() => navigate('/categories/free-range-birds')}>
             <img src={CatFreeRange} style={isDesktop ? styles.posterImgDesk : styles.posterImg} />
             Free Range Birds
           </Box>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
-            onClick={() => navigate('/categories', {state:{title : 'Village Birds', data: chickenData}})}>
+            onClick={() => navigate('/categories/village-birds')}>
             <img src={CatVillageBirds} style={isDesktop ? styles.posterImgDesk : styles.posterImg} />
             Village Birds
           </Box>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
-            onClick={() => navigate('/categories', {state:{title : 'Eggs', data: eggsData}})}>
+            onClick={() => navigate('/categories/eggs')}>
             <img src={CatEggs} style={isDesktop ? styles.posterImgDesk : styles.posterImg}/>
             Eggs
           </Box>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
-            onClick={() => navigate('/categories', {state:{title : 'Pickles', data: picklesData}})}>
+            onClick={() => navigate('/categories/pickles')}>
             <img src={CatPickles} style={isDesktop ? styles.posterImgDesk : styles.posterImg}/>
             Pickles
           </Box>
@@ -633,226 +628,92 @@ function Home() {
           }
         </Grid> 
 
-
-        <Box style={isDesktop ? styles.productCatTitleDesk : styles.productCatTitle}>
-          <Box>
-            Chicken
-          </Box>
-          {
-            isDesktop ? null : 
-            <Box sx={{fontSize:'15px', display:'flex', alignItems:'center', color:'black'}}
-              onClick={() => navigate('/categories', {state: {data : chickenData}})}>
-              View All
-              <ArrowForwardIosIcon sx={{fontSize:'15px' }}/>
-            </Box>
-          }
-        </Box>
-        <Box style={isDesktop ? styles.productCatContDesk : styles.productCatCont}>
         {
-          chickenData.map((item) => {
-          return (
-            <Box style={isDesktop ? styles.productItemDesk : styles.productItem} key={item.id}>
-              <Box sx={styles.prodImgCont}
-                onClick={() => navigate('/itemDetail', {state : item})}>
-                <Box sx={styles.discountCont}>
-                  ₹ {item.mrp - item.price}/- Off
-                </Box>
-                <img src={getImgMap()[item.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
+          itemsData.length && itemsData.map((category, index) => {
+            return <Box key={index}>
+            
+            <Box style={isDesktop ? styles.productCatTitleDesk : styles.productCatTitle}>
+              <Box>
+                {category.title}
               </Box>
-              <div style={styles.productDescCont}>
-                <Box sx={styles.prodName}
-                  onClick={() => navigate('/itemDetail', {state : item})}>
-                  {item.name}
+              {
+                isDesktop ? null : 
+                <Box sx={{fontSize:'15px', display:'flex', alignItems:'center', color:'black'}}
+                  onClick={() => navigate(`/categories/${category.id}`)}>
+                  View All
+                  <ArrowForwardIosIcon sx={{fontSize:'15px' }}/>
                 </Box>
-                <Box sx={{textAlign:'left', marginBottom:'5px',fontSize:'12px'}}>
-                  ({item.style})
-                </Box>
-                <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
-                  {item.qty}
-                </Box>
-                <Box sx={{textAlign:'left', marginBottom:'5px', fontSize:'16px', display:'flex', alignItems:'end'}}>
-                ₹ {item.price} <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.5'}}><s>₹ {item.mrp}</s></Box> 
-                </Box>
-                {
-                  cartData && cartData[item.id] && cartData[item.id].count ?
-                  <Box style={styles.incCont}>
-                    <Box sx={{border:'1px solid #dddddd', 
-                              display:'flex', 
-                              borderRadius:'5px', 
-                              
-                              background:'white', border:'1px solid #c3c3c3'}}>
-                      <Box onClick={() => modifyCart(item, false)}
-                        sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
-                        -
+              }
+            </Box>
+            <Box style={isDesktop ? styles.productCatContDesk : styles.productCatCont}>
+              {
+                category.data.map((item) => {
+                return (
+                  <Box style={isDesktop ? styles.productItemDesk : styles.productItem} key={item.id}>
+                    <Box sx={styles.prodImgCont}
+                      onClick={() => navigate('/itemDetail', {state : item})}>
+                      <Box sx={styles.discountCont}>
+                        {Math.trunc(((item.mrp - item.price) / item.mrp) * 100)}% Off
                       </Box>
-                      <Box sx={{padding:'5px 10px', 
-                                borderRight:'1px solid #bababa', 
-                                borderLeft:'1px solid #bababa', fontSize:'15px',
-                                background:'#a4243d !important', color:'white'}}>
-                        {cartData[item.id].count}
-                      </Box>
-                      <Box  onClick={() => modifyCart(item, true)}
-                        sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
-                        +
-                      </Box>
+                      <img src={getImgMap()[item.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
                     </Box>
-                  </Box> : 
-                  <Box sx={{textAlign:'right'}}>
-                    <Button variant="contained" style={styles.mainBtn} size='small' onClick={() => addToCart(item)}>
-                      Add To Cart
-                    </Button>
-                  </Box>
-                }
-              </div>
-            </Box>)
+                    <div style={styles.productDescCont}>
+                      <Box sx={styles.prodName}
+                        onClick={() => navigate('/itemDetail', {state : item})}>
+                        {item.name}
+                      </Box>
+                      {
+                        item.style ? 
+                        <Box sx={{textAlign:'left', marginBottom:'5px',fontSize:'12px'}}>
+                          ({item.style})
+                        </Box> : null
+                      }
+                      
+                      <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
+                        {item.qty}
+                      </Box>
+                      <Box sx={{textAlign:'left', marginBottom:'5px', fontSize:'16px', display:'flex', alignItems:'end'}}>
+                      ₹ {item.price} <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.5'}}><s>₹ {item.mrp}</s></Box> 
+                      </Box>
+                      {
+                        cartData && cartData[item.id] && cartData[item.id].count ?
+                        <Box style={styles.incCont}>
+                          <Box sx={{border:'1px solid #dddddd', 
+                                    display:'flex', 
+                                    borderRadius:'5px', 
+                                    
+                                    background:'white', border:'1px solid #c3c3c3'}}>
+                            <Box onClick={() => modifyCart(item, false)}
+                              sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
+                              -
+                            </Box>
+                            <Box sx={{padding:'5px 10px', 
+                                      borderRight:'1px solid #bababa', 
+                                      borderLeft:'1px solid #bababa', fontSize:'15px',
+                                      background:'#a4243d !important', color:'white'}}>
+                              {cartData[item.id].count}
+                            </Box>
+                            <Box  onClick={() => modifyCart(item, true)}
+                              sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
+                              +
+                            </Box>
+                          </Box>
+                        </Box> : 
+                        <Box sx={{textAlign:'right'}}>
+                          <Button variant="contained" style={styles.mainBtn} size='small' onClick={() => addToCart(item)}>
+                            Add To Cart
+                          </Button>
+                        </Box>
+                      }
+                    </div>
+                  </Box>)
+                })
+              }
+              </Box>
+            
+            </Box>
           })
         }
-        </Box>
-
-
-        <Box style={isDesktop ? styles.productCatTitleDesk : styles.productCatTitle}>
-          <Box>
-            Eggs
-          </Box>
-          {
-            isDesktop ? null : 
-            <Box sx={{fontSize:'15px', display:'flex', alignItems:'center', color:'black'}}
-              onClick={() => navigate('/categories', {state:{data : eggsData}})}>
-              View All
-              <ArrowForwardIosIcon sx={{fontSize:'15px' }}/>
-            </Box>
-          }
-        </Box>
-        <Box style={isDesktop ? styles.productCatContDesk : styles.productCatCont}>
-            {
-              eggsData.map((item) => {
-              return (
-                <Box style={isDesktop ? styles.productItemDesk : styles.productItem} key={item.id}>
-                  <Box sx={styles.prodImgCont}
-                    onClick={() => navigate('/itemDetail', {state : item})}>
-                    <Box sx={styles.discountCont}>
-                      ₹ {item.mrp - item.price}/- Off
-                    </Box>
-                    <img src={getImgMap()[item.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
-                  </Box>
-                  <div style={styles.productDescCont}>
-                    <Box sx={styles.prodName}
-                      onClick={() => navigate('/itemDetail', {state : item})}>
-                      {item.name}
-                    </Box>
-                    <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
-                      {item.qty}
-                    </Box>
-                    <Box sx={{textAlign:'left', marginBottom:'5px', fontSize:'16px', display:'flex', alignItems:'end'}}>
-                    ₹ {item.price} <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.5'}}><s>₹ {item.mrp}</s></Box> 
-                    </Box>
-                    {
-                      cartData && cartData[item.id] && cartData[item.id].count ?
-                      <Box style={styles.incCont}>
-                        <Box sx={{border:'1px solid #dddddd', 
-                                  display:'flex', 
-                                  borderRadius:'5px', 
-                                   
-                                  background:'white', border:'1px solid #c3c3c3'}}>
-                          <Box onClick={() => modifyCart(item, false)}
-                            sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
-                            -
-                          </Box>
-                          <Box sx={{padding:'5px 10px', 
-                                    borderRight:'1px solid #bababa', 
-                                    borderLeft:'1px solid #bababa', fontSize:'15px',
-                                    background:'#a4243d !important', color:'white'}}>
-                            {cartData[item.id].count}
-                          </Box>
-                          <Box  onClick={() => modifyCart(item, true)}
-                            sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
-                            +
-                          </Box>
-                        </Box>
-                      </Box> : 
-                      <Box sx={{textAlign:'right'}}>
-                        <Button variant="contained" style={styles.mainBtn} size='small' onClick={() => addToCart(item)}>
-                          Add To Cart
-                        </Button>
-                      </Box>
-                    }
-                  </div>
-                </Box>)
-              })
-            }
-        </Box>
-
-        <Box style={isDesktop ? styles.productCatTitleDesk : styles.productCatTitle}>
-          <Box>
-            Pickles
-          </Box>     
-          {
-            isDesktop ? null : 
-            <Box sx={{fontSize:'15px', display:'flex', alignItems:'center', color:'black'}}
-              onClick={() => navigate('/categories', {state:{data : picklesData}})}>
-              View All
-              <ArrowForwardIosIcon sx={{fontSize:'15px' }}/>
-            </Box>
-          }
-        </Box>
-        <Box style={isDesktop ? styles.productCatContDesk : styles.productCatCont}>
-            {
-              picklesData.map((item) => {
-              return (
-                <Box style={isDesktop ? styles.productItemDesk : styles.productItem} key={item.id}>
-                  <Box sx={styles.prodImgCont}
-                    onClick={() => navigate('/itemDetail', {state : item})}>
-                    <Box sx={styles.discountCont}>
-                      ₹ {item.mrp - item.price}/- Off
-                    </Box>
-                    <img src={getImgMap()[item.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
-                  </Box>
-                  <div style={styles.productDescCont}>
-                    <Box sx={styles.prodName}
-                      onClick={() => navigate('/itemDetail', {state : item})}>
-                      {item.name}
-                    </Box>
-                    <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
-                      {item.qty}
-                    </Box>
-                    <Box sx={{textAlign:'left', marginBottom:'5px', fontSize:'16px', display:'flex', alignItems:'end'}}>
-                    ₹ {item.price} <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.5'}}><s>₹ {item.mrp}</s></Box> 
-                    </Box>
-                    {
-                      cartData && cartData[item.id] && cartData[item.id].count ?
-                      <Box style={styles.incCont}>
-                        <Box sx={{border:'1px solid #dddddd', 
-                                  display:'flex', 
-                                  borderRadius:'5px', 
-                                   
-                                  background:'white', border:'1px solid #c3c3c3'}}>
-                          <Box onClick={() => modifyCart(item, false)}
-                            sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
-                            -
-                          </Box>
-                          <Box sx={{padding:'5px 10px', 
-                                    borderRight:'1px solid #bababa', 
-                                    borderLeft:'1px solid #bababa', fontSize:'15px',
-                                    background:'#a4243d !important', color:'white'}}>
-                            {cartData[item.id].count}
-                          </Box>
-                          <Box  onClick={() => modifyCart(item, true)}
-                            sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
-                            +
-                          </Box>
-                        </Box>
-                      </Box> : 
-                      <Box sx={{textAlign:'right'}}>
-                        <Button variant="contained" style={styles.mainBtn} size='small' onClick={() => addToCart(item)}>
-                          Add To Cart
-                        </Button>
-                      </Box>
-                    }
-                  </div>
-                </Box>)
-              })
-            }
-        </Box>
 
         <Box style={styles.whyccc}>
           <Grid container spacing={2}>
