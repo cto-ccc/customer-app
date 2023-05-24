@@ -2,7 +2,7 @@
   "name": "Country-Chicken-Co",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://countrychicken.co.in/",
+  "homepage": "https://countrychickenco.in/",
   "dependencies": {
     "@capacitor/android": "^4.7.0",
     "@capacitor/app": "^4.1.1",

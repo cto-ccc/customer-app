@@ -37,11 +37,15 @@ const styles = {
     borderRadius:'10px',
     padding:'7px 15px',
     cursor:'pointer',
-    boxShadow:'1px 1px 5px 3px #eaeaea'
+    boxShadow:'1px 1px 5px 3px #eaeaea',
+    display:'flex',
+    alignItems:'baseline'
   },
   inactiveExtra : {
     padding:'8px 15px',
-    cursor:'pointer'
+    cursor:'pointer',
+    display:'flex',
+    alignItems:'baseline'
   },
   disabled : {
     opacity:'0.5',
@@ -132,7 +136,7 @@ function ItemDetail() {
           </Box>
           <Box style={skinType == 'skinless' ? styles.activeExtra : styles.inactiveExtra}
             onClick={() => modifySkinType('skinless')}>
-            Skinless
+            Skinless <Box sx={{fontSize:'12px', marginLeft:'5px'}}>(+ ₹100/-)</Box>
           </Box>
        </Box>
       </Box>
@@ -149,7 +153,7 @@ function ItemDetail() {
           </Box>
           <Box sx={{mr:3}} style={flavourType == 'smoketurmeric' ? styles.activeExtra : styles.inactiveExtra}
             onClick={() => setFlavourType('smoketurmeric')}>
-            Smoked & Turmeric
+            Smoked & Turmeric <Box sx={{fontSize:'12px', marginLeft:'5px'}}>(+ ₹15/-)</Box>
           </Box>
        </Box>
       </Box>

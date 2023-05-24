@@ -92,6 +92,20 @@ function OrderDetails() {
             })
           }
 
+          <Box sx={{display:'flex', borderTop:'1px solid #eaeaea', justifyContent:'space-between'}} mt={2} pt={2}>
+            <Box sx={{width:'50%'}}>
+              Delivery Cost
+            </Box>
+            <Box sx={{width:'15%'}}>
+
+            </Box>
+            <Box sx={{width:'20%'}}>
+              {
+                location.state.shipping_cost
+              }
+            </Box>
+          </Box>
+
           <Box sx={{display:'flex', fontWeight:'bold', borderTop:'1px solid #eaeaea'}} mt={2} pt={2}>
             <Box sx={{width:'50%'}}>
               Total
@@ -106,7 +120,7 @@ function OrderDetails() {
             </Box>
             <Box sx={{width:'20%'}}>
               {
-                location.state.order_amount
+                location.state.order_amount + location.state.shipping_cost
               }
             </Box>
           </Box>
@@ -163,7 +177,7 @@ function OrderDetails() {
           </Box>
 
           {
-            location.state.deliveryPersonInfo ? 
+            location.state.deliveryPersonInfo.length ? 
             <Box sx={{display:'flex', mt:1}}>
             <Box sx={{width:'40%'}}>
               Delivered By 

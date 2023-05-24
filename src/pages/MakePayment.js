@@ -26,7 +26,8 @@ function MakePayment() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    initiatePayment()
+    initiatePaymentWithCashFree()
+    // initiatePaymentWithRazorpay()
   }, [])
 
 
@@ -91,7 +92,7 @@ function MakePayment() {
     })  
   }
 
-  async function initiatePayment() {
+  async function initiatePaymentWithRazorpay() {
     const orderResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/createRazorpayOrder`, {
       "method"  : "POST",
       "headers" : {
@@ -110,12 +111,64 @@ function MakePayment() {
     .catch((error) => console.log(error))
   }
 
+  async function initiatePaymentWithCashFree() {
+    const orderResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/createCashFreeOrder`, {
+      "method"  : "POST",
+      "headers" : {
+        "content-type"  : "application/json",
+        "accept"        : "application/json"
+      },
+      "body": JSON.stringify({
+        amount   : location.state.itemDetails.totalAmount + getDeliveryCharge()
+      })
+    }).then((response) => response.json())
+    .then(function(data) { 
+   
+      const success = (data) => {
+        placeOrder(data.transaction.transactionId)
+      }
+
+      const failure = (data) => {
+        setLoading(false)
+      }
+
+      const dropConfig = {
+        "components": [
+            "order-details",
+            "card",
+            "netbanking",
+            "app",
+            "upi"
+        ],
+        "onSuccess": success,
+        "onFailure": failure,
+        "style": {
+            "backgroundColor": "#ffffff",
+            "color": "#11385b",
+            "fontFamily": "Lato",
+            "fontSize": "14px",
+            "errorColor": "#ff0000",
+            "theme": "light", //(or dark)
+        }
+    }
+      const cashfree = new window.Cashfree(data.payment_session_id);
+      cashfree.drop(document.getElementById("payment-form"), dropConfig);
+      // cashfree.redirect()
+    })
+    .catch((error) => console.log(error))
+  }
+
   return (
     <Box sx={{minHeight:'80vh', marginTop:'10vh', display:'flex', alignItems:'center', justifyContent:'center'}}>
+      
+      
       {
         loading ?
         <Box>
-          Loading... Please Wait
+          {/* Enable For RazorPay */}
+          {/* Loading... Please Wait */}
+
+          <div id="payment-form" className='hello'></div>
         </Box> : 
         <Box sx={{textAlign:'center'}}>
           <Box sx={{mb:2}}>
@@ -124,6 +177,7 @@ function MakePayment() {
           <h2>
             Payment Failed
           </h2>
+          {/* TODO remove navigate */}
           <Button variant='contained' onClick={() => navigate(-2)}>
             Go to home
           </Button>

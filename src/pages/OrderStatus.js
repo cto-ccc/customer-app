@@ -39,7 +39,6 @@ function OrderStatus() {
 
 
   useEffect(() => {
-    console.log("===========", location.state)
     clearCart()
     setTimeout(() => {
       LocalNotifications.schedule({notifications : [{
@@ -52,7 +51,13 @@ function OrderStatus() {
   }, [])
 
   const goHome = async() => {
-    navigate(-3)
+    window.history.replaceState(null, null, "/")
+    navigate('/')
+  }
+
+  const goToProfile = async() => {
+    window.history.replaceState(null, null, "/profile")
+    navigate('/profile')
   }
 
   return (
@@ -67,7 +72,7 @@ function OrderStatus() {
             </Box>
           </Box>
            : 
-          <Box sx={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+          <Box sx={{display:'flex', flexDirection:'column', alignItems:'center', marginTop:'4vw'}}>
             <img src={OrderSuccess} style={styles.successImg} />
             <Box sx={{fontSize:'35px', fontWeight:'bold', textAlign:'center'}}>
               Order Placed Successfully
@@ -98,7 +103,7 @@ function OrderStatus() {
 
    
               <Button variant='outlined'
-                onClick={() => navigate('/profile')}>
+                onClick={() => goToProfile()}>
                 View All Orders
               </Button>
             </Box>

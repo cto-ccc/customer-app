@@ -42,7 +42,7 @@ function Delivery() {
 
   const containerStyle = {
     width: '80vw',
-    maxWidth:'450px',
+    maxWidth:'560px',
     height: '400px'
   };
 
@@ -203,10 +203,11 @@ function Delivery() {
     data.userId    = await getUserId()
     data.timeStamp = Date.now()
     data.latLong   = latLong
-    // let newAddressSet = address
-    console.log(data)
-    // newAddressSet.push(data)
-    // setAddress(newAddressSet)
+
+    if (!latLong) {
+      showAlert("Please select your delivery location on map to add address.")
+      return
+    }
 
     showLoader()
     addNewAddress(data, false).then((response => {

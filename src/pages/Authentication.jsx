@@ -305,8 +305,8 @@ function Authentication(props) {
                 <form onSubmit={signupUser(signUpNewUser)} key={2}>
                   <Box mb={3}>
                     <TextField
-                      placeholder="Enter your first name"
-                      label="First Name"
+                      placeholder="Enter your full name"
+                      label="Full Name"
                       variant="outlined"
                       fullWidth
                       autoComplete='off'
@@ -319,7 +319,7 @@ function Authentication(props) {
                     />
                   </Box>
 
-                  <Box mb={3}>
+                  {/* <Box mb={3}>
                     <TextField
                       placeholder="Enter your last name"
                       label="Last Name"
@@ -333,7 +333,7 @@ function Authentication(props) {
                       error={Boolean(errorSignup?.lastName)}
                       helperText={errorSignup?.lastName?.message}
                     />
-                  </Box>
+                  </Box> */}
 
                   <Box mb={3}>
                     <TextField
@@ -356,7 +356,7 @@ function Authentication(props) {
                     />
                   </Box>
 
-                  <Box mb={3}>
+                  {/* <Box mb={3}>
                     <TextField
                       placeholder="Enter your email"
                       label="Email ID"
@@ -374,7 +374,7 @@ function Authentication(props) {
                       error={Boolean(errorSignup?.emailId)}
                       helperText={errorSignup?.emailId?.message}
                     />
-                  </Box>
+                  </Box> */}
 
                   <Button type="submit" variant="contained" color="primary" fullWidth>
                     Sign Up 

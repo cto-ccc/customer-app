@@ -69,14 +69,14 @@ function Profile() {
         <Box style={styles.shadowBox}>
           <Box sx={{display:'flex', flexDirection:'column', padding:'10px'}}>
             <Box sx={{marginBottom:'5px', fontSize:'20px', fontWeight:'bold', textTransform:'capitalize'}}>
-              {profileData.f_name} {profileData.l_name}
+              {profileData.f_name} 
             </Box>
             <Box sx={{marginBottom:'5px'}}>
               {profileData.phone}
             </Box>
-            <Box sx={{marginBottom:'5px'}}>
+            {/* <Box sx={{marginBottom:'5px'}}>
               {profileData.email}
-            </Box>
+            </Box> */}
           </Box>
         </Box>
 
@@ -108,7 +108,7 @@ function Profile() {
                     {item.itemDetails.totalCount}
                   </Box> */}
                   <Box mb={1} sx={{fontWeight:'bold'}}>
-                   ₹ {item.order_amount}
+                   ₹ {item.order_amount + item.shipping_cost}
                   </Box>
                   <Box mb={1}>
                     {/* {new Date(item.timeStamp).toLocaleString()} */}

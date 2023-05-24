@@ -33,23 +33,36 @@ export const CommonProvider = (props) => {
 
   const updateCart = async(itemData, isIncrease) => {
 
+    itemData = JSON.parse(JSON.stringify(itemData))
     const newCartData = cartData || {}
+
     if (newCartData[itemData.id]) {
+
+      itemData.price = newCartData[itemData.id].price
+
       newCartData[itemData.id].count = newCartData[itemData.id].count + (isIncrease ? 1 : -1)
+
       if (newCartData[itemData.id].count == 0) delete newCartData[itemData.id]
     } else {
+
+      if (itemData.extras) {
+        if (itemData.extras.skinType=='skinless') itemData.price = itemData.price + 100
+        if (itemData.extras.flavourType=='smoketurmeric') itemData.price = itemData.price + 15
+      }
+
       itemData.count = 1
-      // if (itemData.style) itemData.name = itemData.name + ` (${itemData.style})`
       newCartData[itemData.id] = itemData
     }
 
+
+
     if (isIncrease) {
-      newCartData.totalCount    = (newCartData.totalCount || 0) + 1
-      newCartData.totalAmount   = (newCartData.totalAmount || 0) + itemData.price
+      newCartData.totalCount    = (newCartData.totalCount || 0)    + 1
+      newCartData.totalAmount   = (newCartData.totalAmount || 0)   + itemData.price 
       newCartData.totalDiscount = (newCartData.totalDiscount || 0) + (itemData.mrp - itemData.price)
     } else {
-      newCartData.totalCount    = newCartData.totalCount - 1
-      newCartData.totalAmount   = newCartData.totalAmount - itemData.price
+      newCartData.totalCount    = newCartData.totalCount    - 1
+      newCartData.totalAmount   = newCartData.totalAmount   - itemData.price
       newCartData.totalDiscount = newCartData.totalDiscount - (itemData.mrp - itemData.price)
     }
     setCartData({...newCartData})

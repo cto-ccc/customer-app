@@ -156,7 +156,7 @@ function Cart() {
                           
                             { cartData[item].extras.flavourType == 'normal' ? null : 
                               <Box sx={{padding:'2px 5px', margin:'5px', border:'1px solid #a4243d', fontSize:'14px', borderRadius:'5px', width:'fit-content'}}>
-                                Smoked & Turmeric
+                                Smoked & Turmeric (+15 /-)
                               </Box>
                             }
                                             
