@@ -1,5 +1,5 @@
 import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, increment, orderBy, where, deleteDoc, arrayRemove } from "firebase/firestore";
-import { db } from '../firebase'
+import { analytics, db } from '../firebase'
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
@@ -12,6 +12,7 @@ import PicklesLogo from '../assets/pickle.png'
 import EggsLogo from '../assets/eggs.png'
 import ThirtyEggsLogo from '../assets/thirty-eggs.png'
 import ClassicCountry from '../assets/classic-country.png'
+import { logEvent } from "firebase/analytics";
 
 let userDataCache = null
 
@@ -106,6 +107,13 @@ export const getTimeSlots = () => {
 
 export const getDeliveryCharge = () => {
   return 35
+}
+
+export const logAction = (key, value) => {
+  if (value)
+    logEvent(analytics, key, {value : value})
+  else
+    logEvent(analytics, key)
 }
 
 export const getUiProductsData = (products) => {
@@ -214,7 +222,6 @@ export const getUserProductOrders = (async(userData) => {
       "body": JSON.stringify({userData : userData})
     }).then((response) => response.json())
     .then(function(data) { 
-      console.log("==========>>", data)
       if (data.error) {
         reject(data)
       } else
@@ -229,7 +236,6 @@ export const getUserProductOrders = (async(userData) => {
 
 
 export const getLanding = (async(userData) => {
-  console.log("===", userData)
   return new Promise(async(resolve, reject) => {
     const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/getLanding`, {
       "method": "POST",

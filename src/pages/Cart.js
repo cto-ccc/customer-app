@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'
 import { AuthContext } from '../contexts/AuthContext';
 import ComponentLoader from '../components/ComponentLoader';
-import { getDeliveryCharge, getImgMap } from '../services/api';
+import { getDeliveryCharge, getImgMap, logAction } from '../services/api';
 import CartOffer from '../assets/cart-offer.png'
 import Grid from '@mui/material/Unstable_Grid2';
 import ProductCard from '../components/ProductCard';
@@ -87,6 +87,7 @@ function Cart() {
 
   useEffect(() => {
     // fetchCartData()
+    logAction('PAGE_VIEW', 'CART')
     setTimeout(() => {
       setLoading(false)
     }, 1000)

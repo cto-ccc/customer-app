@@ -63,7 +63,7 @@ import Drawer from '@mui/material/Drawer';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import * as React from 'react';
-import { getCustomizedProducts, getImgMap, getLanding } from '../services/api';
+import { getCustomizedProducts, getImgMap, getLanding, logAction } from '../services/api';
 import { Capacitor } from '@capacitor/core';
 import Footer from '../Footer';
 
@@ -518,6 +518,7 @@ function Home() {
 
 
   useEffect(() => {
+    logAction('PAGE_VIEW', 'HOME_PAGE')
     printCurrentPosition()
   }, [])
 

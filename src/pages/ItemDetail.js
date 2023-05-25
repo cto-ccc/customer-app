@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import { getCustomizedProducts, getImgMap, getRecepieVideos } from '../services/api';
+import { getCustomizedProducts, getImgMap, getRecepieVideos, logAction } from '../services/api';
 import Grid from '@mui/material/Unstable_Grid2';
 import { CommonContext } from '../contexts/CommonContext';
 import Button from '@mui/material/Button'
@@ -190,7 +190,7 @@ function ItemDetail() {
   )
 
   useEffect(() => {
-
+    logAction('PAGE_VIEW', 'ITEM_DETAIL')
   })
   return (
     <Box sx={{padding:'4vw', marginTop:'5vh'}}>

@@ -58,6 +58,10 @@ function Footer() {
 
   const {isDesktop} = useContext(CommonContext)
 
+  const openUrl = (url) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
   return (
     <Box style={isDesktop ? styles.whycccDesk : styles.whyccc}>
       <Box sx={{height:'150px', }}>
@@ -138,19 +142,23 @@ function Footer() {
               Connect With Us
             </Box>
             <Box sx={{marginLeft:'4vw'}}>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
+                onClick={() => openUrl('https://www.facebook.com/Countrychickenco/')}>
                 <FacebookIcon sx={{marginRight:'10px'}} />
                 Facebook
               </Box>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
+                onClick={() => openUrl('https://www.instagram.com/countrychickenco/')}>
                 <InstagramIcon sx={{marginRight:'10px'}}/>
                 Instagram
               </Box>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
+                onClick={() => openUrl('https://api.whatsapp.com/send/?phone=7386661281&text&type=phone_number&app_absent=0')}>
                 <WhatsAppIcon sx={{marginRight:'10px'}}/>
                 WhatsApp
               </Box>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
+                onClick={() => openUrl('https://www.linkedin.com/company/74350758/admin/')}>
                 <LinkedInIcon sx={{marginRight:'10px'}}/>
                 LinkedIn
               </Box>

@@ -14,8 +14,9 @@ import Kadaknath from '../assets/kadaknath.png'
 import Warrior from '../assets/warrior.png'
 import TenderChicken from '../assets/tender-chicken.png'
 import ComponentLoader from '../components/ComponentLoader';
-import { getCategoryData, getCustomizedProducts, getImgMap } from '../services/api';
+import { getCategoryData, getCustomizedProducts, getImgMap, logAction } from '../services/api';
 import Drawer from '@mui/material/Drawer';
+import {Helmet} from "react-helmet";
 
 
 const styles = {
@@ -137,7 +138,6 @@ function Categories() {
     setTitle(resp.title)
     setCategoryData(resp.data)
     setLoading(false)
-    console.log(resp)
   }
   
 
@@ -241,6 +241,7 @@ function Categories() {
 
   
   useEffect(() => {
+    logAction('PAGE_VIEW', 'CATEGORIES')
     getProductData()
   }, [])
 

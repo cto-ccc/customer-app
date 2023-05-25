@@ -44,11 +44,11 @@ export const AuthContextProvider = (props) => {
       const { value } = await Preferences.get({ key: 'userId' }) || { value : false }
      
       if (value) {
-        console.log("User ID found in cap preferences", value)
+        // console.log("User ID found in cap preferences", value)
         setUserId(value)
         return true
       } else {
-        console.log("User ID not found in cap preferences")
+        // console.log("User ID not found in cap preferences")
         return false
       }
   }

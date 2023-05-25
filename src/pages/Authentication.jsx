@@ -5,7 +5,7 @@ import { CommonContext } from '../contexts/CommonContext';
 import { auth } from '../firebase'
 import { AuthContext } from '../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { createNewUser, getInputTheme, getUserData, registerToken, setUserData, unRegisterToken, updateUserData } from '../services/api';
+import { createNewUser, getInputTheme, getUserData, logAction, registerToken, setUserData, unRegisterToken, updateUserData } from '../services/api';
 import { getFirebaseError } from '../services/error-codes';
 import {
   PushNotifications,
@@ -37,7 +37,7 @@ const styles = {
 
 function Authentication(props) {
 
-  const [showSignIn, setShowSignIn] = useState(true)
+  const [showSignIn, setShowSignIn] = useState(false)
   const [mobileNo, setMobileNo] = useState(null)
   const [deviceToken, setDeviceToken] = useState(null)
   const [isActive, setIsActive] = useState(false)
@@ -57,11 +57,11 @@ function Authentication(props) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    
+    logAction('PAGE_VIEW', 'AUTHENTICATION')
     async function checkLogin() {
-      console.log("Check login in auth page")
+      // console.log("Check login in auth page")
       const resp = await isUserLoggedIn()
-      console.log("Response from is user login : ", resp)
+      // console.log("Response from is user login : ", resp)
       if (resp) {
         navigate("/", {replace:true})
       }
@@ -97,7 +97,7 @@ function Authentication(props) {
 
     showLoader()
     setMobileNo(data.mobileNo)
-
+    logAction('USER_LOGIN')
     getUserData(data.mobileNo, false).then((response => {
       if (response) {
         setUserProfile(response)
@@ -114,6 +114,7 @@ function Authentication(props) {
 
   const signUpNewUser = (data) => {
 
+    logAction('USER_REGISTRATION')
     getUserData(data.mobileNo, false).then((response => {
       if (response) {
         showAlert(<>Mobile number already registered. Please login.</>)
