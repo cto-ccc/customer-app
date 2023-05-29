@@ -87,7 +87,7 @@ function Cart() {
 
   useEffect(() => {
     // fetchCartData()
-    logAction('PAGE_VIEW', 'CART')
+    logAction('PAGE_VIEW', 'cart')
     setTimeout(() => {
       setLoading(false)
     }, 1000)

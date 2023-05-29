@@ -14,7 +14,7 @@ import Kadaknath from '../assets/kadaknath.png'
 import Warrior from '../assets/warrior.png'
 import TenderChicken from '../assets/tender-chicken.png'
 import ComponentLoader from '../components/ComponentLoader';
-import { getCategoryData, getCustomizedProducts, getImgMap, logAction } from '../services/api';
+import { getCategoryData, getCustomizedProducts, getImgMap, getMetaData, logAction } from '../services/api';
 import Drawer from '@mui/material/Drawer';
 import {Helmet} from "react-helmet";
 
@@ -123,6 +123,8 @@ function Categories() {
   const [title, setTitle] = useState('')
   const [categoryData, setCategoryData] = useState([])
 
+
+  const [metaData, setMetaData] = useState(getMetaData())
 
   async function addToCart(item) {
     if (getCustomizedProducts().includes(item.id)) {
@@ -241,7 +243,7 @@ function Categories() {
 
   
   useEffect(() => {
-    logAction('PAGE_VIEW', 'CATEGORIES')
+    logAction('PAGE_VIEW', {id})
     getProductData()
   }, [])
 
@@ -251,6 +253,11 @@ function Categories() {
         loading ? 
         <ComponentLoader /> : 
         <Box>
+          <Helmet>
+            <title>{metaData[id].title}</title>
+            <meta name='description' content={metaData[id].description} />
+            <meta name='keywords' content={metaData[id].keywords} />
+          </Helmet>
           <Box sx={{color:'#a4243d', fontSize:'20px', ml:2,mb:1, fontWeight:'bold'}}>
             {title}
           </Box>

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ComponentLoader from '../components/ComponentLoader';
 import { useContext, useEffect, useState } from 'react';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { getClientDetails, updateOrderStatus } from '../services/api';
+import { getClientDetails, logAction, updateOrderStatus } from '../services/api';
 import { CommonContext } from '../contexts/CommonContext';
 
 const styles = {
@@ -26,8 +26,8 @@ function OrderDetails() {
 
 
   useEffect(() => {
-    console.log("==========>>>", location.state)
-
+    // console.log("==========>>>", location.state)
+    logAction('PAGE_VIEW', 'order-details')
   }, [])  
 
 

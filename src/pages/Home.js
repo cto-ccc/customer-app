@@ -63,9 +63,10 @@ import Drawer from '@mui/material/Drawer';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import * as React from 'react';
-import { getCustomizedProducts, getImgMap, getLanding, logAction } from '../services/api';
+import { getCustomizedProducts, getImgMap, getLanding, getMetaData, logAction } from '../services/api';
 import { Capacitor } from '@capacitor/core';
 import Footer from '../Footer';
+import { Helmet } from 'react-helmet';
 
 
 const styles = {
@@ -366,6 +367,7 @@ function Home() {
 
   const [itemsData, setItemsData] = useState([])
   const [latLong, setLatLong] = useState(null)
+  const [metaData, setMetaData] = useState(getMetaData()['home'])
 
   const printCurrentPosition = async() => {
 
@@ -518,7 +520,7 @@ function Home() {
 
 
   useEffect(() => {
-    logAction('PAGE_VIEW', 'HOME_PAGE')
+    logAction('PAGE_VIEW', 'home')
     printCurrentPosition()
   }, [])
 
@@ -528,6 +530,11 @@ function Home() {
       animate={{opacity:1}}
       exit={{x:-window.innerWidth, transition:{duration:isDesktop ? 0 : 0.1}}}>
       <Box>
+        <Helmet>
+          <title>{metaData.title}</title>
+          <meta name='description' content={metaData.description} />
+          <meta name='keywords' content={metaData.keywords} />
+        </Helmet>
       <Box style={styles.navbar}>
         <Box>
           <Box onClick={() => navigate('/')}>
@@ -544,7 +551,7 @@ function Home() {
               About Us
             </Box>
             <Box p={2} onClick={() => navigate('/recipies')} style={styles.navItem}>
-              Our Recipies
+              Our Recipes
             </Box>
             <Box onClick={() => goToProfile()} p={2} style={styles.navItem}>
               Profile

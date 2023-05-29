@@ -3,7 +3,7 @@ import {auth} from '../firebase'
 import { signOut } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 import { CommonContext } from './CommonContext';
-import { removeUserCache } from '../services/api';
+import { logAction, removeUserCache } from '../services/api';
 import { Preferences } from '@capacitor/preferences';
 
 export const AuthContext = React.createContext()
@@ -73,6 +73,7 @@ export const AuthContextProvider = (props) => {
 
 
   async function logout() {
+    logAction('logout')
     showLoader()
     signOut(auth).then(async () => {
       hideLoader()

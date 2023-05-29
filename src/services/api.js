@@ -104,9 +104,44 @@ export const getTimeSlots = () => {
   ]
 }
 
-
 export const getDeliveryCharge = () => {
   return 35
+}
+
+export const getMetaData = () => {
+  return {
+
+    'home' : {
+      title : 'Country Chicken Co - Authentic Natu Kodi in Hyderabad',
+      keywords : 'countrychicken, natu kodi, healthy chicken, country eggs, chicken pickles, free range, antibiotic, steroids free',
+      description : 'Country Chicken Co. brings you authentic natu kodi (country chicken) in Hyderabad. Our free-range chickens are raised without antibiotics. Buy now online and experience the goodness of authentic country chicken, conveniently delivered to your doorstep'
+    },
+    'free-range-birds' : {
+      title : 'Naturally Grown, Free Range, and Healthy Country Chicken (Natu Kodi)',
+      keywords : 'Country chicken, natu kodi, free range, naturally grown, near you, beyond organic, healthy Free Range, Naturally Grown',
+      description : 'We believe in providing our chickens with a stress-free life. Thats why all our poultry is free-range, allowing them to engage in natural behaviors, roam outdoors, and forage for their food. We follow sustainable farming practices and avoid the use of hormones or antibiotics'
+    },
+    'village-birds' : {
+      title : 'Village Birds: Order Now in Hyderabad for Authentic Natu Kodi (Country Chicken)',
+      keywords : 'Country Chicken Co., Village Birds, Order Now, Hyderabad, Authentic Natu Kodi, Backyard-raised Poultry',
+      description : 'Discover the Taste of Pure Tradition with Country Chicken Co Village Birds. Located in Hyderabad, we bring you the finest selection of Natu Kodi (Country Chicken) raised by local farmers. Our poultry is free-range and nurtured naturally, offering you an authentic farm-fresh experience. Place your order now to enjoy the natural and healthy goodness of our Village Birds.'
+    },
+    'eggs' : {
+      title : 'Finest Free-Range, Cage-Free Brown Eggs and Country Eggs in Hyderabad',
+      keywords : 'free-range, cage-free, order now online, lowest price, best quality',
+      description : 'Buy The finest free-range, cage-free brown eggs and country eggs in Hyderabad at Country Chicken Co. Order now online for the lowest prices and experience the best quality eggs that are ethically sourced.'
+    },
+    'pickles' : {
+      title : 'Authentic Country Chicken Pickle for Order in Hyderabad',
+      keywords: 'country chicken pickle, authentic, finest spices, order, buy now, Hyderabad',
+      description : 'Satisfy your cravings with our authentic Country Chicken Pickle. Made with the finest spices and locally sourced chicken, order now for quick delivery in Hyderabad. Experience the irresistible taste of tradition.'
+    },
+    'recipes' : {
+      title : 'Finest Natukodi Recipes',
+      keywords : 'Country Chicken Co., Natukodi recipes, finest flavors, traditional favorites, innovative creations, delicious possibilities',
+      description : 'Explore our curated collection featuring traditional favorites and innovative creations that will tantalize your taste buds. Join our vibrant community of food enthusiasts as we unlock a world of delicious possibilities with the best Natukodi flavors.'
+    }
+  }
 }
 
 export const logAction = (key, value) => {

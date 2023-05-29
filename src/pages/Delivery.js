@@ -13,7 +13,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Preferences } from '@capacitor/preferences';
 import { CommonContext } from '../contexts/CommonContext';
 import { motion } from 'framer-motion'
-import { addNewAddress, getAllUserAddress } from '../services/api';
+import { addNewAddress, getAllUserAddress, logAction } from '../services/api';
 import { getFirebaseError } from '../services/error-codes';
 import { AuthContext } from '../contexts/AuthContext';
 import  ComponentLoader from '../components/ComponentLoader'
@@ -138,7 +138,7 @@ function Delivery() {
   function onPlaceChanged() {
     if (searchResult != null) {
       const place = searchResult.getPlace();
-      console.log("===", place.geometry.location.lat(), place.geometry.location.lng())
+      // console.log("===", place.geometry.location.lat(), place.geometry.location.lng())
       const name = place.name;
       const status = place.business_status;
       const formattedAddress = place.formatted_address;
@@ -150,15 +150,16 @@ function Delivery() {
       }
       setLatLong(window['currentLocation'])
 
-      console.log(`Name: ${name}`);
-      console.log(`Business Status: ${status}`);
-      console.log(`Formatted Address: ${formattedAddress}`);
+      // console.log(`Name: ${name}`);
+      // console.log(`Business Status: ${status}`);
+      // console.log(`Formatted Address: ${formattedAddress}`);
     } else {
       showAlert("Please enter address for map", "error")
     }
   }
 
   useEffect(() => {
+    logAction('PAGE_VIEW', 'delivery')
     setDeliverySlots('Today')
     printCurrentPosition()
     getUserAddress()

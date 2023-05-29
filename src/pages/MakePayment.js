@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import { useLocation, useNavigate, useHistory } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { getFirebaseError } from '../services/error-codes';
-import { createNewOrder, getDeliveryCharge, getTimeSlots } from '../services/api';
+import { createNewOrder, getDeliveryCharge, getTimeSlots, logAction } from '../services/api';
 import { Checkout } from 'capacitor-razorpay';
 import PaymentFailed from '../assets/payment-failed.png'
 
@@ -19,15 +19,17 @@ function MakePayment() {
 
   const location = useLocation()
   
-  const { showLoader, hideLoader, showAlert, showSnackbar } = useContext(CommonContext)
+  const { showLoader, hideLoader, showAlert, showSnackbar, isDesktop } = useContext(CommonContext)
   const { getUserId, getCustomerId } = useContext(AuthContext)
   const [loading, setLoading] = useState(true)
 
   const navigate = useNavigate()
 
   useEffect(() => {
+    logAction('PAGE_VIEW', 'make-payment')
     initiatePaymentWithCashFree()
     // initiatePaymentWithRazorpay()
+    // initiatePaymentWithCashFreeSDK()
   }, [])
 
 
@@ -168,7 +170,7 @@ function MakePayment() {
           {/* Enable For RazorPay */}
           {/* Loading... Please Wait */}
 
-          <div id="payment-form" className='hello'></div>
+          <div id="payment-form" className={isDesktop ? 'gateway-cont-desk' : 'gateway-cont-mob' }></div>
         </Box> : 
         <Box sx={{textAlign:'center'}}>
           <Box sx={{mb:2}}>

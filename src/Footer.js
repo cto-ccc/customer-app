@@ -85,7 +85,7 @@ function Footer() {
               </Box>
               <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
                 onClick={() => navigate('/recipies')}>
-                Our Recipies
+                Our Recipes
               </Box>
               <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
                 onClick={() => navigate('/contactUs')}>

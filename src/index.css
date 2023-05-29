@@ -63,8 +63,13 @@ code {
   width: 100%;
 }
 
-.hello {
+.gateway-cont-desk {
   width: 50vw !important;
   height: 100% !important;
   margin:20px;
+}
+
+.gateway-cont-mob {
+  width: 100vw !important;
+  height: 100% !important;
 }

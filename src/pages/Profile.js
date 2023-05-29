@@ -6,7 +6,7 @@ import { getFirebaseError } from '../services/error-codes';
 import { AuthContext } from '../contexts/AuthContext';
 import  ComponentLoader from '../components/ComponentLoader'
 import { CommonContext } from '../contexts/CommonContext';
-import { getUiProductsData, getUserProductOrders, getUserProfileData } from '../services/api';
+import { getUiProductsData, getUserProductOrders, getUserProfileData, logAction } from '../services/api';
 import { Paper } from '@mui/material';
 
 const styles = {
@@ -29,6 +29,7 @@ function Profile() {
   const [specifications, setSpecifications] = useState({})
 
   useEffect(() => {
+    logAction('PAGE_VIEW', 'profile')
     getUserProfile()
   }, [])
 

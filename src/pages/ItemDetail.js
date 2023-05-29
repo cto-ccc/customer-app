@@ -8,6 +8,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { CommonContext } from '../contexts/CommonContext';
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer';
+import { Helmet } from 'react-helmet';
 
 
 const styles = {
@@ -190,10 +191,14 @@ function ItemDetail() {
   )
 
   useEffect(() => {
-    logAction('PAGE_VIEW', 'ITEM_DETAIL')
+    logAction('PAGE_VIEW', `${location.state.name.split(' ').join('-')}`)
   })
   return (
     <Box sx={{padding:'4vw', marginTop:'5vh'}}>
+      <Helmet>
+        <title>{location.state.name}</title>
+        <meta name='description' content={location.state.description} />
+      </Helmet>
       <Grid container>
         {/* <Box sx={{padding:'10px', border:'1px solid #eaeaea', boxShadow:'0 0 5px 5px #eaeaea'}}> */}
           <Grid xs={12} sm={12} md={5} lg={5} style={isDesktop ? styles.productGridContDesk : styles.productGridCont}>

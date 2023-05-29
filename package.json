@@ -36,9 +36,9 @@
   },
   "scripts": {
     "start": "env-cmd -f .env.development react-scripts start",
-    "build": "env-cmd -f .env.development react-scripts build",
-    "start:prod": "env-cmd -f .env.production react-scripts start",
-    "build:prod": "env-cmd -f .env.production react-scripts build"
+    "build": "env-cmd -f .env.development react-scripts build && cp sitemap.xml build/ && cp .htaccess build/",
+    "start:prod": "env-cmd -f .env.production react-scripts start && cp sitemap.xml build/ && cp .htaccess build/",
+    "build:prod": "env-cmd -f .env.production react-scripts build && cp sitemap.xml build/ && cp .htaccess build/"
   },
   "eslintConfig": {
     "extends": [

@@ -97,7 +97,7 @@ function Authentication(props) {
 
     showLoader()
     setMobileNo(data.mobileNo)
-    logAction('USER_LOGIN')
+    logAction('login')
     getUserData(data.mobileNo, false).then((response => {
       if (response) {
         setUserProfile(response)
@@ -114,7 +114,7 @@ function Authentication(props) {
 
   const signUpNewUser = (data) => {
 
-    logAction('USER_REGISTRATION')
+    logAction('signup')
     getUserData(data.mobileNo, false).then((response => {
       if (response) {
         showAlert(<>Mobile number already registered. Please login.</>)

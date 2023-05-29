@@ -115,7 +115,7 @@ function Header() {
               About Us
             </Box>
             <Box p={2} onClick={() => navigate('/recipies')} style={styles.navItem}>
-              Our Recipies
+              Our Recipes
             </Box>
             <Box onClick={() => goToProfile()} p={2} style={styles.navItem}>
               Profile

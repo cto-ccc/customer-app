@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
 import ComponentLoader from '../components/ComponentLoader';
 import { Grid } from '@mui/material';
-import { getRecepieVideos } from '../services/api';
+import { getRecepieVideos, logAction } from '../services/api';
 
 
 const styles = {
@@ -23,7 +23,7 @@ function Recipeies() {
 
   
   useEffect(() => {
-
+    logAction('PAGE_VIEW', 'recipes')
   }, [])
   
 
@@ -34,7 +34,7 @@ function Recipeies() {
         <ComponentLoader /> : 
         <Box>
           <Box sx={{fontSize:'25px', marginTop:'20px'}}>
-            Our Recipies
+            Our Recipes
           </Box>
            <Grid container>
            {
