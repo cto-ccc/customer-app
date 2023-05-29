@@ -243,7 +243,7 @@ function Categories() {
 
   
   useEffect(() => {
-    logAction('PAGE_VIEW', {id})
+    logAction('PAGE_VIEW', id)
     getProductData()
   }, [])
 

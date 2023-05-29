@@ -57,7 +57,7 @@ function Authentication(props) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    logAction('PAGE_VIEW', 'AUTHENTICATION')
+    logAction('PAGE_VIEW', 'authentication')
     async function checkLogin() {
       // console.log("Check login in auth page")
       const resp = await isUserLoggedIn()
