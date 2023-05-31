@@ -58,7 +58,7 @@ function Delivery() {
   const { getCartData } = useContext(CommonContext)
   const [loading, setLoading] = useState(true)
   const [address, setAddress] = useState([])
-  const [latLong, setLatLong] = useState(null)
+  const [latLong, setLatLong] = useState({lat : 17.3850, lng : 78.4867})
   const [searchResult, setSearchResult] = useState("Result: none")
 
   const [delSlot, setDelSlot] = useState(null)
@@ -176,16 +176,17 @@ function Delivery() {
 
   const printCurrentPosition = async() => {
 
-    const coordinates = await Geolocation.getCurrentPosition()
+    const coordinates = await Geolocation.getCurrentPosition().catch((err) => {
+      //User denied location permission
+    })
 
-    console.log('Current position:', coordinates)
     setLatLong({
-      lat : coordinates.coords.latitude,
-      lng : coordinates.coords.longitude
+      lat : coordinates?.coords.latitude || 17.3850,
+      lng : coordinates?.coords.longitude || 78.4867
     })
     window['currentLocation'] = {
-      lat : coordinates.coords.latitude,
-      lng : coordinates.coords.longitude
+      lat : coordinates?.coords.latitude || 17.3850,
+      lng : coordinates?.coords.longitude || 78.4867
     }
   }
 
