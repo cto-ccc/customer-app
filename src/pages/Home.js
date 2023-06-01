@@ -370,31 +370,12 @@ function Home() {
   const [metaData, setMetaData] = useState(getMetaData()['home'])
 
   const printCurrentPosition = async() => {
-
-    // const coordinates = await Geolocation.getCurrentPosition()
-    const coordinates = {
-      coords : {
-        latitude : '17.4498424',
-        longitude : '78.398782'
-      }
-    }
-
-    setLatLong({
-      lat : coordinates.coords.latitude,
-      lng : coordinates.coords.longitude
-    })
-
-    getLanding({}).then((resp) => {
+    getLanding(navigator.userAgent).then((resp) => {
       setItemsData(resp)
       setLoading(false)
     }).catch((err) => {
       setLoading(false)
     })
-
-    window['currentLocation'] = {
-      lat : coordinates.coords.latitude,
-      lng : coordinates.coords.longitude
-    }
   }
 
   async function addToCart(item) {
