@@ -8,6 +8,8 @@ import { getFirebaseError } from '../services/error-codes';
 import { createNewOrder, getDeliveryCharge, getTimeSlots, logAction } from '../services/api';
 import { Checkout } from 'capacitor-razorpay';
 import PaymentFailed from '../assets/payment-failed.png'
+import { registerPlugin } from '@capacitor/core';
+import Gateway from '../components/PaymentGateway';
 
 const styles = {
   paymentLogo : {
@@ -114,7 +116,7 @@ function MakePayment() {
   }
 
   async function initiatePaymentWithCashFree() {
-    const orderResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/createCashFreeOrder`, {
+    const orderResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/createCashFreeNativeOrder`, {
       "method"  : "POST",
       "headers" : {
         "content-type"  : "application/json",
@@ -126,40 +128,83 @@ function MakePayment() {
     }).then((response) => response.json())
     .then(function(data) { 
    
-      const success = (data) => {
-        placeOrder(data.transaction.transactionId)
-      }
+      // const success = (data) => {
+      //   placeOrder(data.transaction.transactionId)
+      // }
 
-      const failure = (data) => {
-        setLoading(false)
-      }
+      // const failure = (data) => {
+      //   setLoading(false)
+      // }
 
-      const dropConfig = {
-        "components": [
-            "order-details",
-            "card",
-            "netbanking",
-            "app",
-            "upi"
-        ],
-        "onSuccess": success,
-        "onFailure": failure,
-        "style": {
-            "backgroundColor": "#ffffff",
-            "color": "#11385b",
-            "fontFamily": "Lato",
-            "fontSize": "14px",
-            "errorColor": "#ff0000",
-            "theme": "light", //(or dark)
-        }
-    }
-      const cashfree = new window.Cashfree(data.payment_session_id);
-      cashfree.drop(document.getElementById("payment-form"), dropConfig);
+    //   const dropConfig = {
+    //     "components": [
+    //         "order-details",
+    //         "card",
+    //         "netbanking",
+    //         "app",
+    //         "upi"
+    //     ],
+    //     "onSuccess": success,
+    //     "onFailure": failure,
+    //     "style": {
+    //         "backgroundColor": "#ffffff",
+    //         "color": "#11385b",
+    //         "fontFamily": "Lato",
+    //         "fontSize": "14px",
+    //         "errorColor": "#ff0000",
+    //         "theme": "light", //(or dark)
+    //     }
+    // }
+
+
+      console.log("=======data=======", JSON.stringify(data))
+
+      testGateway({orderId : data.order_id, paymentSessionId :  data.payment_session_id})
+
+      // const pg = registerPlugin('PaymentGateway');
+      // pg.initiatePayment()
+
+      // const cashfree = new window.Cashfree(data.payment_session_id);
+      // cashfree.drop(document.getElementById("payment-form"), dropConfig);
       // cashfree.redirect()
     })
     .catch((error) => console.log(error))
   }
 
+
+
+  const testGateway = async(data) => {
+    console.log("=======testing gatw======", JSON.stringify(data))
+    const resp = await Gateway.initiatePayment(data);
+    console.log("=============", JSON.stringify(resp))
+
+    if (resp.status == 'SUCCESS') {
+
+      console.log("=========", JSON.stringify(data))
+      const orderResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/getCashfreePaymentId`, {
+        "method"  : "POST",
+        "headers" : {
+          "content-type"  : "application/json",
+          "accept"        : "application/json"
+        },
+        "body": JSON.stringify({
+          orderId : data.orderId
+        })
+      }).then((response) => response.json())
+      .then(function(data) { 
+        console.log("=========paymentid succ==", JSON.stringify(data))
+        placeOrder(data[0].cf_payment_id)
+      })
+      .catch((error) => 
+      console.log("======paymentid error===========", error)
+      
+      )
+      
+    } else {
+      setLoading(false)
+    }
+
+  }
   return (
     <Box sx={{minHeight:'80vh', marginTop:'10vh', display:'flex', alignItems:'center', justifyContent:'center'}}>
       

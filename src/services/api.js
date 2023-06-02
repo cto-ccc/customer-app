@@ -317,6 +317,42 @@ export const getCategoryData = (async(key) => {
 })
 
 
+export const createNewCashFreeNativeSdkOrder = (async(key) => {
+  return new Promise(async(resolve, reject) => {
+    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/createCashFreeNativeOrder`, {
+      "method": "POST",
+      "headers": {
+        'Content-Type'    : 'application/json',
+        'accept'          : 'application/json',
+        'x-api-version'   : '2022-09-01' ,
+        'x-client-id'     : `175390c4dd28a5f186e213ab75093571`,
+        'x-client-secret' : `535c294271568909d7fd9d6aa1d1d7ca7eee6574`
+      },
+      "body": JSON.stringify({id : key})
+    }).then((response) => response.json())
+    .then(function(data) { 
+      if (data.error) {
+        reject(data)
+      } else
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
+    })
+  })
+})
+
+
+
+
+
+
+
+
+
+
+
 // Should remove id and fetch from cookie
 export const getUserData = (async(id, verifyToken) => {
   // console.log("getting user data for : ", id)

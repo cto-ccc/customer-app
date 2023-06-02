@@ -22,6 +22,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "capacitor-razorpay": "git+https://github.com/razorpay/razorpay-capacitor.git",
+    "cordova-plugin-cashfree-pg": "^1.0.3",
     "env-cmd": "^10.1.0",
     "firebase": "^9.18.0",
     "framer-motion": "^10.9.1",

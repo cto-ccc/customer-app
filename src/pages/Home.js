@@ -64,9 +64,10 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import * as React from 'react';
 import { getCustomizedProducts, getImgMap, getLanding, getMetaData, logAction } from '../services/api';
-import { Capacitor } from '@capacitor/core';
+import { Capacitor, registerPlugin } from '@capacitor/core';
 import Footer from '../Footer';
 import { Helmet } from 'react-helmet';
+import Gateway from '../components/PaymentGateway';
 
 
 const styles = {
@@ -519,7 +520,8 @@ function Home() {
   )
 
 
-  useEffect(() => {
+
+  useEffect(() => {    
     logAction('PAGE_VIEW', 'home')
     printCurrentPosition()
   }, [])
