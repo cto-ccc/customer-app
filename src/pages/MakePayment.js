@@ -8,6 +8,8 @@ import { getFirebaseError } from '../services/error-codes';
 import { createNewOrder, getDeliveryCharge, getTimeSlots, logAction } from '../services/api';
 import { Checkout } from 'capacitor-razorpay';
 import PaymentFailed from '../assets/payment-failed.png'
+import { Capacitor } from '@capacitor/core';
+import CashfreePaymentBridge from '../components/CashfreePaymentBridge';
 
 const styles = {
   paymentLogo : {
@@ -114,6 +116,7 @@ function MakePayment() {
   }
 
   async function initiatePaymentWithCashFree() {
+
     const orderResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/createCashFreeOrder`, {
       "method"  : "POST",
       "headers" : {
@@ -126,40 +129,73 @@ function MakePayment() {
         customerId : await getCustomerId()
       })
     }).then((response) => response.json())
-    .then(function(data) { 
+      .then(function(data) { 
    
-      const success = (data) => {
-        placeOrder(data.transaction.transactionId)
-      }
-
-      const failure = (data) => {
-        setLoading(false)
-      }
-
-      const dropConfig = {
-        "components": [
-            "order-details",
-            "card",
-            "netbanking",
-            "app",
-            "upi"
-        ],
-        "onSuccess": success,
-        "onFailure": failure,
-        "style": {
-            "backgroundColor": "#ffffff",
-            "color": "#11385b",
-            "fontFamily": "Lato",
-            "fontSize": "14px",
-            "errorColor": "#ff0000",
-            "theme": "light", //(or dark)
+        const success = (data) => {
+          placeOrder(data.transaction.transactionId)
         }
-    }
-      const cashfree = new window.Cashfree(data.payment_session_id);
-      cashfree.drop(document.getElementById("payment-form"), dropConfig);
-      // cashfree.redirect()
+
+        const failure = (data) => {
+          setLoading(false)
+        }
+
+        const dropConfig = {
+          "components": [
+              "order-details",
+              "upi",
+              "card",
+              "app",
+              "netbanking",
+              "paylater"
+          ],
+          "onSuccess": success,
+          "onFailure": failure,
+          "style": {
+              "backgroundColor" : "#ffffff",
+              "color"           : "#a4243d",
+              "fontFamily"      : "Lato",
+              "fontSize"        : "14px",
+              "errorColor"      : "#ff0000",
+              "theme"           : "light", 
+          }
+        }
+
+        if (Capacitor.getPlatform() == 'web') {
+
+          const cashfree = new window.Cashfree(data.payment_session_id)
+          cashfree.drop(document.getElementById("payment-form"), dropConfig)
+        } else {
+
+          initiatePaymentThroughBridge({paymentSessionId : data.payment_session_id, orderId : data.order_id})
+        }
     })
     .catch((error) => console.log(error))
+  }
+
+  const initiatePaymentThroughBridge = async(data) => {
+    
+    const resp = await CashfreePaymentBridge.initiatePayment(data)
+
+    if (resp.status == 'SUCCESS') {
+
+      const orderResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/getCashfreePaymentId`, {
+        "method"  : "POST",
+        "headers" : {
+          "content-type"  : "application/json",
+          "accept"        : "application/json"
+        },
+        "body": JSON.stringify({
+          orderId : data.orderId
+        })
+      }).then((response) => response.json())
+      .then(function(data) { 
+        placeOrder(data[0].cf_payment_id)
+      }).catch((error) => 
+        console.log("Error in processing payment")
+      )
+    } else {
+      setLoading(false)
+    }
   }
 
   return (

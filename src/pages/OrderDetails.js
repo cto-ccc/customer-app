@@ -26,7 +26,6 @@ function OrderDetails() {
 
 
   useEffect(() => {
-    // console.log("==========>>>", location.state)
     logAction('PAGE_VIEW', 'order-details')
   }, [])  
 
