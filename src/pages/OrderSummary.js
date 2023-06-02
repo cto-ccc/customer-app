@@ -56,7 +56,8 @@ function OrderSummary() {
       customerId     : await getCustomerId(),
       deliveryDate   : location.state.delDate,
       deliverySlot   : getTimeSlots().filter((slot) => slot.id == location.state.delSlotId)[0].pranaId,
-      totalDiscount  : location.state.totalDiscount
+      totalDiscount  : location.state.totalDiscount,
+      storeDetails   : location.state.storeDetails
     } 
 
     let ordersObj = JSON.parse(JSON.stringify(location.state.itemDetails))
@@ -84,6 +85,10 @@ function OrderSummary() {
         <Box>
       <Box sx={{fontSize:'20px', fontWeight:'700', marginBottom:'10px'}}>
         Order Summary
+      </Box>
+
+      <Box sx={{fontSize:'14px', fontWeight:'400', marginBottom:'10px'}}>
+        Your order will be delivered from {location.state.storeDetails.storeName} store
       </Box>
 
       <Box sx={{margin:'20px 0 10px 5px', fontSize:'18px',color:'#a4243d', marginTop:'20px'}}>

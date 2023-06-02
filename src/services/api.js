@@ -316,6 +316,37 @@ export const getCategoryData = (async(key) => {
   })
 })
 
+export const getNearestStoreDetails = (async(data) => {
+  return new Promise(async(resolve, reject) => {
+    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/getNearestStoreDetails`, {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      "body": JSON.stringify(data)
+    }).then((response) => response.json())
+    .then(function(data) { 
+      if (data.error) {
+        reject(data)
+      } else
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
+    })
+  })
+})
+
+
+
+
+
+
+
+
+
 
 // Should remove id and fetch from cookie
 export const getUserData = (async(id, verifyToken) => {

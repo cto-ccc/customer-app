@@ -13,7 +13,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Preferences } from '@capacitor/preferences';
 import { CommonContext } from '../contexts/CommonContext';
 import { motion } from 'framer-motion'
-import { addNewAddress, getAllUserAddress, logAction } from '../services/api';
+import { addNewAddress, getAllUserAddress, getNearestStoreDetails, logAction } from '../services/api';
 import { getFirebaseError } from '../services/error-codes';
 import { AuthContext } from '../contexts/AuthContext';
 import  ComponentLoader from '../components/ComponentLoader'
@@ -61,8 +61,11 @@ function Delivery() {
   const [latLong, setLatLong] = useState({lat : 17.3850, lng : 78.4867})
   const [searchResult, setSearchResult] = useState("Result: none")
 
+  const [selectedAddrIndex, setSelectedAddrIndex] = useState(null)
+
   const [delSlot, setDelSlot] = useState(null)
   const [delDate, setDelDate] = useState('Today')
+  const [storeDetails, setStoreDetails] = useState(null)
 
   const [filteredSlots, setFilteredSlots] = useState([])
   const [timeSlots, setTimeSlots] = useState([
@@ -251,12 +254,28 @@ function Delivery() {
       paymentMode    : paymentMode,
       delSlotId      : delSlot,
       delDate        : delDate,
+      storeDetails   : storeDetails,
       itemDetails    : await getCartData()
     }
     navigate(`/orderSummary`, {state : summaryProps, replace:true})
   }
 
   const handleAddressChange = async(event) => {
+
+    event.preventDefault()
+
+    showLoader()
+    const resp = await getNearestStoreDetails(address[event.target.value].latLong)
+    hideLoader()
+
+    if (!resp.branchId || !resp.locCode) {
+      showAlert("Sorry, Country Chicken Co delivery is currently unavailable for the selected address.")
+      setDeliveryAddress(null)
+      return
+    } 
+
+    setSelectedAddrIndex(event.target.value)
+    setStoreDetails(resp)
     setDeliveryAddress(address[event.target.value])
   }
 
@@ -278,7 +297,7 @@ function Delivery() {
         <Box style={styles.titleCont}>
           Delivery Details
         </Box>
-            <RadioGroup onChange={handleAddressChange}>
+            <RadioGroup onChange={handleAddressChange} value={selectedAddrIndex}>
             {
               address.map((address, index) => {
                 return <Box key={index}>

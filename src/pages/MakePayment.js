@@ -121,7 +121,9 @@ function MakePayment() {
         "accept"        : "application/json"
       },
       "body": JSON.stringify({
-        amount   : location.state.itemDetails.totalAmount + getDeliveryCharge()
+        amount     : location.state.itemDetails.totalAmount + getDeliveryCharge(),
+        mobileNo   : await getUserId(),
+        customerId : await getCustomerId()
       })
     }).then((response) => response.json())
     .then(function(data) { 
@@ -162,8 +164,6 @@ function MakePayment() {
 
   return (
     <Box sx={{minHeight:'80vh', marginTop:'10vh', display:'flex', alignItems:'center', justifyContent:'center'}}>
-      
-      
       {
         loading ?
         <Box>
