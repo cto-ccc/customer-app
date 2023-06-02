@@ -270,7 +270,6 @@ function Delivery() {
 
     if (!resp.branchId || !resp.locCode) {
       showAlert("Sorry, Country Chicken Co delivery is currently unavailable for the selected address.")
-      setDeliveryAddress(null)
       return
     } 
 
