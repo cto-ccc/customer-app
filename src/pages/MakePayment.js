@@ -72,6 +72,7 @@ function MakePayment() {
       addressDetails : location.state.addressDetails,
       totalCount     : location.state.itemDetails.totalCount,
       totalAmount    : location.state.itemDetails.totalAmount,
+      storeDetails   : location.state.storeDetails,
       paymentMode    : location.state.paymentMode,
       customerId     : await getCustomerId(),
       txnId          : txnId,
