@@ -253,8 +253,15 @@ function ItemDetail() {
                         </Box>
                       </Box> : 
                       <Box>
-                        <Button sx={{width: isDesktop ? '50%' : '100%'}} variant='contained'
-                        onClick={() => addToCart(location.state)}>Add To Cart</Button>
+                        {
+                          location.state.stockQty == 0 ? 
+                            <Button variant='outlined' sx={{width: isDesktop ? '50%' : '100%', opacity:'0.6'}} disabled>
+                              Out of stock
+                            </Button> :
+                            <Button sx={{width: isDesktop ? '50%' : '100%'}} variant='contained'
+                              onClick={() => addToCart(location.state)}>Add To Cart</Button>
+                        }
+                        
                       </Box>
                     }
         

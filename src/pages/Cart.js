@@ -57,16 +57,19 @@ function Cart() {
   const [loading, setLoading] = useState(true)
   const [offerProds, setOfferProds] = useState([
     {
-      name : 'Country Eggs',
-      mrp : 149,
-      price:99,
-      id : 'C043',
+      name : 'Brown Eggs',
+      price : 79,
+      mrp:149,
+      id : 'C041',
       qty : '6 Pack',
       imgUrl : 'EggsLogo',
   
-      preferredBy:'Health-Conscious Individuals',
-      healthBenefits:'Contains vital nutrients – Vitamins A, B5, B12 and E, including phosphorus and iodine, helps to improve good cholesterol levels and aids weight management',
-      description:'Our country eggs are the perfect addition to any healthy diet, especially for women who need essential nutrients to maintain their health. At CountryChickenCo, we source our eggs from local villages, where our country hens are free-range and only fed natural diets without any antibiotics or vaccines. Our commitment to natural farming practices ensures that our eggs are not only healthy but also sustainably produced.'
+      preferredBy:'Everyone',
+      healthBenefits:'Strengthens immunity, good for the heart, aids in building strong muscles and helps gain healthy skin & hair',
+  
+      stockQty : 1,
+
+      description:'Our free-range eggs are produced by happy, pasture-raised hens and are 100% hormone and antibiotic-free. They are rich in essential nutrients and proteins that promote good health, including stronger immunity, healthier skin and hair, and stronger muscles. We do not use any yolk colour enhancers, and we conduct rigorous quality checks on all our feed ingredients to ensure that you get the best quality eggs possible.\n\nNaturally Nourishing Free-Range Eggs, produced by happy, pasture-raised hens. These 100% hormone and antibiotic-free eggs offer numerous health benefits.Packed with omega 3 fatty acids, Vitamin B12,Vitamin B2, Vitamin D, vitamin E, Calcium and iron. with We ensure the finest, nutrient-rich feed without using any yolk color enhancers, resulting in exceptional and authentic eggs. Experience the wholesome goodness of ethically sourced eggs with every delicious bite.'
     },
     {
       name : 'Brown Eggs',
@@ -76,6 +79,8 @@ function Cart() {
       qty : '30 Pack',
       imgUrl : 'ThirtyEggsLogo',
   
+      stockQty : 1,
+      
       preferredBy:'Everyone',
       healthBenefits:'Strengthens immunity, good for the heart, aids in building strong muscles and helps gain healthy skin & hair',
   

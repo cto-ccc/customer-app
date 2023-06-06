@@ -314,9 +314,17 @@ function Categories() {
                         </Box>
                       </Box> : 
                       <Box sx={{textAlign:'right'}}>
-                        <Button variant="contained" style={styles.mainBtn} onClick={() => addToCart(chick)}>
-                          Add To Cart
-                        </Button>
+                        {
+                          chick.stockQty == 0 ?
+                          <Button variant="outlined" style={styles.mainBtn} disabled sx={{opacity:'0.6'}}>
+                            Out of stock
+                          </Button>
+                            :
+                          <Button variant="contained" style={styles.mainBtn} onClick={() => addToCart(chick)}>
+                            Add To Cart
+                          </Button>
+                        }
+                        
                       </Box>
                     }
                     

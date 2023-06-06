@@ -692,9 +692,16 @@ function Home() {
                           </Box>
                         </Box> : 
                         <Box sx={{textAlign:'right'}}>
-                          <Button variant="contained" style={styles.mainBtn} size='small' onClick={() => addToCart(item)}>
-                            Add To Cart
-                          </Button>
+                          {
+                            item.stockQty == 0 ?
+                            <Button variant='outlined' style={styles.mainBtn} size='small' disabled sx={{opacity:'0.6'}}>
+                              Out of stock
+                            </Button> :
+                            <Button variant="contained" style={styles.mainBtn} size='small' onClick={() => addToCart(item)}>
+                              Add To Cart
+                            </Button>  
+                          }
+                          
                         </Box>
                       }
                     </div>
