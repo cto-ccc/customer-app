@@ -22,6 +22,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { Capacitor } from '@capacitor/core';
 
 const styles = {
   titleCont : {
@@ -58,7 +59,7 @@ function Delivery() {
   const { getCartData } = useContext(CommonContext)
   const [loading, setLoading] = useState(true)
   const [address, setAddress] = useState([])
-  const [latLong, setLatLong] = useState({lat : 17.3850, lng : 78.4867})
+  const [latLong, setLatLong] = useState({})
   const [searchResult, setSearchResult] = useState("Result: none")
 
   const [selectedAddrIndex, setSelectedAddrIndex] = useState(null)
@@ -66,6 +67,7 @@ function Delivery() {
   const [delSlot, setDelSlot] = useState(null)
   const [delDate, setDelDate] = useState('Today')
   const [storeDetails, setStoreDetails] = useState(null)
+  const [map, setMap] = useState(null)
 
   const [filteredSlots, setFilteredSlots] = useState([])
   const [timeSlots, setTimeSlots] = useState([
@@ -115,14 +117,13 @@ function Delivery() {
     libraries: placesLibrary
   })
 
-  const [map, setMap] = useState(null)
 
   const onUnmount = useCallback(function callback(map) {
     setMap(null)
   }, [])
   
   const onLoad = useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds(window['currentLocation']);
+    const bounds = new window.google.maps.LatLngBounds(window['currentLocation'])
     map.fitBounds(bounds);
     setMap(map)
   }, [])
@@ -139,23 +140,15 @@ function Delivery() {
   }
 
   function onPlaceChanged() {
-    if (searchResult != null) {
-      const place = searchResult.getPlace();
-      // console.log("===", place.geometry.location.lat(), place.geometry.location.lng())
-      const name = place.name;
-      const status = place.business_status;
-      const formattedAddress = place.formatted_address;
-      // console.log(place);
 
+    if (searchResult != null) {
+
+      const place = searchResult.getPlace()
       window['currentLocation'] = {
         lat : place.geometry.location.lat(),
         lng : place.geometry.location.lng()
       }
       setLatLong(window['currentLocation'])
-
-      // console.log(`Name: ${name}`);
-      // console.log(`Business Status: ${status}`);
-      // console.log(`Formatted Address: ${formattedAddress}`);
     } else {
       showAlert("Please enter address for map", "error")
     }
@@ -164,8 +157,8 @@ function Delivery() {
   useEffect(() => {
     logAction('PAGE_VIEW', 'delivery')
     setDeliverySlots('Today')
-    printCurrentPosition()
     getUserAddress()
+    window['currentLocation'] = undefined
   }, [])
 
   const setDeliverySlots = (date) => {
@@ -179,19 +172,34 @@ function Delivery() {
 
   const printCurrentPosition = async() => {
 
-    const coordinates = await Geolocation.getCurrentPosition().catch((err) => {
-      //User denied location permission
+   await Geolocation.getCurrentPosition()
+    .then((resp) => {
+      console.log("current position is : ", resp.coords)
+      setLatLong({
+        lat : resp.coords.latitude,
+        lng : resp.coords.longitude
+      })
+      window['currentLocation'] = {
+        lat : resp.coords.latitude,
+        lng : resp.coords.longitude
+      }      
     })
-
-    setLatLong({
-      lat : coordinates?.coords.latitude || 17.3850,
-      lng : coordinates?.coords.longitude || 78.4867
+    .catch((err) => {
+      requestForLocPermission()
     })
-    window['currentLocation'] = {
-      lat : coordinates?.coords.latitude || 17.3850,
-      lng : coordinates?.coords.longitude || 78.4867
-    }
   }
+
+  const requestForLocPermission = async() => {
+    await Geolocation.requestPermissions('location').then((resp) => {
+      if (resp.location == 'granted')
+        printCurrentPosition()
+      else 
+        showAlert("Location permission is disabled. Please enable location to continue")
+    }).catch((err) => {
+      showAlert("Location permission is disabled. Please enable location to continue")
+    })
+  }
+
 
   const getUserAddress = async() => { 
 
@@ -208,8 +216,8 @@ function Delivery() {
     data.userId    = await getUserId()
     data.timeStamp = Date.now()
     data.latLong   = latLong
-
-    if (!latLong) {
+   
+    if (!latLong.lat || !latLong.lng) {
       showAlert("Please select your delivery location on map to add address.")
       return
     }
@@ -340,7 +348,7 @@ function Delivery() {
                     boxSizing: `border-box`,
                     border: `1px solid transparent`,
                     width: `100%`,
-                    height: `32px`,
+                    height: `40px`,
                     padding: `0 12px`,
                     borderRadius: `3px`,
                     boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
@@ -351,7 +359,8 @@ function Delivery() {
                   }}
                 />
               </Autocomplete>
-              <Box mb={3}>
+              <Button variant='outlined' size='small' onClick={() => printCurrentPosition()}>Use Current Location</Button>
+              <Box mb={3} mt={2}>
            
                   {
                     isLoaded ? 
@@ -359,11 +368,11 @@ function Delivery() {
                       <GoogleMap
                         mapContainerStyle={containerStyle}
                         onLoad={onLoad}
-                        center={latLong}
+                        center={window['currentLocation']}
                         options={{mapTypeControl: false, fullscreenControl:false, minZoom:15}}
                         onUnmount={onUnmount}
                       >
-                        <Marker position={latLong} draggable={true} onDrag={(e) => mapPositionChanged(e.latLng) } />                             
+                        <Marker position={window['currentLocation']} draggable={true} onDrag={(e) => mapPositionChanged(e.latLng) } />                             
                       </GoogleMap>
                   ) : <></>
                   }
