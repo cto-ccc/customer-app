@@ -17,6 +17,8 @@ import ComponentLoader from '../components/ComponentLoader';
 import { getCategoryData, getCustomizedProducts, getImgMap, getMetaData, logAction } from '../services/api';
 import Drawer from '@mui/material/Drawer';
 import {Helmet} from "react-helmet";
+import NavHeader from '../components/NavHeader';
+
 
 
 const styles = {
@@ -258,6 +260,7 @@ function Categories() {
             <meta name='description' content={metaData[id].description} />
             <meta name='keywords' content={metaData[id].keywords} />
           </Helmet>
+          <NavHeader />
           <Box sx={{color:'#a4243d', fontSize:'20px', ml:2,mb:1, fontWeight:'bold'}}>
             {title}
           </Box>

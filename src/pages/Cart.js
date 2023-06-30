@@ -11,6 +11,7 @@ import { getDeliveryCharge, getImgMap, logAction } from '../services/api';
 import CartOffer from '../assets/cart-offer.png'
 import Grid from '@mui/material/Unstable_Grid2';
 import ProductCard from '../components/ProductCard';
+import NavHeader from '../components/NavHeader';
 
 
 const styles = {
@@ -122,6 +123,7 @@ function Cart() {
     {
       loading ? <ComponentLoader /> : 
       <Box sx={{ marginTop:'5vh'}}>
+        <NavHeader />
         <Box sx={{fontSize:'25px'}}>
           Cart Items
         </Box>

@@ -23,6 +23,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Capacitor } from '@capacitor/core';
+import NavHeader from '../components/NavHeader';
 
 const styles = {
   titleCont : {
@@ -300,6 +301,7 @@ function Delivery() {
       loading ? <ComponentLoader /> :
     
       <Box>
+        <NavHeader />
         <Box style={styles.shadowBox}>
         <Box style={styles.titleCont}>
           Delivery Details

@@ -1,14 +1,15 @@
 import { useContext, useEffect, useState, useCallback } from 'react'
 import * as React from 'react';
 
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import { getCustomizedProducts, getImgMap, getRecepieVideos, logAction } from '../services/api';
+import { getCustomizedProducts, getImgMap, getProductData, getRecepieVideos, logAction } from '../services/api';
 import Grid from '@mui/material/Unstable_Grid2';
 import { CommonContext } from '../contexts/CommonContext';
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer';
 import { Helmet } from 'react-helmet';
+import NavHeader from '../components/NavHeader';
 
 
 const styles = {
@@ -76,6 +77,7 @@ function ItemDetail() {
 
   const location = useLocation()
   const {isDesktop, cartData, updateCart} = useContext(CommonContext)
+  const { id }   = useParams()
 
   const [anchor, setAnchor] = useState(false)
   const [selectedItem, setSelectedItem] = useState(null)
@@ -119,6 +121,11 @@ function ItemDetail() {
     setFlavourType('normal')
     setCutType('medium')
     setAnchor(false)
+  }
+
+  const getProductDetails = async() => {
+    const resp = await getProductData({id : id})
+    console.log("========", resp)
   }
 
   const list = (anchor) => (
@@ -192,6 +199,7 @@ function ItemDetail() {
 
   useEffect(() => {
     logAction('PAGE_VIEW', `${location.state.name.split(' ').join('-')}`)
+    getProductDetails()
   })
   return (
     <Box sx={{padding:'4vw', marginTop:'5vh'}}>
@@ -199,6 +207,7 @@ function ItemDetail() {
         <title>{location.state.name}</title>
         <meta name='description' content={location.state.description} />
       </Helmet>
+      <NavHeader />
       <Grid container>
         {/* <Box sx={{padding:'10px', border:'1px solid #eaeaea', boxShadow:'0 0 5px 5px #eaeaea'}}> */}
           <Grid xs={12} sm={12} md={5} lg={5} style={isDesktop ? styles.productGridContDesk : styles.productGridCont}>

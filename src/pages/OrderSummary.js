@@ -10,6 +10,7 @@ import { CommonContext } from '../contexts/CommonContext';
 import { getFirebaseError } from '../services/error-codes';
 import ComponentLoader from '../components/ComponentLoader';
 import ItemsSummary from '../components/ItemsSummary';
+import NavHeader from '../components/NavHeader';
 
 const styles = {
   cartCont : {
@@ -83,6 +84,7 @@ function OrderSummary() {
         loading ? 
         <ComponentLoader /> : 
         <Box>
+      <NavHeader />
       <Box sx={{fontSize:'20px', fontWeight:'700', marginBottom:'10px'}}>
         Order Summary
       </Box>

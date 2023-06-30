@@ -340,6 +340,27 @@ export const getNearestStoreDetails = (async(data) => {
 })
 
 
+export const getProductData = (async(data) => {
+  return new Promise(async(resolve, reject) => {
+    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/getProductData`, {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      "body": JSON.stringify(data)
+    }).then((response) => response.json())
+    .then(function(data) { 
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
+    })
+  })
+})
+
+
 
 
 
