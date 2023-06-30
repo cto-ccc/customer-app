@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<sitemap>
+    
 <url>
 
   <loc>https://countrychickenco.in/</loc>
@@ -15,4 +17,49 @@
   <lastmod>2023-03-01T18:23:17+00:00</lastmod>
 
 </url>
+
+
+<url>
+
+  <loc>https://countrychickenco.in/categories/village-birds</loc>
+
+  <lastmod>2023-03-01T18:23:17+00:00</lastmod>
+
+</url>
+
+<url>
+
+  <loc>https://countrychickenco.in/categories/eggs</loc>
+
+  <lastmod>2023-03-01T18:23:17+00:00</lastmod>
+
+</url>
+
+
+<url>
+
+  <loc>https://countrychickenco.in/categories/pickles</loc>
+
+  <lastmod>2023-03-01T18:23:17+00:00</lastmod>
+
+</url>
+
+<url>
+
+  <loc>https://countrychickenco.in/aboutUs</loc>
+
+  <lastmod>2023-03-01T18:23:17+00:00</lastmod>
+
+</url>
+
+<url>
+
+  <loc>https://countrychickenco.in/recipies</loc>
+
+  <lastmod>2023-03-01T18:23:17+00:00</lastmod>
+
+</url>
+
+</sitemap>
+
 
