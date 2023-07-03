@@ -10,6 +10,7 @@ import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer';
 import { Helmet } from 'react-helmet';
 import NavHeader from '../components/NavHeader';
+import ComponentLoader from '../components/ComponentLoader';
 
 
 const styles = {
@@ -84,6 +85,9 @@ function ItemDetail() {
   const [skinType, setSkinType] = useState('withskin')
   const [flavourType, setFlavourType] = useState('normal')
   const [cutType, setCutType] = useState('medium')
+  const [productData, setProductData] = useState({})
+  const [loading, setLoading] = useState(true)
+
 
   async function addToCart(item) {
     if (getCustomizedProducts().includes(item.id)) {
@@ -125,7 +129,8 @@ function ItemDetail() {
 
   const getProductDetails = async() => {
     const resp = await getProductData({id : id})
-    console.log("========", resp)
+    setProductData(resp)
+    setLoading(false)
   }
 
   const list = (anchor) => (
@@ -198,54 +203,58 @@ function ItemDetail() {
   )
 
   useEffect(() => {
-    logAction('PAGE_VIEW', `${location.state.name.split(' ').join('-')}`)
+    // logAction('PAGE_VIEW', `${productData.name.split(' ').join('-')}`)
     getProductDetails()
-  })
+  }, [])
   return (
     <Box sx={{padding:'4vw', marginTop:'5vh'}}>
-      <Helmet>
-        <title>{location.state.name}</title>
-        <meta name='description' content={location.state.description} />
-      </Helmet>
-      <NavHeader />
-      <Grid container>
+      {
+        loading ? 
+        <ComponentLoader /> : 
+        <>
+          <Helmet>
+          <title>{productData.name}</title>
+          <meta name='description' content={productData.description} />
+          </Helmet>
+          <NavHeader />
+          <Grid container>
         {/* <Box sx={{padding:'10px', border:'1px solid #eaeaea', boxShadow:'0 0 5px 5px #eaeaea'}}> */}
           <Grid xs={12} sm={12} md={5} lg={5} style={isDesktop ? styles.productGridContDesk : styles.productGridCont}>
               <Box sx={styles.discountCont}>
-                {Math.trunc(((location.state.mrp - location.state.price) / location.state.mrp) * 100)}% Off
+                {Math.trunc(((productData.mrp - productData.price) / productData.mrp) * 100)}% Off
               </Box>
-            <img src={getImgMap()[location.state.imgUrl]} style={styles.prodImg}/>
+            <img src={getImgMap()[productData.imgUrl]} style={styles.prodImg}/>
           </Grid>
           <Grid xs={12} sm={12} md={6} lg={6} style={isDesktop ? styles.productGridContDesk : styles.productGridCont}>
             <Box sx={{fontSize:'20px', fontWeight:'600', mt:2, mb:1, color:'#a4243d'}}>
-              {location.state.name} {location.state.style ? `(${location.state.style})` : null}
+              {productData.name} {productData.style ? `(${productData.style})` : null}
             </Box>
             {/* <Box sx={{mb:1}}>
-              {location.state.style ? `(${location.state.style})` : null}
+              {productData.style ? `(${productData.style})` : null}
             </Box> */}
             <Box sx={{fontSize:'17px', mb:1}}>
-              {location.state.qty}
+              {productData.qty}
             </Box>
             <Box sx={{display:'flex',alignItems:'baseline',  mb:1}}>
               <Box sx={{fontSize:'20px', mr:1, color:'#a4243d'}}>
-                ₹ {location.state.price} 
+                ₹ {productData.price} 
               </Box>
               <Box sx={{fontSize:'15px'}}>
-                <s>₹ {location.state.mrp}</s> 
+                <s>₹ {productData.mrp}</s> 
               </Box>
               <Box sx={{fontSize:'13px', marginLeft:'5px'}}>
-                ({Math.trunc(((location.state.mrp - location.state.price) / location.state.mrp) * 100)}% Off)
+                ({Math.trunc(((productData.mrp - productData.price) / productData.mrp) * 100)}% Off)
               </Box>
             </Box>
             <Box mb={2} mt={1}>
             {
-                      cartData && cartData[location.state.id] && cartData[location.state.id].count ?
+                      cartData && cartData[productData.id] && cartData[productData.id].count ?
                       <Box style={styles.incCont}>
                         <Box sx={{border:'1px solid #dddddd', 
                                   display:'flex', 
                                   borderRadius:'5px', 
                                   background:'white', border:'1px solid #c3c3c3'}}>
-                          <Box onClick={() => updateCart(location.state, false)}
+                          <Box onClick={() => updateCart(productData, false)}
                             sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
                             -
                           </Box>
@@ -253,9 +262,9 @@ function ItemDetail() {
                                     borderRight:'1px solid #bababa', 
                                     borderLeft:'1px solid #bababa', fontSize:'15px',
                                     background:'#a4243d !important', color:'white'}}>
-                            {cartData[location.state.id].count}
+                            {cartData[productData.id].count}
                           </Box>
-                          <Box  onClick={() => updateCart(location.state, true)}
+                          <Box  onClick={() => updateCart(productData, true)}
                             sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
                             +
                           </Box>
@@ -263,12 +272,12 @@ function ItemDetail() {
                       </Box> : 
                       <Box>
                         {
-                          location.state.stockQty == 0 ? 
+                          productData.stockQty == 0 ? 
                             <Button variant='outlined' sx={{width: isDesktop ? '50%' : '100%', opacity:'0.6'}} disabled>
                               Out of stock
                             </Button> :
                             <Button sx={{width: isDesktop ? '50%' : '100%'}} variant='contained'
-                              onClick={() => addToCart(location.state)}>Add To Cart</Button>
+                              onClick={() => addToCart(productData)}>Add To Cart</Button>
                         }
                         
                       </Box>
@@ -276,50 +285,55 @@ function ItemDetail() {
         
             </Box>
             {
-             location.state.aka ?
+             productData.aka ?
              <Box sx={{display:'flex'}}>
                 <Box style={styles.subLabel} sx={{width:'100px'}}>Aka</Box>
                 <Box sx={{width:'15px'}}>:</Box>
-                <Box style={styles.subValue} sx={{width:'250px'}}>{location.state.aka}</Box> 
+                <Box style={styles.subValue} sx={{width:'250px'}}>{productData.aka}</Box> 
               </Box> : null
             }
             {
-             location.state.preferredBy ?
+             productData.preferredBy ?
              <Box sx={{display:'flex', marginTop:'5px'}}>
                 <Box style={styles.subLabel} sx={{width:'100px'}}>Preferred By</Box>
                 <Box sx={{width:'15px'}}>:</Box>
-                <Box style={styles.subValue}>{location.state.preferredBy}</Box> 
+                <Box style={styles.subValue}>{productData.preferredBy}</Box> 
               </Box> : null
             }
             {
-             location.state.age ?
+             productData.age ?
              <Box sx={{display:'flex', marginTop:'5px'}}>
                 <Box style={styles.subLabel} sx={{width:'100px'}}>Age</Box>
                 <Box sx={{width:'15px'}}>:</Box>
-                <Box style={styles.subValue}>{location.state.age}</Box> 
+                <Box style={styles.subValue}>{productData.age}</Box> 
               </Box> : null
             }
             {
-             location.state.dishes ?
+             productData.dishes ?
              <Box sx={{display:'flex', flexDirection:'column', marginTop:'10px'}}>
                 <Box style={styles.subLabel}>Suggested Dishes:</Box>
-                <Box style={styles.subValue}> {location.state.dishes}</Box> 
+                <Box style={styles.subValue}> {productData.dishes}</Box> 
               </Box> : null
             }
             {
-             location.state.healthBenefits ?
+             productData.healthBenefits ?
              <Box sx={{display:'flex', flexDirection:'column', marginTop:'10px'}}>
                 <Box style={styles.subLabel}>Health Benefits :</Box>
-                <Box style={styles.subValue}> {location.state.healthBenefits}</Box> 
+                <Box style={styles.subValue}> {productData.healthBenefits}</Box> 
               </Box> : null
             }
 
             <Box sx={{whiteSpace:'pre-line', textAlign:'justify', wordBreak:'break-word', marginTop:'10px'}}>
-              {location.state?.description}
+              {productData?.description}
             </Box>
           </Grid>
         {/* </Box> */}
       </Grid>
+
+        </>
+      }
+      
+
 
       {
         isDesktop ? 
