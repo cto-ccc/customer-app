@@ -14,7 +14,7 @@ CapApp.addListener('backButton', ({ canGoBack }) => {
   const urlArray = window.location.href.split("/")
 
   const tagManagerArgs = {
-    gtmId: 'GTM-T7JBVWW'
+    gtmId: 'GTM-WMJMQ9M'
   }
   TagManager.initialize(tagManagerArgs)
 
