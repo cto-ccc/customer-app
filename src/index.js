@@ -6,17 +6,11 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { App as CapApp } from '@capacitor/app';
 import ScrollToTop from './components/ScrollToTop';
-import TagManager from 'react-gtm-module'
 
 
 CapApp.addListener('backButton', ({ canGoBack }) => {
 
   const urlArray = window.location.href.split("/")
-
-  const tagManagerArgs = {
-    gtmId: 'GTM-WMJMQ9M'
-  }
-  TagManager.initialize(tagManagerArgs)
 
   // if (urlArray[urlArray.length - 1] === 'auth') {
   //   CapApp.exitApp();
