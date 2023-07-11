@@ -86,7 +86,7 @@ function ProductCard(props) {
       return <Grid xs={12} sm={12} md={4} lg={5} style={styles.productGridCont} key={chick.id}>
         <Box style={styles.productItem}>
           <Box sx={{textAlign:'center', height:'250px', position:'relative', cursor:'pointer', display:'flex', alignItems:'center'}}
-            onClick={() => navigate('/itemDetail', {state : chick})}>
+            onClick={() => navigate(`/itemDetail/${chick.urlId}`, {state : chick})}>
             <Box sx={styles.discountCont}>
               ₹ {chick.mrp - chick.price}/- Off
             </Box>
@@ -94,7 +94,7 @@ function ProductCard(props) {
           </Box>
           <div style={styles.productDescCont}>
             <Box sx={styles.prodName}
-              onClick={() => navigate('/itemDetail', {state : chick})}>
+              onClick={() => navigate(`/itemDetail/${chick.urlId}`, {state : chick})}>
               {chick.name}
             </Box>
             {

@@ -8,6 +8,7 @@ import  ComponentLoader from '../components/ComponentLoader'
 import { CommonContext } from '../contexts/CommonContext';
 import { getUiProductsData, getUserProductOrders, getUserProfileData, logAction } from '../services/api';
 import { Paper } from '@mui/material';
+import NavHeader from '../components/NavHeader';
 
 const styles = {
   shadowBox : {
@@ -60,10 +61,11 @@ function Profile() {
   }  
 
   return (
-    <Box sx={{padding:'4vw', maxWidth:'550px', marginTop:'5vh'}}>
+    <Box sx={{padding:'4vw', maxWidth:'550px', marginTop:'7vh'}}>
     {
       loading ? <ComponentLoader /> : 
       <Box>  
+        <NavHeader />
         <Box sx={{fontSize:'25px'}}>
           Profile
         </Box>

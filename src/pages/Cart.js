@@ -63,8 +63,9 @@ function Cart() {
       mrp:149,
       id : 'C041',
       qty : '6 Pack',
-      imgUrl : 'EggsLogo',
-  
+      imgUrl : 'EggsLogo',  
+      urlId : 'brown-eggs-6pack',
+
       preferredBy:'Everyone',
       healthBenefits:'Strengthens immunity, good for the heart, aids in building strong muscles and helps gain healthy skin & hair',
   
@@ -79,7 +80,8 @@ function Cart() {
       id : 'C042',
       qty : '30 Pack',
       imgUrl : 'ThirtyEggsLogo',
-  
+      urlId : 'brown-eggs',
+
       stockQty : 1,
       
       preferredBy:'Everyone',
@@ -122,7 +124,7 @@ function Cart() {
     <Box sx={{padding:'4vw'}}>
     {
       loading ? <ComponentLoader /> : 
-      <Box sx={{ marginTop:'5vh'}}>
+      <Box sx={{ marginTop:'7vh'}}>
         <NavHeader />
         <Box sx={{fontSize:'25px'}}>
           Cart Items
@@ -171,13 +173,25 @@ function Cart() {
                         </Box> : null
                       }
 
-                      <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 10px'}}>
-                        <Box sx={{display:'flex', fontSize:'13px',}}>
-                          <Box mr={2} sx={{minWidth:'50px'}}>
+                      <Box sx={{display:'flex', justifyContent:'space-between', padding:'10px 0px 10px 0'}}>
+                        <Box sx={{display:'flex', fontSize:'13px', alignItems:'center'}}>
+                          <Box sx={{minWidth:'50px', marginRight:'10px', display:'flex', alignItems:'center'}}>
                             {cartData[item].qty}
                           </Box>
-                          <Box>
-                          x {cartData[item].count}
+                          
+                          <Box sx={{display:'flex', alignItems:'center', marginLeft:'15px', fontSize:'13px'}}>
+                            <Box sx={{border:'1px solid #eaeaea', padding:'0 7px', cursor:'pointer'}}
+                              onClick={() => updateCart(cartData[item], false)}>
+                              -
+                            </Box>
+                            <Box sx={{padding:'0px 7px'}}>
+                              {cartData[item].count}
+                            </Box>
+                            <Box sx={{border:'1px solid #eaeaea', padding:'0 7px', cursor:'pointer'}}
+                              onClick={() => updateCart(cartData[item], true)}>
+                              +
+                            </Box>
+                          
                           </Box>
                         </Box>
 

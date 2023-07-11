@@ -79,7 +79,7 @@ function OrderSummary() {
   }
 
   return (
-    <Box sx={{padding:'4vw', maxWidth:'600px', marginTop:'5vh'}}>
+    <Box sx={{padding:'4vw', maxWidth:'600px', marginTop:'7vh'}}>
       {
         loading ? 
         <ComponentLoader /> : 

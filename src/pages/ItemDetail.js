@@ -207,7 +207,7 @@ function ItemDetail() {
     getProductDetails()
   }, [])
   return (
-    <Box sx={{padding:'4vw', marginTop:'5vh'}}>
+    <Box sx={{padding:'4vw', marginTop:'7vh'}}>
       {
         loading ? 
         <ComponentLoader /> : 

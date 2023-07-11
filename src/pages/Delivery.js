@@ -295,7 +295,7 @@ function Delivery() {
     <motion.div
       initial={{opacity:0}} 
       animate={{opacity:1}}>
-    <Box sx={{padding:'4vw', maxWidth:'600px', marginTop:'5vh'}}>
+    <Box sx={{padding:'4vw', maxWidth:'600px', marginTop:'7vh'}}>
 
     {
       loading ? <ComponentLoader /> :
