@@ -17,6 +17,8 @@ import ComponentLoader from '../components/ComponentLoader';
 import { getCategoryData, getCustomizedProducts, getImgMap, getMetaData, logAction } from '../services/api';
 import Drawer from '@mui/material/Drawer';
 import {Helmet} from "react-helmet";
+import NavHeader from '../components/NavHeader';
+
 
 
 const styles = {
@@ -248,7 +250,7 @@ function Categories() {
   }, [])
 
   return (
-    <Box sx={{padding:'4vw', marginTop:'5vh', paddingBottom:'8vh'}}>
+    <Box sx={{padding:'4vw', marginTop:'7vh', paddingBottom:'8vh'}}>
       {
         loading ? 
         <ComponentLoader /> : 
@@ -258,6 +260,7 @@ function Categories() {
             <meta name='description' content={metaData[id].description} />
             <meta name='keywords' content={metaData[id].keywords} />
           </Helmet>
+          <NavHeader />
           <Box sx={{color:'#a4243d', fontSize:'20px', ml:2,mb:1, fontWeight:'bold'}}>
             {title}
           </Box>
@@ -267,7 +270,7 @@ function Categories() {
               return <Grid xs={12} sm={6} md={4} lg={3} style={styles.productGridCont} key={chick.id}>
                 <Box style={styles.productItem}>
                   <Box sx={{textAlign:'center', height:'250px', position:'relative', cursor:'pointer', display:'flex', alignItems:'center' }}
-                    onClick={() => navigate('/itemDetail', {state : chick})}>
+                    onClick={() => navigate(`/itemDetail/${chick.urlId}`, {state : chick})}>
                     <Box sx={styles.discountCont}>
                       {Math.trunc(((chick.mrp - chick.price) / chick.mrp) * 100)}% Off
                     </Box>
@@ -275,8 +278,8 @@ function Categories() {
                   </Box>
                   <div style={styles.productDescCont}>
                     <Box sx={styles.prodName}
-                      onClick={() => navigate('/itemDetail', {state : chick})}>
-                      {chick.name}
+                      onClick={() => navigate(`/itemDetail/${chick.urlId}`, {state : chick})}>
+                      {chick.name} 
                     </Box>
                     {
                       chick.style ? 

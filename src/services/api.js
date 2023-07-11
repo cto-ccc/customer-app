@@ -126,6 +126,16 @@ export const getMetaData = () => {
       keywords : 'Country Chicken Co., Village Birds, Order Now, Hyderabad, Authentic Natu Kodi, Backyard-raised Poultry',
       description : 'Discover the Taste of Pure Tradition with Country Chicken Co Village Birds. Located in Hyderabad, we bring you the finest selection of Natu Kodi (Country Chicken) raised by local farmers. Our poultry is free-range and nurtured naturally, offering you an authentic farm-fresh experience. Place your order now to enjoy the natural and healthy goodness of our Village Birds.'
     },
+    'chicken-half-kg' : {
+      title : 'Naturally Grown, Free Range, and Healthy Country Chicken (Natu Kodi)',
+      keywords : 'Country chicken, natu kodi, free range, naturally grown, near you, beyond organic, healthy Free Range, Naturally Grown',
+      description : 'We believe in providing our chickens with a stress-free life. Thats why all our poultry is free-range, allowing them to engage in natural behaviors, roam outdoors, and forage for their food. We follow sustainable farming practices and avoid the use of hormones or antibiotics'
+    },
+    'chicken' : {
+      title : 'Naturally Grown, Free Range, and Healthy Country Chicken (Natu Kodi)',
+      keywords : 'Country chicken, natu kodi, free range, naturally grown, near you, beyond organic, healthy Free Range, Naturally Grown',
+      description : 'We believe in providing our chickens with a stress-free life. Thats why all our poultry is free-range, allowing them to engage in natural behaviors, roam outdoors, and forage for their food. We follow sustainable farming practices and avoid the use of hormones or antibiotics'
+    },
     'eggs' : {
       title : 'Finest Free-Range, Cage-Free Brown Eggs and Country Eggs in Hyderabad',
       keywords : 'free-range, cage-free, order now online, lowest price, best quality',
@@ -330,6 +340,27 @@ export const getNearestStoreDetails = (async(data) => {
       if (data.error) {
         reject(data)
       } else
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
+    })
+  })
+})
+
+
+export const getProductData = (async(data) => {
+  return new Promise(async(resolve, reject) => {
+    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/getProductData`, {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      "body": JSON.stringify(data)
+    }).then((response) => response.json())
+    .then(function(data) { 
       resolve(data)
     })
     .catch((error) => {

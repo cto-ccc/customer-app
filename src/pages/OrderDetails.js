@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { getClientDetails, logAction, updateOrderStatus } from '../services/api';
 import { CommonContext } from '../contexts/CommonContext';
+import NavHeader from '../components/NavHeader';
 
 const styles = {
   circleIcon : {
@@ -35,11 +36,12 @@ function OrderDetails() {
   }
 
   return (
-    <Box sx={{padding:'4vw', marginTop:'5vh', maxWidth:'550px'}}>
+    <Box sx={{padding:'4vw', marginTop:'7vh', maxWidth:'550px'}}>
       {
         loading ? <ComponentLoader /> :
         <Box>
-          <Box mb={2} sx={{fontSize:'20px'}}>
+        <NavHeader />
+        <Box mb={2} sx={{fontSize:'20px'}}>
           Order Details
         </Box>
 
