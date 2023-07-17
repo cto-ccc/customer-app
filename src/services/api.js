@@ -12,6 +12,7 @@ import PicklesLogo from '../assets/pickle.png'
 import EggsLogo from '../assets/eggs.png'
 import ThirtyEggsLogo from '../assets/thirty-eggs.png'
 import ClassicCountry from '../assets/classic-country.png'
+import Nutrisoft from '../assets/nutrisoft.png'
 import { logEvent } from "firebase/analytics";
 
 let userDataCache = null
@@ -24,11 +25,12 @@ const imgMap = {
   'PicklesLogo' : PicklesLogo,
   'EggsLogo' : EggsLogo,
   'ThirtyEggsLogo' : ThirtyEggsLogo,
-  'ClassicCountry' : ClassicCountry
+  'ClassicCountry' : ClassicCountry,
+  'Nutrisoft' : Nutrisoft
 }
 
 export const getCustomizedProducts = () => {
-  return ['C009', 'C013', 'C017', 'C029', 'C021',  'CC009', 'CC013', 'CC017', 'CC029', 'CC021', 'C019', 'C023', 'C011', 'C016']
+  return ['C009', 'C013', 'C017', 'C029', 'C021',  'CC009', 'CC013', 'CC017', 'CC029', 'CC021', 'C019', 'C023', 'C011', 'C016', 'C067']
 }
 
 export const getImgMap = () => {

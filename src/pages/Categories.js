@@ -121,6 +121,8 @@ function Categories() {
   const [skinType, setSkinType] = useState('withskin')
   const [flavourType, setFlavourType] = useState('normal')
   const [cutType, setCutType] = useState('medium')
+  const [boneType, setBoneType] = useState('withBones')
+
 
   const [title, setTitle] = useState('')
   const [categoryData, setCategoryData] = useState([])
@@ -159,12 +161,17 @@ function Categories() {
     }
   }
 
+  const modifyBoneType = (type) => {
+    setBoneType(type)
+  }
+
   const addItemFromExtras = () => {
     let activeItem = selectedItem
     activeItem.extras = {
       skinType    : skinType,
       flavourType : flavourType,
-      cutType     : cutType
+      cutType     : cutType,
+      boneType    : boneType
     }
     updateCart(activeItem, true)
     setSelectedItem(null)
@@ -183,33 +190,58 @@ function Categories() {
         <Box>
           Chicken Type
         </Box>
-       <Box sx={{display:'flex', padding:'15px 0 20px 0', borderBottom:'1px solid #eaeaea', mb:3}}>
-          <Box sx={{mr:3}} style={skinType == 'withskin' ? styles.activeExtra : styles.inactiveExtra}
-            onClick={() => modifySkinType('withskin')}>
-            With Skin
+        {
+          selectedItem?.skinType ? 
+          <>
+            <Box sx={{display:'flex', padding:'15px 0 20px 0', borderBottom:'1px solid #eaeaea', mb:3}}>
+              <Box sx={{mr:3}} style={skinType == 'withskin' ? styles.activeExtra : styles.inactiveExtra}
+                onClick={() => modifySkinType('withskin')}>
+                With Skin 
+              </Box>
+              <Box style={skinType == 'skinless' ? styles.activeExtra : styles.inactiveExtra}
+                onClick={() => modifySkinType('skinless')}>
+                Skinless <Box sx={{fontSize:'12px', marginLeft:'5px'}}>(+ ₹100/-)</Box>  
+              </Box>
+            </Box>
+          </> : null
+        }
+        {
+          selectedItem?.boneType ? 
+          <>
+            <Box sx={{display:'flex', padding:'15px 0 20px 0', borderBottom:'1px solid #eaeaea', mb:3}}>
+              <Box sx={{mr:3}} style={boneType == 'withBones' ? styles.activeExtra : styles.inactiveExtra}
+                onClick={() => modifyBoneType('withBones')}>
+                With Bone
+              </Box>
+              <Box style={boneType == 'boneless' ? styles.activeExtra : styles.inactiveExtra}
+                onClick={() => modifyBoneType('boneless')}>
+                Boneless <Box sx={{fontSize:'12px', marginLeft:'5px'}}>(+ ₹300/-)</Box>  
+              </Box>
           </Box>
-          <Box style={skinType == 'skinless' ? styles.activeExtra : styles.inactiveExtra}
-            onClick={() => modifySkinType('skinless')}>
-            Skinless <Box sx={{fontSize:'12px', marginLeft:'5px'}}>(+ ₹100/-)</Box>
+          </>
+          : null
+        }
+        {
+          selectedItem?.flavourType ? 
+          <>
+          <Box sx={{display:'flex', flexDirection:'column'}}
+            style={skinType == 'withskin' ? null : styles.disabled}>
+            <Box>
+              Chicken Flavour
+            </Box>
+            <Box sx={{display:'flex', padding:'15px 0 20px 0', borderBottom:'1px solid #eaeaea', mb:3, alignItems:'center'}}>
+              <Box style={flavourType == 'normal' ? styles.activeExtra : styles.inactiveExtra}
+                onClick={() => setFlavourType('normal')}>
+                Normal
+              </Box>
+              <Box sx={{display:'flex', alignItems:'center'}} style={flavourType == 'smoketurmeric' ? styles.activeExtra : styles.inactiveExtra}
+                onClick={() => setFlavourType('smoketurmeric')}>
+                Smoked & Turmeric <Box sx={{fontSize:'12px', marginLeft:'5px'}}>(+ ₹15/-)</Box>  
+              </Box>
           </Box>
-       </Box>
-      </Box>
-
-      <Box sx={{display:'flex', flexDirection:'column'}}
-        style={skinType == 'withskin' ? null : styles.disabled}>
-        <Box>
-          Chicken Flavour
-        </Box>
-        <Box sx={{display:'flex', padding:'15px 0 20px 0', borderBottom:'1px solid #eaeaea', mb:3}}>
-          <Box style={flavourType == 'normal' ? styles.activeExtra : styles.inactiveExtra}
-            onClick={() => setFlavourType('normal')}>
-            Normal
           </Box>
-          <Box sx={{mr:3}} style={flavourType == 'smoketurmeric' ? styles.activeExtra : styles.inactiveExtra}
-            onClick={() => setFlavourType('smoketurmeric')}>
-            Smoked & Turmeric <Box sx={{fontSize:'12px', marginLeft:'5px'}}>(+ ₹15/-)</Box>  
-          </Box>
-       </Box>
+          </> : null
+        } 
       </Box>
 
       <Box sx={{display:'flex', flexDirection:'column'}}>

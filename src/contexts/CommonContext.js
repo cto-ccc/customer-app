@@ -48,6 +48,15 @@ export const CommonProvider = (props) => {
       if (itemData.extras) {
         if (itemData.extras.skinType=='skinless') itemData.price = itemData.price + 100
         if (itemData.extras.flavourType=='smoketurmeric') itemData.price = itemData.price + 15
+
+        //Specific for nutrisoft
+        if (itemData.extras.boneType=='boneless') {
+          itemData.price = itemData.price + 300
+          itemData.extras.skinType = 'skinless'
+        } 
+        if (itemData.extras.boneType=='withBones') {
+          itemData.extras.skinType = 'skinless'
+        } 
       }
 
       itemData.count = 1

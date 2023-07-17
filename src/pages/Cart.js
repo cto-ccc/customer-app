@@ -162,6 +162,9 @@ function Cart() {
                             <Box sx={{padding:'2px 5px', margin:'5px', border:'1px solid #a4243d', fontSize:'14px', borderRadius:'5px', textTransform:'capitalize'}}>
                               {cartData[item].extras.cutType || null} Cut
                             </Box>
+                            <Box sx={{padding:'2px 5px', margin:'5px', border:'1px solid #a4243d', fontSize:'14px', borderRadius:'5px', textTransform:'capitalize'}}>
+                              {cartData[item].extras.boneType == 'withBones' ? 'With Bone' : 'Boneless'} 
+                            </Box>
                           </Box>
                           
                             { cartData[item].extras.flavourType == 'normal' ? null : 
