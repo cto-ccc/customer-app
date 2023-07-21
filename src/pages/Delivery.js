@@ -24,6 +24,8 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Capacitor } from '@capacitor/core';
 import NavHeader from '../components/NavHeader';
+import { useLocation } from 'react-router-dom'
+
 
 const styles = {
   titleCont : {
@@ -61,6 +63,7 @@ function Delivery() {
   const [loading, setLoading] = useState(true)
   const [address, setAddress] = useState([])
   const [latLong, setLatLong] = useState({})
+  const location = useLocation()
   const [searchResult, setSearchResult] = useState("Result: none")
 
   const [selectedAddrIndex, setSelectedAddrIndex] = useState(null)
@@ -264,7 +267,8 @@ function Delivery() {
       delSlotId      : delSlot,
       delDate        : delDate,
       storeDetails   : storeDetails,
-      itemDetails    : await getCartData()
+      itemDetails    : await getCartData(),
+      instructions   : location.state.instructions
     }
     navigate(`/orderSummary`, {state : summaryProps, replace:true})
   }

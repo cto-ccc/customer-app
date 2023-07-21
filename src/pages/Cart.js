@@ -12,6 +12,7 @@ import CartOffer from '../assets/cart-offer.png'
 import Grid from '@mui/material/Unstable_Grid2';
 import ProductCard from '../components/ProductCard';
 import NavHeader from '../components/NavHeader';
+import TextField from '@mui/material/TextField';
 
 
 const styles = {
@@ -53,6 +54,7 @@ function Cart() {
   const navigate = useNavigate()
 
   const { updateCart, getCartData, clearCart, isDesktop, cartData } = useContext(CommonContext)
+  const [instructions, setInstructions] = useState('')
   const { isUserLoggedIn } = useContext(AuthContext)
   // const [cartData, setCartData] = useState({})
   const [loading, setLoading] = useState(true)
@@ -104,7 +106,7 @@ function Cart() {
 
   const checkout = async() => {
     if(await isUserLoggedIn()) {
-      navigate(`/delivery`)
+      navigate(`/delivery`, {state : {instructions : instructions}})
     } else {
       navigate('/auth')
     }
@@ -215,6 +217,8 @@ function Cart() {
                 </Box>
               })
             }
+
+    
             <Box sx={{padding:'10px', margin:'10px 0', border:'1px solid lightgreen', color:'green', fontWeight:'bold', textAlign:'center', fontSize:'13px'}}>
               Congratulations! You have saved ₹{cartData.totalDiscount} /-
             </Box>
@@ -237,6 +241,18 @@ function Cart() {
                   ₹ {cartData.totalAmount + getDeliveryCharge()} 
                 </Box>
               </Box>
+            </Box>
+
+            <Box sx={{padding:'20px'}}>
+              <TextField
+                placeholder="Add Delivery Instructions"
+                multiline
+                value={instructions}
+                rows={2}
+                onChange={(event) => {setInstructions(event.target.value)}}
+                fullWidth
+                maxRows={4}
+              />
             </Box>
 
             <Box sx={{padding:'20px'}}>

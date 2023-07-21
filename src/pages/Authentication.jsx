@@ -208,7 +208,6 @@ function Authentication(props) {
       otp      : data.otp
     }
     validateUserOtp(reqData).then((response) => {
-      console.log("=====", response)
       if (response.err) {
         showAlert(response.err)
         hideLoader()

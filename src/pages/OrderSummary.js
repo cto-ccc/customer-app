@@ -58,7 +58,8 @@ function OrderSummary() {
       deliveryDate   : location.state.delDate,
       deliverySlot   : getTimeSlots().filter((slot) => slot.id == location.state.delSlotId)[0].pranaId,
       totalDiscount  : location.state.totalDiscount,
-      storeDetails   : location.state.storeDetails
+      storeDetails   : location.state.storeDetails,
+      instructions   : location.state.instructions
     } 
 
     let ordersObj = JSON.parse(JSON.stringify(location.state.itemDetails))
@@ -136,6 +137,13 @@ function OrderSummary() {
             <Box>
               {location.state.addressDetails.pincode}
             </Box>   
+
+            <Box sx={{marginTop:'18px', fontSize:'18px'}}>
+              Instructions :
+            </Box>
+            <Box sx={{marginBottom:'5px', marginTop:'5px'}}>
+              {location.state.instructions}
+            </Box>
           </Box>
         </Box>  
 
