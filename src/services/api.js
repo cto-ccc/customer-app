@@ -372,6 +372,47 @@ export const getProductData = (async(data) => {
   })
 })
 
+export const generateSignupOtp = (async(data) => {
+  return new Promise(async(resolve, reject) => {
+    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/generateSignupOtp`, {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      "body": JSON.stringify(data)
+    }).then((response) => response.json())
+    .then(function(data) { 
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
+    })
+  })
+})
+
+
+export const validateUserOtp = (async(data) => {
+  return new Promise(async(resolve, reject) => {
+    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/validateUserOtp`, {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      "body": JSON.stringify(data)
+    }).then((response) => response.json())
+    .then(function(data) { 
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
+    })
+  })
+})
+
 
 
 

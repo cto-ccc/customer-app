@@ -38,7 +38,7 @@ function AnimatedRoutes() {
           <Route element={<CartHolder />}>
             <Route path="/" element={<Home />}/>
             <Route path="/categories/:id" element={<Categories />}/>
-            <Route path="/itemDetail/:id" element={<ItemDetail />}/>
+            <Route path="/products/:id" element={<ItemDetail />}/>
           </Route>
           
           <Route path="/cart" element={<Cart />}/>

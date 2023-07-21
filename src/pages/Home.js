@@ -679,7 +679,7 @@ function Home() {
                 return (
                   <Box style={isDesktop ? styles.productItemDesk : styles.productItem} key={item.id}>
                     <Box sx={styles.prodImgCont}
-                      onClick={() => navigate(`/itemDetail/${item.urlId}`, {state : item})}>
+                      onClick={() => navigate(`/products/${item.urlId}`, {state : item})}>
                       <Box sx={styles.discountCont}>
                         {Math.trunc(((item.mrp - item.price) / item.mrp) * 100)}% Off
                       </Box>
@@ -687,7 +687,7 @@ function Home() {
                     </Box>
                     <div style={styles.productDescCont}>
                       <Box sx={styles.prodName}
-                        onClick={() => navigate(`/itemDetail/${item.urlId}`, {state : item})}>
+                        onClick={() => navigate(`/products/${item.urlId}`, {state : item})}>
                         {item.name}
                       </Box>
                       {

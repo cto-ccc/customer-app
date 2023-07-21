@@ -5,13 +5,14 @@ import { CommonContext } from '../contexts/CommonContext';
 import { auth } from '../firebase'
 import { AuthContext } from '../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { createNewUser, getInputTheme, getUserData, logAction, registerToken, setUserData, unRegisterToken, updateUserData } from '../services/api';
+import { createNewUser, generateSignupOtp, getInputTheme, getUserData, logAction, registerToken, setUserData, unRegisterToken, updateUserData, validateUserOtp } from '../services/api';
 import { getFirebaseError } from '../services/error-codes';
 import {
   PushNotifications,
 } from '@capacitor/push-notifications';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import HomeLogo from '../assets/home-logo.png'
+import { Capacitor } from '@capacitor/core';
 
 
 const styles = {
@@ -43,9 +44,9 @@ function Authentication(props) {
   const [isActive, setIsActive] = useState(false)
   const [isNotiEnabled, setIsNotiEnabled] = useState(false)
   const [showOtp, setShowOtp] = useState(false)
-  const [otpResult, setOtpResult] = useState(null)
+  // const [otpResult, setOtpResult] = useState(null)
   const [userProfile, setUserProfile] = useState(null)
-  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false)
+  // const [isCaptchaVerified, setIsCaptchaVerified] = useState(false)
 
   const { showLoader, hideLoader, showAlert, showSnackbar, isDesktop } = useContext(CommonContext)
   const {userLoggedIn, setUserProfileData, isUserLoggedIn} = useContext(AuthContext)
@@ -67,26 +68,26 @@ function Authentication(props) {
       }
     }
     checkLogin()
-    if(showOtp) {
-      setUpRecaptha('+91'+userProfile.mobileNo).then((response) => {
-        console.log("recaptcha response", response)
-        setOtpResult(response)
-        setIsCaptchaVerified(true)
-        }).catch((error) => {
-          console.log('Error', error)
-      })
-    }
-  }, [showOtp])
+    // if(showOtp) {
+    //   setUpRecaptha('+91'+userProfile.mobileNo).then((response) => {
+    //     console.log("recaptcha response", response)
+    //     setOtpResult(response)
+    //     setIsCaptchaVerified(true)
+    //     }).catch((error) => {
+    //       console.log('Error', error)
+    //   })
+    // }
+  }, [])
 
-  function setUpRecaptha(number) {
-    const recaptchaVerifier = new RecaptchaVerifier(
-      "recaptcha-container",
-      {},
-      auth
-    );
-    recaptchaVerifier.render();
-    return signInWithPhoneNumber(auth, number, recaptchaVerifier);
-  }
+  // function setUpRecaptha(number) {
+  //   const recaptchaVerifier = new RecaptchaVerifier(
+  //     "recaptcha-container",
+  //     {},
+  //     auth
+  //   );
+  //   recaptchaVerifier.render();
+  //   return signInWithPhoneNumber(auth, number, recaptchaVerifier);
+  // }
   
   const switchLogin = () => {
     setShowSignIn(!showSignIn) 
@@ -101,7 +102,12 @@ function Authentication(props) {
     getUserData(data.mobileNo, false).then((response => {
       if (response) {
         setUserProfile(response)
-        setShowOtp(true)
+        sendOtp({
+          channel : Capacitor.getPlatform(),
+          mobileNo : data.mobileNo,
+          firstName : response.f_name,
+          type : 'LOGIN'
+        })
       } else {
         showAlert(<>User account is not registered. Please sign up.</>)
       }
@@ -114,14 +120,17 @@ function Authentication(props) {
 
   const signUpNewUser = (data) => {
 
+    data.channel = Capacitor.getPlatform() 
     logAction('signup')
+    showLoader()
     getUserData(data.mobileNo, false).then((response => {
       if (response) {
         showAlert(<>Mobile number already registered. Please login.</>)
       } else {
         subscribePushNotification()
-        setShowOtp(true)
         setUserProfile(data)
+        data.type='SIGN_UP'
+        sendOtp(data)
       }
       hideLoader()
     })).catch((error) => {
@@ -129,6 +138,18 @@ function Authentication(props) {
       showAlert(getFirebaseError(error))
     })    
   }
+
+  const sendOtp = (data) => {
+    generateSignupOtp(data).then((response) => {
+      setShowOtp(true)
+      hideLoader()
+    }).catch((error) => {
+
+      hideLoader()
+      showAlert(error)
+    })  
+  }
+
 
   const subscribePushNotification = () => {
 
@@ -180,42 +201,89 @@ function Authentication(props) {
   }
 
   const verifyOtp = async(data) => {
+
     showLoader()
-    try {
-      await otpResult.confirm(data.otp)
-  
-      const userData = {
-        userId      : userProfile.mobileNo,
-        deviceToken : deviceToken,
-        ...userProfile
-      }
-
-      if (!showSignIn) {  
-
-        createNewUser(userData).then((response) => {
-          setUserProfileData(userData)
-          userLoggedIn(userProfile.mobileNo, response.customerId)
-          hideLoader()
-          showSnackbar("Signup successful")
-          navigate('/', {replace:true})
-        }).catch((error) => {
-          hideLoader()
-          showAlert(getFirebaseError(error.code))
-        })
-
+    const reqData = {
+      mobileNo : userProfile.mobileNo,
+      otp      : data.otp
+    }
+    validateUserOtp(reqData).then((response) => {
+      console.log("=====", response)
+      if (response.err) {
+        showAlert(response.err)
+        hideLoader()
       } else {
 
-        setUserProfileData(userProfile)
-        userLoggedIn(userProfile.mobileNo, userProfile.customerId)
-        hideLoader()
-        showSnackbar("Login successful")
-        navigate('/', {replace:true})
+        const userData = {
+          userId      : userProfile.mobileNo,
+          deviceToken : deviceToken,
+          ...userProfile
+        }
+
+        if (!showSignIn) {  
+
+          createNewUser(userData).then((response) => {
+            setUserProfileData(userData)
+            userLoggedIn(userProfile.mobileNo, response.customerId)
+            hideLoader()
+            showSnackbar("Signup successful")
+            navigate('/', {replace:true})
+          }).catch((error) => {
+            hideLoader()
+            showAlert(getFirebaseError(error.code))
+          })
+
+        } else {
+
+          setUserProfileData(userProfile)
+          userLoggedIn(userProfile.mobileNo, userProfile.customerId)
+          hideLoader()
+          showSnackbar("Login successful")
+          navigate('/', {replace:true})
+        }
       }
-   
-    } catch (err) {
+      
+    }).catch((error) => {
+
       hideLoader()
-      showAlert(getFirebaseError(err.message))
-    }
+      showAlert(error)
+    })  
+
+    // try {
+    //   await otpResult.confirm(data.otp)
+  
+    //   const userData = {
+    //     userId      : userProfile.mobileNo,
+    //     deviceToken : deviceToken,
+    //     ...userProfile
+    //   }
+
+    //   if (!showSignIn) {  
+
+    //     createNewUser(userData).then((response) => {
+    //       setUserProfileData(userData)
+    //       userLoggedIn(userProfile.mobileNo, response.customerId)
+    //       hideLoader()
+    //       showSnackbar("Signup successful")
+    //       navigate('/', {replace:true})
+    //     }).catch((error) => {
+    //       hideLoader()
+    //       showAlert(getFirebaseError(error.code))
+    //     })
+
+    //   } else {
+
+    //     setUserProfileData(userProfile)
+    //     userLoggedIn(userProfile.mobileNo, userProfile.customerId)
+    //     hideLoader()
+    //     showSnackbar("Login successful")
+    //     navigate('/', {replace:true})
+    //   }
+   
+    // } catch (err) {
+    //   hideLoader()
+    //   showAlert(getFirebaseError(err.message))
+    // }
   }
 
   return (
@@ -227,36 +295,29 @@ function Authentication(props) {
         {
           showOtp ? 
           <Box sx={{textAlign:'center', padding:'4vw', display:'flex', flexDirection:'column', alignItems:'center'}}>
-            <Box sx={{display : isCaptchaVerified ? 'none' : 'block'}}>
-              <h5>Please verify captcha to send OTP</h5>  
-              <div id="recaptcha-container"></div>
-            </Box>
-            {
-              isCaptchaVerified ? 
-              <Box sx={{width:'100%'}}>
-                <form onSubmit={submitOtp(verifyOtp)}>
-                  <h5>Enter otp sent to your registered mobile number</h5>
-                  <Box mb={3}>
-                    <TextField
-                      placeholder="Enter OTP"
-                      label="OTP Number"
-                      variant="outlined"
-                      fullWidth
-                      type="number"
-                      autoComplete='off'
-                      name="otp"
-                      {...registerOtp("otp", {
-                        required: "Required field"})}
-                      error={Boolean(errorsOtp?.otp)}
-                      helperText={errorsOtp?.otp?.message}
-                    />
-                  </Box>
-                  <Button type="submit" variant="contained" color="primary" fullWidth id='sign-in-button'>
-                    Verify OTP
-                  </Button>
-                </form>
-              </Box> : null
-            }
+            <Box sx={{width:'100%'}}>
+              <form onSubmit={submitOtp(verifyOtp)}>
+                <h5>Enter OTP sent to your mobile number</h5>
+                <Box mb={3}>
+                  <TextField
+                    placeholder="Enter OTP"
+                    label="OTP Number"
+                    variant="outlined"
+                    fullWidth
+                    type="number"
+                    autoComplete='off'
+                    name="otp"
+                    {...registerOtp("otp", {
+                      required: "Required field"})}
+                    error={Boolean(errorsOtp?.otp)}
+                    helperText={errorsOtp?.otp?.message}
+                  />
+                </Box>
+                <Button type="submit" variant="contained" color="primary" fullWidth id='sign-in-button'>
+                  Verify OTP
+                </Button>
+              </form>
+            </Box> 
           </Box> : null
         }
       </Box>

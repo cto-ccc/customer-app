@@ -115,20 +115,25 @@ function Footer() {
               Our Chickens
             </Box>
             <Box sx={{marginLeft:'4vw'}}>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
-                Tender Telangana Country Chicken 
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
+                onClick={() => navigate('products/tender-country-chicken')}>
+                Tender country chicken
               </Box>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
-                Mysore Queen Country Chicken
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
+                onClick={() => navigate('products/mysore-country-chicken')}>
+                Queen of country chicken
               </Box>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
-                Classic Andhra Country Chicken
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
+                onClick={() => navigate('products/classic-country-chicken')}>
+                Classic country chicken
               </Box>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
+                onClick={() => navigate('products/young-warrior')}>
                 Warrior Country Chicken
               </Box>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
-                Kadaknath Andhra Country Chicken
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
+                onClick={() => navigate('products/kadaknath-country-chicken')}>
+                Kadaknath Country Chicken
               </Box>
             </Box>
           </Box>
@@ -175,7 +180,8 @@ function Footer() {
               Download Our Apps
             </Box>
             <Box sx={{marginLeft:'4vw'}}>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
+                onClick={() => openUrl('https://play.google.com/store/apps/details?id=com.countrychicken.customerapp')}>
                 <img src={DownloadGoogle} style={styles.storeIcon} />
               </Box>
               <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>

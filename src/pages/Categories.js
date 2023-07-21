@@ -302,7 +302,7 @@ function Categories() {
               return <Grid xs={12} sm={6} md={4} lg={3} style={styles.productGridCont} key={chick.id}>
                 <Box style={styles.productItem}>
                   <Box sx={{textAlign:'center', height:'250px', position:'relative', cursor:'pointer', display:'flex', alignItems:'center' }}
-                    onClick={() => navigate(`/itemDetail/${chick.urlId}`, {state : chick})}>
+                    onClick={() => navigate(`/products/${chick.urlId}`, {state : chick})}>
                     <Box sx={styles.discountCont}>
                       {Math.trunc(((chick.mrp - chick.price) / chick.mrp) * 100)}% Off
                     </Box>
@@ -310,7 +310,7 @@ function Categories() {
                   </Box>
                   <div style={styles.productDescCont}>
                     <Box sx={styles.prodName}
-                      onClick={() => navigate(`/itemDetail/${chick.urlId}`, {state : chick})}>
+                      onClick={() => navigate(`/products/${chick.urlId}`, {state : chick})}>
                       {chick.name} 
                     </Box>
                     {
