@@ -38,6 +38,11 @@ export const CommonProvider = (props) => {
 
     if (newCartData[itemData.id]) {
 
+      if (isIncrease && newCartData[itemData.id].count == 15) {
+        showAlert("Maximum quantity you can order is 15")
+        return
+      }
+
       itemData.price = newCartData[itemData.id].price
 
       newCartData[itemData.id].count = newCartData[itemData.id].count + (isIncrease ? 1 : -1)

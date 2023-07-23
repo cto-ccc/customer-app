@@ -117,15 +117,15 @@ function Footer() {
             <Box sx={{marginLeft:'4vw'}}>
               <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
                 onClick={() => navigate('products/tender-country-chicken')}>
-                Tender country chicken
+                Tender Country Chicken
               </Box>
               <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
                 onClick={() => navigate('products/mysore-country-chicken')}>
-                Queen of country chicken
+                Queen of Country Chicken
               </Box>
               <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
                 onClick={() => navigate('products/classic-country-chicken')}>
-                Classic country chicken
+                Classic Country Chicken
               </Box>
               <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
                 onClick={() => navigate('products/young-warrior')}>
