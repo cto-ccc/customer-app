@@ -7,6 +7,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
 import ComponentLoader from '../components/ComponentLoader'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { TextField } from '@mui/material'
 
 import Eggs from '../assets/eggs.png'
 import HomeBanner1 from '../assets/banner1.png'
@@ -59,8 +60,11 @@ import ListItemText from '@mui/material/ListItemText';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
+import CloseIcon from '@mui/icons-material/Close';
 
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import SearchIcon from '@mui/icons-material/Search';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import * as React from 'react';
 import { getCustomizedProducts, getImgMap, getLanding, getMetaData, logAction } from '../services/api';
@@ -358,6 +362,7 @@ function Home() {
   const { isUserLoggedIn } = useContext(AuthContext)
   const [anchor, setAnchor] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [showSearchBar, setShowSearchBar] = useState(false)
 
   const [skinType, setSkinType] = useState('withskin')
   const [boneType, setBoneType] = useState('withBones')
@@ -367,12 +372,20 @@ function Home() {
   const [selectedItem, setSelectedItem] = useState(null)
 
   const [itemsData, setItemsData] = useState([])
+  const [allItemsData, setAllItemsData] = useState([])
+  const [filteredItemsData, setFilteredItemsData] = useState([])
+
   const [latLong, setLatLong] = useState(null)
   const [metaData, setMetaData] = useState(getMetaData()['home'])
 
   const printCurrentPosition = async() => {
     getLanding(navigator.userAgent).then((resp) => {
       setItemsData(resp)
+      let allCatItems = []
+      resp.forEach((item) => {
+        allCatItems = allCatItems.concat(item.data)
+      })
+      setAllItemsData(allCatItems)
       setLoading(false)
     }).catch((err) => {
       setLoading(false)
@@ -420,6 +433,23 @@ function Home() {
 
   const modifyBoneType = (type) => {
     setBoneType(type)
+  }
+
+  const searchProductsEvent = (value) => {
+
+    if (!value) {
+      setFilteredItemsData([])
+      return
+    }
+
+    const newItemsData = allItemsData.filter((item) => item.name.split(" ").join("").toLowerCase()
+                                              .match(value.toLowerCase().split(" ").join("")))
+    setFilteredItemsData(newItemsData)
+  }
+
+  const closeSearch = () => {
+    setShowSearchBar(false)
+    setFilteredItemsData([])
   }
 
   const addItemFromExtras = () => {
@@ -560,6 +590,46 @@ function Home() {
         {
           isDesktop ? 
           <Box sx={{display:'flex'}}>
+            {
+              showSearchBar ? 
+              <Box sx={{display:'flex', flexDirection:'column', alignItems:'center', width:'30vw'}}>
+                <Box sx={{display:'flex', alignItems:'center', padding:'0 10px', width:'30vw', justifyContent:'flex-end'}}>
+                  <TextField
+                    size='small'
+                    placeholder="Search Products"
+                    variant="outlined"
+                    type="text"
+                    autoComplete='off'
+                    name="searchProducts"
+                    autoFocus
+                    onChange={(event) => {
+                      searchProductsEvent(event.target.value);
+                    }}
+                  />
+                  <CloseIcon onClick={() => closeSearch()} sx={{cursor:'pointer', marginLeft:'10px'}}/>
+                </Box>
+                {
+                  filteredItemsData.length ?
+                  <Box sx={{display:'flex', position:'absolute', top:'10vh', 
+                    background:'white', width:'30vw', justifyContent:'flex-end', flexDirection:'column' }}>
+                    {
+                      filteredItemsData.map((item) => {
+                        return (
+                          <Box sx={{padding:'10px', borderBottom:'2px solid white', cursor:'pointer', background:'#f3f3f3'}}
+                            onClick={() => navigate(`/products/${item.urlId}`, {state : item})}>
+                            {item.name} ({item.qty})
+                          </Box>
+                        )
+                      })
+                    }
+                  </Box> : null
+                }
+                
+              </Box> : 
+              <Box p={2} onClick={() => setShowSearchBar(true)} style={styles.navItem}>
+                <SearchIcon />
+              </Box>
+            }
             <Box p={2} onClick={() => navigate('/')} style={styles.navItem}>
               Home
             </Box>
@@ -578,8 +648,9 @@ function Home() {
               Cart
             </Box>
           </Box> : 
-          <Box onClick={() => goToProfile()}>
-            <img src={User} style={styles.userLogo}/>
+          <Box>
+            {/* <SearchIcon style={styles.userLogo} sx={{marginRight:'10px'}}/> */}
+            <img src={User} style={styles.userLogo} onClick={() => goToProfile()}/>
           </Box>
         }
         </Box>
