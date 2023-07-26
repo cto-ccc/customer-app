@@ -648,8 +648,48 @@ function Home() {
               Cart
             </Box>
           </Box> : 
-          <Box>
-            {/* <SearchIcon style={styles.userLogo} sx={{marginRight:'10px'}}/> */}
+          <Box sx={{display:'flex'}}>
+              {
+                showSearchBar ?  
+                <Box>
+                <Box sx={{display:'flex', alignItems:'center', padding:'0 10px', width:'80vw',
+                   position:'absolute', left:0, top:0, height:'10vh', background:'white',justifyContent:'flex-end'}}>
+                  <TextField
+                    size='small'
+                    placeholder="Search Products"
+                    variant="outlined"
+                    type="text"
+                    autoComplete='off'
+                    name="searchProducts"
+                    autoFocus
+                    fullWidth
+                    onChange={(event) => {
+                      searchProductsEvent(event.target.value);
+                    }}  
+                  />
+                  <CloseIcon onClick={() => closeSearch()} sx={{cursor:'pointer', marginLeft:'10px'}}/>
+                </Box>
+                {
+                  filteredItemsData.length ?
+                  <Box sx={{display:'flex', position:'absolute', top:'10vh', left:0,
+                    background:'white', width:'100vw', justifyContent:'flex-start', flexDirection:'column' }}>
+                    {
+                      filteredItemsData.map((item) => {
+                        return (
+                          <Box sx={{padding:'10px', borderBottom:'2px solid white', cursor:'pointer', background:'#f3f3f3'}}
+                            onClick={() => navigate(`/products/${item.urlId}`, {state : item})}>
+                            {item.name} ({item.qty})
+                          </Box>
+                        )
+                      })
+                    }
+                  </Box> : null
+                } 
+                </Box> : <Box onClick={() => setShowSearchBar(true)}>
+                  <SearchIcon style={styles.userLogo} sx={{marginRight:'10px'}}/>
+                  </Box>
+              }
+            
             <img src={User} style={styles.userLogo} onClick={() => goToProfile()}/>
           </Box>
         }
