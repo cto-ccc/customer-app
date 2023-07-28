@@ -13,6 +13,7 @@ import {
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import HomeLogo from '../assets/home-logo.png'
 import { Capacitor } from '@capacitor/core';
+import { useLocation } from 'react-router-dom'
 
 
 const styles = {
@@ -44,9 +45,7 @@ function Authentication(props) {
   const [isActive, setIsActive] = useState(false)
   const [isNotiEnabled, setIsNotiEnabled] = useState(false)
   const [showOtp, setShowOtp] = useState(false)
-  // const [otpResult, setOtpResult] = useState(null)
   const [userProfile, setUserProfile] = useState(null)
-  // const [isCaptchaVerified, setIsCaptchaVerified] = useState(false)
 
   const { showLoader, hideLoader, showAlert, showSnackbar, isDesktop } = useContext(CommonContext)
   const {userLoggedIn, setUserProfileData, isUserLoggedIn} = useContext(AuthContext)
@@ -56,6 +55,7 @@ function Authentication(props) {
   const { register : registerUser, handleSubmit : signupUser, reset : resetSignup, formState : {errors:errorSignup} } = useForm()
 
   const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     logAction('PAGE_VIEW', 'authentication')
@@ -111,7 +111,6 @@ function Authentication(props) {
       } else {
         showAlert(<>User account is not registered. Please sign up.</>)
       }
-      hideLoader()
     })).catch((error) => {
       hideLoader()
       showAlert(getFirebaseError(error))
@@ -226,7 +225,10 @@ function Authentication(props) {
             userLoggedIn(userProfile.mobileNo, response.customerId)
             hideLoader()
             showSnackbar("Signup successful")
-            navigate('/', {replace:true})
+            if (location?.state?.navToCart) 
+              navigate('/cart', {replace:true})
+            else  
+              navigate('/', {replace:true})
           }).catch((error) => {
             hideLoader()
             showAlert(getFirebaseError(error.code))
@@ -238,7 +240,10 @@ function Authentication(props) {
           userLoggedIn(userProfile.mobileNo, userProfile.customerId)
           hideLoader()
           showSnackbar("Login successful")
-          navigate('/', {replace:true})
+          if (location?.state?.navToCart) 
+            navigate('/delivery', {replace:true})
+          else  
+            navigate('/', {replace:true})
         }
       }
       
@@ -247,42 +252,6 @@ function Authentication(props) {
       hideLoader()
       showAlert(error)
     })  
-
-    // try {
-    //   await otpResult.confirm(data.otp)
-  
-    //   const userData = {
-    //     userId      : userProfile.mobileNo,
-    //     deviceToken : deviceToken,
-    //     ...userProfile
-    //   }
-
-    //   if (!showSignIn) {  
-
-    //     createNewUser(userData).then((response) => {
-    //       setUserProfileData(userData)
-    //       userLoggedIn(userProfile.mobileNo, response.customerId)
-    //       hideLoader()
-    //       showSnackbar("Signup successful")
-    //       navigate('/', {replace:true})
-    //     }).catch((error) => {
-    //       hideLoader()
-    //       showAlert(getFirebaseError(error.code))
-    //     })
-
-    //   } else {
-
-    //     setUserProfileData(userProfile)
-    //     userLoggedIn(userProfile.mobileNo, userProfile.customerId)
-    //     hideLoader()
-    //     showSnackbar("Login successful")
-    //     navigate('/', {replace:true})
-    //   }
-   
-    // } catch (err) {
-    //   hideLoader()
-    //   showAlert(getFirebaseError(err.message))
-    // }
   }
 
   return (

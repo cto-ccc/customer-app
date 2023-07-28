@@ -108,7 +108,7 @@ function Cart() {
     if(await isUserLoggedIn()) {
       navigate(`/delivery`, {state : {instructions : instructions}})
     } else {
-      navigate('/auth')
+      navigate('/auth', {state : {navToCart : true}})
     }
    
   }

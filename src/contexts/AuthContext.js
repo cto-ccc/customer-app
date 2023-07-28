@@ -23,7 +23,8 @@ export const AuthContextProvider = (props) => {
     userLoggedIn,
     isUserLoggedIn,
     getUserId,
-    getCustomerId
+    getCustomerId,
+    getCustomerIdFromCache
   }
 
   async function userLoggedIn(userId, customerId) {
@@ -53,6 +54,10 @@ export const AuthContextProvider = (props) => {
       }
   }
 
+  function getCustomerIdFromCache() {
+    return userId
+  }
+
   async function getUserId() {
     const { value } = await Preferences.get({ key: 'userId' })
     if (value) {
@@ -75,6 +80,7 @@ export const AuthContextProvider = (props) => {
   async function logout() {
     logAction('logout')
     showLoader()
+    setUserId(null)
     signOut(auth).then(async () => {
       hideLoader()
       removeUserCache()

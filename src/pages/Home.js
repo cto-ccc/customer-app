@@ -359,7 +359,7 @@ function Home() {
 
   const navigate = useNavigate()
   const { updateCart, cartData, isDesktop } = useContext(CommonContext)
-  const { isUserLoggedIn } = useContext(AuthContext)
+  const { isUserLoggedIn, getCustomerIdFromCache } = useContext(AuthContext)
   const [anchor, setAnchor] = useState(false)
   const [loading, setLoading] = useState(true)
   const [showSearchBar, setShowSearchBar] = useState(false)
@@ -640,7 +640,7 @@ function Home() {
               Our Recipes
             </Box>
             <Box onClick={() => goToProfile()} p={2} style={styles.navItem}>
-              Profile
+            { getCustomerIdFromCache() ? 'My Orders' : 'Login / Signup'} 
             </Box>
             <Box p={2} onClick={() => navigate('/cart')} style={styles.cartCont}>
               <ShoppingCartIcon 

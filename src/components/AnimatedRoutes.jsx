@@ -22,6 +22,7 @@ import ContactUs from '../pages/ContactUs';
 import TermsAndConditions from '../pages/TermsAndConditions';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
 import RefundPolicy from '../pages/RefundPolicy';
+import ApplyCoupon from '../pages/ApplyCoupon';
 
 function AnimatedRoutes() {
   
@@ -49,6 +50,7 @@ function AnimatedRoutes() {
           <Route path="/orderStatus" element={<OrderStatus />}/>
           <Route path="/auth" element={<Authentication />}/>
           <Route path="/orderDetails" element={<OrderDetails />}/>
+          <Route path="/applyCoupon" element={<ApplyCoupon />}/>
           
 
           <Route path="/aboutUs" element={<AboutUs />}/>

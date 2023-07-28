@@ -85,7 +85,7 @@ function Header() {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const { isUserLoggedIn } = useContext(AuthContext)
+  const { isUserLoggedIn, getCustomerIdFromCache } = useContext(AuthContext)
   const { updateCart, cartData, isDesktop } = useContext(CommonContext)
 
 
@@ -118,7 +118,7 @@ function Header() {
               Our Recipes
             </Box>
             <Box onClick={() => goToProfile()} p={2} style={styles.navItem}>
-              Profile
+              { getCustomerIdFromCache() ? 'My Orders' : 'Login / SignUp'} 
             </Box>
             <Box p={2} onClick={() => navigate('/cart')} style={styles.cartCont}>
               <ShoppingCartIcon 

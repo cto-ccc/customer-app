@@ -268,7 +268,7 @@ function Delivery() {
       delDate        : delDate,
       storeDetails   : storeDetails,
       itemDetails    : await getCartData(),
-      instructions   : location.state.instructions
+      instructions   : location?.state?.instructions
     }
     navigate(`/orderSummary`, {state : summaryProps, replace:true})
   }
