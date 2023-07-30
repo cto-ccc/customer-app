@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, browserSessionPersistence, browserPopupRedirectResolver } from "firebase/auth";
+import { getAuth, browserSessionPersistence, browserPopupRedirectResolver, indexedDBLocalPersistence, initializeAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { Capacitor } from "@capacitor/core"
 
 const firebaseConfig = {
   apiKey:  process.env.REACT_APP_FIREBASE_api,
@@ -15,6 +16,12 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+if (Capacitor.isNativePlatform) {
+  initializeAuth(app, {
+    persistence : indexedDBLocalPersistence
+  })
+}
+
 export const db = getFirestore(app)
 export const analytics = getAnalytics(app)
 export const auth = getAuth(app)
