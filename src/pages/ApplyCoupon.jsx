@@ -1,6 +1,7 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { TextField, Button, Box } from '@mui/material'
 import { useForm } from "react-hook-form";
+import { getCoupons } from '../services/api';
 
 function ApplyCoupon() {
 
@@ -8,7 +9,19 @@ function ApplyCoupon() {
 
   const verifyCoupon = (couponData) => {
     console.log("=======", couponData)
+  } 
+
+  const getUserCoupons = async() => {
+    const params = {
+      customerId : '8179198780'
+    }
+    const resp = await getCoupons(params)
+    console.log("==========", resp)
   }
+
+  useEffect(() => {
+    getUserCoupons()
+  }, [])
 
   return (
     <Box sx={{padding:'4vw'}}>

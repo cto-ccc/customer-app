@@ -23,6 +23,7 @@ import OfferBanner2 from '../assets/offer-banner2.png'
 import Marinates from '../assets/cat-marinates.png'
 import CatEggs from '../assets/cat-eggs.png'
 import CatPickles from '../assets/cat-pickle.png'
+import CatNutrisoft from '../assets/cat-nutrisoft.png'
 import CccLogo from '../assets/ccc-logo.png'
 import RaisedByNature from '../assets/raised-by-nature.png'
 
@@ -217,6 +218,7 @@ const styles = {
   },
   posterImg : {
     width:'100px',
+    height:'100px',
     marginBottom:'10px',
     boxShadow:'0 0 5px 0px #b3b1b1',
     borderRadius:'2px'
@@ -728,6 +730,11 @@ function Home() {
           Top Categories
         </Box>
         <Box sx={isDesktop ? styles.topCatContDesk : styles.topCatCont}>
+          <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
+            onClick={() => navigate('/categories/nutrisoft-chicken')}>
+            <img src={CatNutrisoft} style={isDesktop ? styles.posterImgDesk : styles.posterImg} />
+            Nutrisoft Chicken
+          </Box>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
             onClick={() => navigate('/categories/free-range-birds')}>
             <img src={CatFreeRange} style={isDesktop ? styles.posterImgDesk : styles.posterImg} />

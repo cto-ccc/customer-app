@@ -113,6 +113,11 @@ export const getDeliveryCharge = () => {
 export const getMetaData = () => {
   return {
 
+    'nutrisoft-chicken' : {
+      title : 'Nutrisoft Chicken',
+      keywords : 'Nutrisoft Chicken',
+      description : 'Nutrisoft Chicken'
+    },
     'home' : {
       title : 'Country Chicken Co - Authentic Natu Kodi in Hyderabad',
       keywords : 'countrychicken, natu kodi, healthy chicken, country eggs, chicken pickles, free range, antibiotic, steroids free',
@@ -413,6 +418,27 @@ export const validateUserOtp = (async(data) => {
   })
 })
 
+
+
+export const getCoupons = (async(data) => {
+  return new Promise(async(resolve, reject) => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/getCoupons`, {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      "body": JSON.stringify(data)
+    }).then((response) => response.json())
+    .then(function(data) { 
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
+    })
+  })
+})
 
 
 
