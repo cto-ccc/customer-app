@@ -5,6 +5,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import BottomNavBar from './BottomNavBar';
+import { Capacitor } from '@capacitor/core';
 
 const Alert = React.forwardRef(function Alert(
   props,
@@ -31,7 +33,7 @@ const styles = {
   }
 }
 function FullPageLoader() {
-  const {loader, loadingText, snackbar, hideSnackbar, snackbarText, snackbarType, setSnackbarType } = useContext(CommonContext)
+  const {loader, loadingText, snackbar, hideSnackbar, snackbarText, snackbarType, setSnackbarType, isDesktop } = useContext(CommonContext)
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -60,7 +62,13 @@ function FullPageLoader() {
           </Alert>
         </Snackbar>        
       }
+
       <Outlet />
+
+      {
+        Capacitor.getPlatform() == 'web' ? null : <BottomNavBar />
+      }
+
     </>
     )
 }

@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { App as CapApp } from '@capacitor/app';
 import ScrollToTop from './components/ScrollToTop';
+import './fonts/foregen.ttf'
+import './fonts/roboto.ttf'
 
 
 CapApp.addListener('backButton', ({ canGoBack }) => {

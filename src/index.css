@@ -1,12 +1,26 @@
 @font-face {
-  font-family: "Light";   /*Can be any text*/
+  font-family: "Roboto";   /*Can be any text*/
   src: local("Roboto"),
-    url("./fonts/Roboto.woff") format("truetype");
+    url("./fonts/roboto.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Foregen";
+  src: local("Foregen"),
+    url("./fonts/foregen.ttf") format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Sans";
+  src: local("Sans"),
+    url("./fonts/sans.ttf") format("truetype");
+  font-weight: normal;
 }
 
 body {
   margin: 0;
-  font-family: "Roboto";
+  font-family: "Sans";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #f9f8f8;
@@ -47,7 +61,14 @@ code {
   position: absolute;
 }
 
+.lan-iframe {
+  align-self: end;
+}
 
+.lan-iframe iframe {
+  width: 40vw;
+  height: 280px;
+}
 
 .recipie-iframe  iframe {
   display: block;   
@@ -72,4 +93,16 @@ code {
 .gateway-cont-mob {
   width: 100vw !important;
   height: 100% !important;
+}
+
+.btn-curved {
+  border-radius: 50%;
+}
+
+.mySwiper {
+  border-radius: 5px;
+}
+
+.nav-ic {
+  margin-bottom: 5px;
 }

@@ -9,6 +9,7 @@ import DownloadApple from './assets/download-apple.png'
 import DownloadGoogle from './assets/download-google.png'
 import CccLogo from './assets/ccc-logo.png'
 import RaisedByNature from './assets/raised-by-nature.png'
+import FooterLogo from './assets/lan-footer.png'
 import FooterBg from './assets/footer-bg.png'
 import { useContext } from 'react';
 import { CommonContext } from './contexts/CommonContext';
@@ -43,7 +44,8 @@ const styles = {
     width:'200px',
     height:'70px',
     // border:'1px solid white',
-    borderRadius:'20px' 
+    borderRadius:'20px',
+    cursor:'pointer' 
   },
   extraImg : {
     maxHeight:'120px',
@@ -66,8 +68,8 @@ function Footer() {
     <Box style={isDesktop ? styles.whycccDesk : styles.whyccc}>
       <Box sx={{height:'150px', }}>
          <Box sx={{ height:'150px', display:'flex', flexDirection:'column', backgroundSize:'cover', alignItems:'center', justifyContent:'center'}}>
-          <img src={CccLogo} style={styles.extraImg} />
-          <img src={RaisedByNature} style={styles.extraImg}/>
+          <img src={FooterLogo} style={styles.extraImg} />
+          {/* <img src={RaisedByNature} style={styles.extraImg}/> */}
         </Box>
       </Box>
     <Grid container spacing={2} sx={{width:'100%', marginTop:'30px'}}>
@@ -184,7 +186,8 @@ function Footer() {
                 onClick={() => openUrl('https://play.google.com/store/apps/details?id=com.countrychicken.customerapp')}>
                 <img src={DownloadGoogle} style={styles.storeIcon} />
               </Box>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
+                onClick={() => openUrl('https://apps.apple.com/in/app/country-chicken-co/id6455496228')}>
                 <img src={DownloadApple} style={styles.storeIcon} />
               </Box>
             </Box>

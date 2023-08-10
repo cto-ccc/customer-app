@@ -15,6 +15,7 @@ export const CommonProvider = (props) => {
   const [snackbarType, setSnackbarType] = useState('success')
 
   const [cartData, setCartData] = useState({})
+  const [couponCacheData, setCouponCacheData] = useState({})
 
   const [isDesktop, setIsDesktop] = useState(
     window.matchMedia("(min-width: 768px)").matches
@@ -28,6 +29,7 @@ export const CommonProvider = (props) => {
   }, [])
 
   const setCartDataOnLoad = async() => {
+    setCouponCacheData(JSON.parse((await Preferences.get({ key: 'couponData' })).value) || {})
     setCartData(JSON.parse((await Preferences.get({ key: 'cartData' })).value) || {})
   }
 
@@ -59,7 +61,7 @@ export const CommonProvider = (props) => {
           itemData.price = itemData.price + 300
           itemData.extras.skinType = 'skinless'
         } 
-        if (itemData.extras.boneType=='withBones') {
+        if (itemData.extras.boneType=='withBones' && itemData.id == 'C067') {
           itemData.extras.skinType = 'skinless'
         } 
       }
@@ -81,6 +83,20 @@ export const CommonProvider = (props) => {
     }
     setCartData({...newCartData})
     await Preferences.set({key: 'cartData', value: JSON.stringify(newCartData)})
+  }
+
+  const addCouponToCart = async(couponData) => {
+    setCouponCacheData(couponData)
+    await Preferences.set({key: 'couponData', value: JSON.stringify(couponData)})
+  }
+
+  const getCouponData = async() => {
+    return JSON.parse((await Preferences.get({ key: 'couponData' })).value) || {}
+  }
+
+  const clearCouponData = async() => {
+    setCouponCacheData(null)
+    return await Preferences.remove({key :  'couponData'})
   }
 
   const getCartData = async() => {
@@ -144,6 +160,10 @@ export const CommonProvider = (props) => {
     cartData,
     getCartData,
     clearCart,
+    couponCacheData,
+    addCouponToCart,
+    getCouponData,
+    clearCouponData,
     isDesktop
   }
 

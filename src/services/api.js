@@ -29,6 +29,11 @@ const imgMap = {
   'Nutrisoft' : Nutrisoft
 }
 
+export const btnCurvedStyle = {
+  borderRadius:'20px', background:'#FFF0D9 !important', color:'#a4243d !important', 
+            fontFamily:'Sans', fontWeight:'bold', padding:'8px 40px'
+}
+
 export const getCustomizedProducts = () => {
   return ['C009', 'C013', 'C017', 'C029', 'C021',  'CC009', 'CC013', 'CC017', 'CC029', 'CC021', 'C019', 'C023', 'C011', 'C016', 'C067']
 }
@@ -436,6 +441,43 @@ export const getCoupons = (async(data) => {
     .catch((error) => {
       console.log(error)
       reject(error)
+    })
+  })
+})
+
+export const getBlogData = (async(id) => {
+
+  return new Promise((resolve, reject)=> {
+    getDoc(doc(db, `blogs/${id}`)).then((querySnapshot) => {
+      resolve(querySnapshot.data())
+    }).catch((error)=> {
+      reject(null)
+    })
+  })
+})
+
+export const getRecipieData = (async(id) => {
+
+  return new Promise((resolve, reject)=> {
+    getDoc(doc(db, `recipies/${id}`)).then((querySnapshot) => {
+      resolve(querySnapshot.data())
+    }).catch((error)=> {
+      reject(null)
+    })
+  })
+})
+
+export const getAllCCCBlogs = (async(id) => {
+
+  return new Promise((resolve, reject)=> {
+    getDocs(query(collection(db, `blogs`))).then((querySnapshot) => {
+      let eventItems = []
+      querySnapshot.forEach((doc) => {
+        eventItems.push(doc.data())      
+      })
+      resolve(eventItems)
+    }).catch(()=> {
+      reject([])
     })
   })
 })

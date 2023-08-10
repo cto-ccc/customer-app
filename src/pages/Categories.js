@@ -42,8 +42,9 @@ const styles = {
   productDescCont : {
     padding:'15px',
     textAlign:'left',
-    background:'#ffebeb',
+    // background:'#ffebeb',
     // borderRadius:'25px 25px 20px 20px'
+    borderTop:'1px solid #eaeaea'
   },
   incCont : {
     display : 'flex',
@@ -63,9 +64,9 @@ const styles = {
     justifyContent:'space-between'
   },
   activeExtra : {
-    background : 'wheat',
-    color:'#a4243d',
-    borderRadius:'10px',
+    background : '#F47F13',
+    color:'white',
+    borderRadius:'5px',
     padding:'7px 15px',
     cursor:'pointer',
     boxShadow:'1px 1px 5px 3px #eaeaea',
@@ -76,7 +77,8 @@ const styles = {
     padding:'8px 15px',
     cursor:'pointer',
     display:'flex',
-    alignItems:'baseline'
+    alignItems:'baseline',
+    borderRadius:'5px'
   },
   disabled : {
     opacity:'0.5',
@@ -99,8 +101,11 @@ const styles = {
     textAlign:'left', 
     marginBottom:'5px', 
     fontWeight:'450', 
-    fontSize:'20px',
+    fontSize:'15px',
     cursor:'pointer',
+    display:'flex',
+    justifyContent:'space-between',
+    alignItems:'center',
     "&:hover": {
       color:'#a4243d'
     }
@@ -183,7 +188,7 @@ function Categories() {
 
   const list = (anchor) => (
     <Box sx={{padding:'4vw'}}>
-      <Box sx={{fontSize:'20px', fontWeight:'600', mb:2}}>
+      <Box sx={{fontSize:'15px', fontWeight:'600', mb:2, color:'#a4243d', borderBottom:'1px solid #eaeaea'}}>
         Customize your order
       </Box>
       <Box sx={{display:'flex', flexDirection:'column'}}>
@@ -303,15 +308,18 @@ function Categories() {
                 <Box style={styles.productItem}>
                   <Box sx={{textAlign:'center', height:'250px', position:'relative', cursor:'pointer', display:'flex', alignItems:'center' }}
                     onClick={() => navigate(`/products/${chick.urlId}`, {state : chick})}>
-                    <Box sx={styles.discountCont}>
+                    {/* <Box sx={styles.discountCont}>
                       {Math.trunc(((chick.mrp - chick.price) / chick.mrp) * 100)}% Off
-                    </Box>
+                    </Box> */}
                     <img src={getImgMap()[chick.imgUrl]} style={styles.productImg}/>
                   </Box>
                   <div style={styles.productDescCont}>
                     <Box sx={styles.prodName}
                       onClick={() => navigate(`/products/${chick.urlId}`, {state : chick})}>
                       {chick.name} 
+                      <Box sx={{fontSize:'15px', opacity:'0.2'}}>
+                        {chick.qty}
+                      </Box>
                     </Box>
                     {
                       chick.style ? 
@@ -319,11 +327,13 @@ function Categories() {
                           ({chick.style})
                         </Box> : null
                     }
-                    <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
+                    {/* <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
                       {chick.qty}
-                    </Box>
-                    <Box sx={{textAlign:'left', marginBottom:'5px', fontSize:'20px', display:'flex', alignItems:'end'}}>
-                    ₹ {chick.price} <Box sx={{fontSize:'15px', marginLeft:'5px', opacity:'0.5'}}><s>₹ {chick.mrp}</s></Box> 
+                    </Box> */}
+                    <Box sx={{textAlign:'left', marginBottom:'10px', fontSize:'20px', display:'flex', alignItems:'end'}}>
+                    ₹ {chick.price} <Box sx={{fontSize:'15px', marginLeft:'5px', opacity:'0.2'}}><s>₹ {chick.mrp}</s></Box> 
+                    <Box sx={{fontSize:'12px', marginLeft:'5px', color:'#f47f13', borderLeft:'1px solid #eaeaea', paddingLeft:'5px'}}>
+                        {Math.trunc(((chick.mrp - chick.price) / chick.mrp) * 100)}% Off</Box>
                     </Box>
                     {
                       cartData && cartData[chick.id] && cartData[chick.id].count ?
@@ -355,7 +365,7 @@ function Categories() {
                             Out of stock
                           </Button>
                             :
-                          <Button variant="contained" style={styles.mainBtn} onClick={() => addToCart(chick)}>
+                          <Button variant="contained" style={styles.mainBtn} fullWidth onClick={() => addToCart(chick)}>
                             Add To Cart
                           </Button>
                         }

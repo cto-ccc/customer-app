@@ -36,7 +36,6 @@ function NavHeader() {
         </Box>
       }
     </>
-
   )
 }
 

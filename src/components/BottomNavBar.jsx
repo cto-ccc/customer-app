@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react'
 import { BottomNavigation, BottomNavigationAction } from '@mui/material'
-import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import AutoAwesomeMosaicIcon from '@mui/icons-material/AutoAwesomeMosaic';
 import ShareIcon from '@mui/icons-material/Share';
@@ -11,19 +10,34 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { CommonContext } from '../contexts/CommonContext';
 import Paper from '@mui/material/Paper';
-import Activities from './Activities';
 
+import CartIcon from '../assets/nav-cart.png'
+import CatIcon from '../assets/nav-categories.png'
+import HomeIcon from '../assets/nav-home.png'
+import HomeActIcon from '../assets/nav-home-act.png'
+import ProfileIcon from '../assets/nav-profile.png'
+import ProfileActIcon from '../assets/nav-profile-act.png'
+import CatActIcon from '../assets/nav-cat-act.png'
+import CartActIcon from '../assets/cart-act.png'
 
 function BottomNavBar() {
   const [activeIndex, setActiveIndex] = useState(0)
   const {showPopup} = useContext(CommonContext)
-  const {getUserId} = useContext(AuthContext)
-
+  const {getUserId, isUserLoggedIn} = useContext(AuthContext)
+  const ref = React.useRef(null);
   const navigate    = useNavigate()
+
+  async function goToProfile() {
+    if (await isUserLoggedIn()) {
+      navigate('/profile')
+    } else {
+      navigate('/auth')
+    }
+  }
+
   return (
-    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, height:'7vh' }} elevation={3}>
+    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, height:'7vh', zIndex:'444' }} elevation={3}>
     <BottomNavigation
-      value={activeIndex}
       onChange={(event, newIndex) => {
         setActiveIndex(newIndex)
         switch (newIndex) {
@@ -31,33 +45,27 @@ function BottomNavBar() {
             navigate("/")
             break;
           case 1:
-            navigate("/network")
-            // navigate("/mycard/"+getUserId())
+            navigate("/allCategories")
             break;
           case 2:
-            showPopup(<Activities />)
+            navigate("/cart")
             break;
           case 3:
-            navigate("/apps")
-            break;
-          // case 3:
-          //   console.log("Share")
-          //   break;
-          case 4:
-            navigate("/profile")
+            goToProfile()
             break;
           default:
             break;
         }
       }}
       showLabels>
-      <BottomNavigationAction label="Home" icon={<HomeIcon />}/> 
-      {/* <BottomNavigationAction label="Card" icon={<StyleIcon />}/>  */}
-      <BottomNavigationAction label="Network" icon={<GroupsIcon />}/> 
-      <BottomNavigationAction label="New" icon={<AddCircleOutlineIcon />} />
-      <BottomNavigationAction label="Apps" icon={<AutoAwesomeMosaicIcon />}/> 
-      {/* <BottomNavigationAction label="Share" icon={<ShareIcon />}/>  */}
-      <BottomNavigationAction label="Profile" icon={<PersonIcon />}/>
+      <BottomNavigationAction label="Home" sx={{color:window.location.pathname == '/' ? '#a4243d' : '#bfbfbf'}}
+       icon={<img className='nav-ic' src={window.location.pathname == '/' ? HomeActIcon : HomeIcon} />}/> 
+      <BottomNavigationAction label="Categories" sx={{color:window.location.pathname == '/allCategories' ? '#a4243d' : '#bfbfbf'}}
+       icon={<img className='nav-ic' src={window.location.pathname == '/allCategories' ? CatActIcon : CatIcon} />}/> 
+      <BottomNavigationAction label="Cart" sx={{color:window.location.pathname == '/cart' ? '#a4243d' : '#bfbfbf'}}
+       icon={<img className='nav-ic' src={window.location.pathname == '/cart' ? CartActIcon : CartIcon} />} />
+      <BottomNavigationAction label="Profile" sx={{color:window.location.pathname == '/profile' ? '#a4243d' : '#bfbfbf'}}
+      icon={<img className='nav-ic' src={window.location.pathname == '/profile' ? ProfileActIcon : ProfileIcon} />} />
     </BottomNavigation>
     </Paper>
   )

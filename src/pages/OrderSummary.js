@@ -35,7 +35,7 @@ function OrderSummary() {
   const navigate = useNavigate()
   const location = useLocation()
   const { getUserId, getCustomerId } = useContext(AuthContext)
-  const { showLoader, hideLoader, showAlert, showSnackbar } = useContext(CommonContext)
+  const { showLoader, hideLoader, showAlert, showSnackbar, couponCacheData } = useContext(CommonContext)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -62,6 +62,12 @@ function OrderSummary() {
       instructions   : location.state.instructions
     } 
 
+    if (couponCacheData?.couponCode) {
+      orderData.couponCode           = couponCacheData.couponCode
+      orderData.couponDiscountAmount = couponCacheData.couponValue
+      orderData.couponDiscountType   = 'discount_coupon'
+    }
+        
     let ordersObj = JSON.parse(JSON.stringify(location.state.itemDetails))
     delete ordersObj.totalAmount
     delete ordersObj.totalCount
@@ -169,12 +175,26 @@ function OrderSummary() {
             </Box>
           </Box>
           
+          {
+            couponCacheData && couponCacheData.couponCode ?
+            <Box sx={{padding:'5px 15px'}}>
+              <Box sx={{borderTop:'1px solid #ebebeb',display:'flex', padding:'10px 0', justifyContent:'space-between', alignItems:'center', fontSize:'13px'}}>
+                <Box sx={{display:'flex', alignItems:'center'}}>
+                  Coupon Discount [ {couponCacheData.couponCode} ]
+                </Box>
+                <Box>
+                - ₹ {couponCacheData.couponValue}
+                </Box>
+              </Box>
+            </Box> : null
+          }
+
           <Box sx={{display:'flex', justifyContent:'space-between', padding:'15px 15px', borderTop:'1px solid #eaeaea'}}>
             <Box>
               To Pay
             </Box>
             <Box sx={{fontWeight:'bold'}}>
-              ₹ {location.state.itemDetails.totalAmount + getDeliveryCharge()}
+              ₹ {location.state.itemDetails.totalAmount + getDeliveryCharge() - (couponCacheData?.couponValue || 0)}
             </Box>
           </Box>
         </Box> 

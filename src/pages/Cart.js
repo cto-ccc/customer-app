@@ -13,7 +13,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 import ProductCard from '../components/ProductCard';
 import NavHeader from '../components/NavHeader';
 import TextField from '@mui/material/TextField';
-
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const styles = {
   cartCont : {
@@ -53,7 +54,7 @@ function Cart() {
 
   const navigate = useNavigate()
 
-  const { updateCart, getCartData, clearCart, isDesktop, cartData } = useContext(CommonContext)
+  const { updateCart, getCartData, clearCart, isDesktop, cartData, getCouponData, couponCacheData, clearCouponData } = useContext(CommonContext)
   const [instructions, setInstructions] = useState('')
   const { isUserLoggedIn } = useContext(AuthContext)
   // const [cartData, setCartData] = useState({})
@@ -110,7 +111,6 @@ function Cart() {
     } else {
       navigate('/auth', {state : {navToCart : true}})
     }
-   
   }
 
   // const fetchCartData = async() => {
@@ -222,8 +222,31 @@ function Cart() {
             <Box sx={{padding:'10px', margin:'10px 0', border:'1px solid lightgreen', color:'green', fontWeight:'bold', textAlign:'center', fontSize:'13px'}}>
               Congratulations! You have saved ₹{cartData.totalDiscount} /-
             </Box>
+            
+            {
+              couponCacheData && couponCacheData.couponCode ?
+              <Box sx={{padding:'5px 15px'}}>
+                <Box sx={{borderTop:'1px solid #ebebeb',display:'flex', paddingTop:'20px', justifyContent:'space-between', alignItems:'center', fontSize:'13px'}}>
+                  <Box sx={{display:'flex', alignItems:'center'}}
+                    onClick={() => clearCouponData()}>
+                    Coupon Discount [ {couponCacheData.couponCode} ]
+                    <HighlightOffIcon sx={{fontSize:'15px', marginLeft:'10px'}}/>
+                  </Box>
+                  <Box>
+                  - ₹ {couponCacheData.couponValue}
+                  </Box>
+                </Box>
+              </Box> : 
+              <Box onClick={() => navigate('/applyCoupon')}
+                sx={{margin:'25px 15px 5px 15px', padding:'10px', border:'1px solid #eaeaea', cursor:'pointer', borderRadius:'10px',
+                    display:'flex', justifyContent:'space-between'}}>
+                Apply Coupon
+                <ChevronRightIcon />
+              </Box>
+            }
+
             <Box sx={{padding:'20px 15px'}}>
-              <Box sx={{borderTop:'1px solid #ebebeb',display:'flex', paddingTop:'20px', justifyContent:'space-between', alignItems:'center', fontSize:'13px', opacity:'0.5'}}>
+              <Box sx={{borderTop:'1px solid #ebebeb',display:'flex', paddingTop:'5px', justifyContent:'space-between', alignItems:'center', fontSize:'13px', opacity:'0.5'}}>
                 <Box>
                   Delivery Charge
                 </Box>
@@ -238,7 +261,7 @@ function Cart() {
                   Total Amount
                 </Box>
                 <Box sx={{fontWeight:'bold'}}>
-                  ₹ {cartData.totalAmount + getDeliveryCharge()} 
+                  ₹ {cartData.totalAmount + getDeliveryCharge() - (couponCacheData?.couponValue || 0)}
                 </Box>
               </Box>
             </Box>

@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { Box} from '@mui/material'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { CommonContext } from '../contexts/CommonContext'
+import { Capacitor } from '@capacitor/core'
 
 
 const styles = {
@@ -46,7 +47,7 @@ function CartHolder() {
   return (
     <>
       {
-        cartData && cartData.totalCount ?
+        cartData && cartData.totalCount && Capacitor.getPlatform() == 'web' ?
         <Box style={isDesktop ? styles.cartContDesk : styles.cartCont}
           onClick={() => navigate(`/cart`)}>
           <Box style={styles.cartViewCont}>

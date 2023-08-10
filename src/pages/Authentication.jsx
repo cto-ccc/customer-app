@@ -64,7 +64,7 @@ function Authentication(props) {
       const resp = await isUserLoggedIn()
       // console.log("Response from is user login : ", resp)
       if (resp) {
-        navigate("/", {replace:true})
+        navigate("/home", {replace:true})
       }
     }
     checkLogin()
@@ -110,6 +110,7 @@ function Authentication(props) {
         })
       } else {
         showAlert(<>User account is not registered. Please sign up.</>)
+        hideLoader()
       }
     })).catch((error) => {
       hideLoader()

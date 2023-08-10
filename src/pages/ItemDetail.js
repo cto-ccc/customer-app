@@ -35,9 +35,9 @@ const styles = {
     fontWeight:'500'
   },
   activeExtra : {
-    background : 'wheat',
-    color:'#a4243d',
-    borderRadius:'10px',
+    background : '#F47F13',
+    color:'white',
+    borderRadius:'5px',
     padding:'7px 15px',
     cursor:'pointer',
     boxShadow:'1px 1px 5px 3px #eaeaea',
@@ -48,7 +48,8 @@ const styles = {
     padding:'8px 15px',
     cursor:'pointer',
     display:'flex',
-    alignItems:'baseline'
+    alignItems:'baseline',
+    borderRadius:'5px'
   },
   disabled : {
     opacity:'0.5',
@@ -141,7 +142,7 @@ function ItemDetail() {
 
   const list = (anchor) => (
     <Box sx={{padding:'4vw'}}>
-      <Box sx={{fontSize:'20px', fontWeight:'600', mb:2}}>
+      <Box sx={{fontSize:'15px', fontWeight:'600', mb:2, color:'#a4243d', borderBottom:'1px solid #eaeaea'}}>
         Customize your order
       </Box>
       <Box sx={{display:'flex', flexDirection:'column'}}>

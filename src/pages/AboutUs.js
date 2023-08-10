@@ -59,7 +59,7 @@ function AboutUs() {
                 <img src={HowWeStarted} style={styles.portImg} />
               </Box>
               <Box sx={{display:'flex', flexDirection:'column', marginLeft:'20px'}}>
-                <Box mb={1} sx={{color:'#a4243d', fontWeight:'bold', fontSize:'20px'}}>
+                <Box mb={1} sx={{color:'#a4243d', fontFamily:'Foregen', fontSize:'30px'}}>
                   OUR HUMBLE BEGINNING
                 </Box>
                 <Box>
@@ -122,7 +122,7 @@ function AboutUs() {
                   <img src={Saikesh} style={styles.portImg} />
                 </Box>
                 <Box sx={{display:'flex', flexDirection:'column', marginLeft:'20px'}}>
-                  <Box mb={1} sx={{color:'#a4243d', fontWeight:'bold', fontSize:'20px'}}>
+                  <Box mb={1} sx={{color:'#a4243d', fontFamily:'Foregen', fontSize:'30px'}}>
                     G SAIKESH GOUD , Founder-CEO
                   </Box>
                   <Box>
@@ -138,7 +138,7 @@ function AboutUs() {
                   <img src={Sami} style={styles.portImg} />
                 </Box>
                 <Box sx={{display:'flex', flexDirection:'column', marginLeft:'20px'}}>
-                  <Box mb={1} sx={{color:'#a4243d', fontWeight:'bold', fontSize:'20px'}}>
+                  <Box mb={1} sx={{color:'#a4243d', fontFamily:'Foregen', fontSize:'30px'}}>
                     MOHD SAMI UDDIN , Co-Founder-COO
                   </Box>
                   <Box>
@@ -154,7 +154,7 @@ function AboutUs() {
                   <img src={Suri} style={styles.portImg} />
                 </Box>
                 <Box sx={{display:'flex', flexDirection:'column', marginLeft:'20px'}}>
-                  <Box mb={1} sx={{color:'#a4243d', fontWeight:'bold', fontSize:'20px'}}>
+                  <Box mb={1} sx={{color:'#a4243d', fontFamily:'Foregen', fontSize:'30px'}}>
                     SURI BABU, Farmers’ Man
                   </Box>
                   <Box>

@@ -7,7 +7,8 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
 import ComponentLoader from '../components/ComponentLoader'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { TextField } from '@mui/material'
+import { IconButton, InputAdornment, OutlinedInput, TextField } from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu';
 
 import Eggs from '../assets/eggs.png'
 import HomeBanner1 from '../assets/banner1.png'
@@ -66,25 +67,35 @@ import CloseIcon from '@mui/icons-material/Close';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SearchIcon from '@mui/icons-material/Search';
 import Autocomplete from '@mui/material/Autocomplete';
+import FooterLogo from '../assets/lan-footer.png'
 
 import * as React from 'react';
 import { getCustomizedProducts, getImgMap, getLanding, getMetaData, logAction } from '../services/api';
 import { Capacitor } from '@capacitor/core';
 import Footer from '../Footer';
 import { Helmet } from 'react-helmet';
-
+import Header from '../components/Header';
+import CatFreeRange1 from '../assets/land-cat-freerange.png'
+import CatVillageBirds1 from '../assets/land-cat-village.png'
+import CatMarinates1 from '../assets/land-cat-marinates.png'
+import CatEggs1 from '../assets/land-cat-eggs.png'
+import CatPickles1 from '../assets/land-cat-pickle.png'
+import CatNutrisoft1 from '../assets/land-cat-nutrisoft.png'
+import CccWhiteLogo from '../assets/ccc-white-logo.png'
+import FavouriteLogo from '../assets/favourites.png'
+import LandingLogo from '../assets/lan-logo.png'
 
 const styles = {
   navbar : {
-    height : '10vh',
-    borderBottom : '1px solid #b1b1b1',
+    height : '8vh',
+    // borderBottom : '1px solid #b1b1b1',
     position:'fixed',
     top:'0',
     left:'0',
     width:'92vw',
-    background:'white',
+    background:'#a4243d',
     zIndex:'2',
-    boxShadow: '0px 0px 5px 0px #7e7e7e',
+    // boxShadow: '0px 0px 5px 0px #7e7e7e',
     padding:'0 4vw',
     display:'flex',
     justifyContent:'space-between',
@@ -92,7 +103,7 @@ const styles = {
   },
   mainContent : {
     height : '100vh',
-    paddingTop:'10vh'
+    paddingTop:'8vh'
   },
   mainContentDesk : {
     height : '100vh',
@@ -120,7 +131,7 @@ const styles = {
     borderRadius:'5px',
     width:'220px',
     height:'315px',
-    boxShadow:'0px 0px 5px 2px #eaeaea'
+    boxShadow:'0px 0px 2px 1px #eaeaea'
   },
 
   productItemDesk : {
@@ -172,10 +183,11 @@ const styles = {
     height:'120px',
     textAlign:'left',
     alignItems:'center',
-    background:'#ffebeb',
+    // background:'#ffebeb',
     borderRadius:'0px 0px 5px 5px',
     display:'grid',
     position:'relative',
+    borderTop:'1px solid #eaeaea'
     // width:'170px'
   },
   mainBtn : {
@@ -212,28 +224,24 @@ const styles = {
     borderRadius:'50%'
   },
   homeLogo : {
-    width:'200px',
-    height:'7.5vh',
-    cursor:'pointer'
+    cursor:'pointer',
+    height:'5vh'
   },
   posterImg : {
-    width:'100px',
-    height:'100px',
+    width:'100%',
+    height:'90px',
     marginBottom:'10px',
     boxShadow:'0 0 5px 0px #b3b1b1',
     borderRadius:'2px'
   },
   posterImgDesk : {
-    width:'75%',
+    width:'90%',
     marginBottom:'10px',
     boxShadow:'0 0 5px 0px #b3b1b1',
     borderRadius:'2px'
   },
   posterCont : {
-    padding:'10px',
     textAlign:'center',
-    width:'300px',
-    background:'#ffebeb',
     borderRadius:'10px',
     boxShadow:'0px 0px 10px 0px #eaeaea',
     margin:'0 5px'
@@ -257,9 +265,9 @@ const styles = {
   },
 
   activeExtra : {
-    background : 'wheat',
-    color:'#a4243d',
-    borderRadius:'10px',
+    background : '#F47F13',
+    color:'white',
+    borderRadius:'5px',
     padding:'7px 15px',
     cursor:'pointer',
     boxShadow:'1px 1px 5px 3px #eaeaea',
@@ -270,7 +278,9 @@ const styles = {
     padding:'8px 15px',
     cursor:'pointer',
     display:'flex',
-    alignItems:'baseline'
+    alignItems:'baseline',
+    border:'1px solid #eaeaea',
+    borderRadius:'5px'
   },
   disabled : {
     opacity:'0.5',
@@ -322,6 +332,9 @@ const styles = {
     marginBottom:'3px', 
     fontWeight:'450', 
     fontSize:'15px', 
+    display:'flex',
+    justifyContent:'space-between',
+    alignItems:'center',
     cursor:'pointer',
     "&:hover": {
       color:'#a4243d'
@@ -350,10 +363,17 @@ const styles = {
     borderRadius:'3px 0 0 3px'
   },
   topCatCont : {
-    display:'flex', width:'100vw', overflowX:'scroll', marginBottom:'20px'
+    display:'inline-grid', 
+    marginBottom:'20px',
+    gridTemplateColumns: 'auto auto auto',
+    width:'92vw',
+    padding:'0 4vw'
   },
   topCatContDesk : {
     display:'flex', justifyContent:'center', padding:'0 10px', marginBottom:'6vw'
+  },
+  mobMenuItem : {
+    padding:'10px 20px'
   }
 }
 
@@ -363,6 +383,7 @@ function Home() {
   const { updateCart, cartData, isDesktop } = useContext(CommonContext)
   const { isUserLoggedIn, getCustomerIdFromCache } = useContext(AuthContext)
   const [anchor, setAnchor] = useState(false)
+  const [sideNavAnchor, setSideNavAnchor] = useState(false)
   const [loading, setLoading] = useState(true)
   const [showSearchBar, setShowSearchBar] = useState(false)
 
@@ -422,6 +443,13 @@ function Home() {
     setAnchor(open)
   }
 
+  const toggleSideNavDrawer = (open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setSideNavAnchor(open)
+  }
+
   const downloadApp = () => {
     window.open('https://play.google.com/store/apps/details?id=com.countrychicken.customerapp', '_blank')
   }
@@ -474,7 +502,7 @@ function Home() {
 
   const list = (anchor) => (
     <Box sx={{padding:'4vw'}}>
-      <Box sx={{fontSize:'20px', fontWeight:'600', mb:2}}>
+      <Box sx={{fontSize:'15px', fontWeight:'600', mb:2, color:'#a4243d', borderBottom:'1px solid #eaeaea'}}>
         Customize your order
       </Box>
       <Box sx={{display:'flex', flexDirection:'column'}}>
@@ -491,7 +519,7 @@ function Home() {
               </Box>
               <Box style={skinType == 'skinless' ? styles.activeExtra : styles.inactiveExtra}
                 onClick={() => modifySkinType('skinless')}>
-                Skinless <Box sx={{fontSize:'12px', marginLeft:'5px'}}>(+ ₹100/-)</Box>  
+                Without Skin <Box sx={{fontSize:'12px', marginLeft:'5px'}}>(+ ₹100/-)</Box>  
               </Box>
             </Box>
           </> : null
@@ -537,7 +565,7 @@ function Home() {
 
       <Box sx={{display:'flex', flexDirection:'column'}}>
         <Box>
-          Pieces Cut
+          Chicken Cut
         </Box>
         <Box sx={{display:'flex', padding:'15px 0 20px 0', borderBottom:'1px solid #eaeaea', mb:4}}>
           <Box sx={{mr:3}} style={cutType == 'small' ? styles.activeExtra : styles.inactiveExtra}
@@ -558,6 +586,7 @@ function Home() {
 
       <Box sx={{mt:3, display:'flex', justifyContent:'flex-end'}}>
         <Button variant='contained'
+          fullWidth
           onClick={() => addItemFromExtras()}>
           Add Item
         </Button>
@@ -583,98 +612,69 @@ function Home() {
           <meta name='description' content={metaData.description} />
           <meta name='keywords' content={metaData.keywords} />
         </Helmet>
-      <Box style={styles.navbar}>
-        <Box>
-          <Box onClick={() => navigate('/')}>
-            <img src={HomeLogo} style={styles.homeLogo}/>
-          </Box>
-        </Box>
+        {
+          isDesktop ? <Header /> :
+          null
+        }
+        
+    
         {
           isDesktop ? 
-          <Box sx={{display:'flex'}}>
+          null : 
+          <Box style={styles.navbar}>
+            <Box onClick={() => setSideNavAnchor(true)}>
+              <MenuIcon sx={{color:'#FFF0D9'}} />
+            </Box>
+            <Box onClick={() => navigate('/')}>
+              <img src={LandingLogo} style={styles.homeLogo}/>
+            </Box>
+            <Box sx={{display:'flex'}}>
+              <img src={FavouriteLogo} />
+              
+            </Box>
+          </Box>
+        }
+
+
+      {
+        loading ?
+        <Box sx={{padding:'4vw'}}>
+          <ComponentLoader />
+        </Box>
+         :
+        <div style={isDesktop ? styles.mainContentDesk : styles.mainContent}>
             {
-              showSearchBar ? 
-              <Box sx={{display:'flex', flexDirection:'column', alignItems:'center', width:'30vw'}}>
-                <Box sx={{display:'flex', alignItems:'center', padding:'0 10px', width:'30vw', justifyContent:'flex-end'}}>
-                  <TextField
-                    size='small'
-                    placeholder="Search Products"
-                    variant="outlined"
-                    type="text"
-                    autoComplete='off'
-                    name="searchProducts"
-                    autoFocus
-                    onChange={(event) => {
-                      searchProductsEvent(event.target.value);
-                    }}
-                  />
-                  <CloseIcon onClick={() => closeSearch()} sx={{cursor:'pointer', marginLeft:'10px'}}/>
-                </Box>
-                {
-                  filteredItemsData.length ?
-                  <Box sx={{display:'flex', position:'absolute', top:'10vh', 
-                    background:'white', width:'30vw', justifyContent:'flex-end', flexDirection:'column' }}>
-                    {
-                      filteredItemsData.map((item) => {
-                        return (
-                          <Box sx={{padding:'10px', borderBottom:'2px solid white', cursor:'pointer', background:'#f3f3f3'}}
-                            onClick={() => navigate(`/products/${item.urlId}`, {state : item})}>
-                            {item.name} ({item.qty})
-                          </Box>
-                        )
-                      })
-                    }
-                  </Box> : null
-                }
-                
-              </Box> : 
-              <Box p={2} onClick={() => setShowSearchBar(true)} style={styles.navItem}>
-                <SearchIcon />
-              </Box>
-            }
-            <Box p={2} onClick={() => navigate('/')} style={styles.navItem}>
-              Home
-            </Box>
-            <Box p={2} onClick={() => navigate('/aboutUs')} style={styles.navItem}>
-              About Us
-            </Box>
-            <Box p={2} onClick={() => navigate('/recipies')} style={styles.navItem}>
-              Our Recipes
-            </Box>
-            <Box onClick={() => goToProfile()} p={2} style={styles.navItem}>
-            { getCustomerIdFromCache() ? 'My Orders' : 'Login / Signup'} 
-            </Box>
-            <Box p={2} onClick={() => navigate('/cart')} style={styles.cartCont}>
-              <ShoppingCartIcon 
-                sx={{fontSize:'18px', paddingRight:'5px', marginRight:'5px', color:'#a4243d'}} />
-              Cart
-            </Box>
-          </Box> : 
-          <Box sx={{display:'flex'}}>
-              {
-                showSearchBar ?  
+              isDesktop ? null : 
+          
                 <Box>
-                <Box sx={{display:'flex', alignItems:'center', padding:'0 10px', width:'80vw',
-                   position:'absolute', left:0, top:0, height:'10vh', background:'white',justifyContent:'flex-end'}}>
-                  <TextField
-                    size='small'
-                    placeholder="Search Products"
-                    variant="outlined"
-                    type="text"
-                    autoComplete='off'
-                    name="searchProducts"
-                    autoFocus
-                    fullWidth
-                    onChange={(event) => {
-                      searchProductsEvent(event.target.value);
-                    }}  
-                  />
-                  <CloseIcon onClick={() => closeSearch()} sx={{cursor:'pointer', marginLeft:'10px'}}/>
+                  <Box sx={{display:'flex', alignItems:'center', padding:'0 10px',
+                            height:'10vh', background:'white',justifyContent:'flex-end'}}>
+                    <OutlinedInput
+                      size='small'
+                      placeholder="Search on Country Chicken Co"
+                      variant="outlined"
+                      type="text"
+                      autoComplete='off'
+                      name="searchProducts"
+                      fullWidth
+                      sx={{borderRadius:'20px'}}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton edge="end">
+                          <SearchIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      onChange={(event) => {
+                        searchProductsEvent(event.target.value);
+                      }}  
+                    />
                 </Box>
+
                 {
                   filteredItemsData.length ?
-                  <Box sx={{display:'flex', position:'absolute', top:'10vh', left:0,
-                    background:'white', width:'100vw', justifyContent:'flex-start', flexDirection:'column' }}>
+                  <Box sx={{display:'flex', position:'absolute', top:'20vh', left:0, background:'white', 
+                            width:'100vw', justifyContent:'flex-start', flexDirection:'column', zIndex:'333' }}>
                     {
                       filteredItemsData.map((item) => {
                         return (
@@ -687,38 +687,24 @@ function Home() {
                     }
                   </Box> : null
                 } 
-                </Box> : <Box onClick={() => setShowSearchBar(true)}>
-                  <SearchIcon style={styles.userLogo} sx={{marginRight:'10px'}}/>
-                  </Box>
-              }
+              </Box> 
+
+          }
             
-            <img src={User} style={styles.userLogo} onClick={() => goToProfile()}/>
-          </Box>
-        }
-        </Box>
-
-      {
-        loading ?
-        <Box sx={{padding:'4vw'}}>
-          <ComponentLoader />
-        </Box>
-         :
-        <div style={isDesktop ? styles.mainContentDesk : styles.mainContent}>
-
-        <Box>
+        <Box sx={{padding:isDesktop ? null : '0 4vw'}}>
           <Swiper
             pagination={{
               dynamicBullets: true,
             }}
             autoplay={{delay:3500, disableOnInteraction: false}}
             modules={[Pagination, Autoplay]}
-            className="mySwiper"
+            className= {isDesktop ? null : 'mySwiper' }
           >
-            <SwiperSlide>
-              <img src={isDesktop ? HomeBanner4 : HomeBanner1} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
+             <SwiperSlide>
+              <img src={isDesktop ? HomeBanner5 : HomeBanner2} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
             </SwiperSlide>
             <SwiperSlide>
-              <img src={isDesktop ? HomeBanner5 : HomeBanner2} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
+              <img src={isDesktop ? HomeBanner4 : HomeBanner1} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
             </SwiperSlide>
             <SwiperSlide>
               <img src={isDesktop ? HomeBanner6 : HomeBanner3} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
@@ -726,38 +712,38 @@ function Home() {
           </Swiper>
         </Box>
         
-        <Box sx={{padding: isDesktop ? '2vw 3vw 2vw 9vw' : '20px 4vw' , fontSize:'20px', fontWeight:'bold'}}>
-          Top Categories
+        <Box sx={{padding: isDesktop ? '3vw 3vw 1vw 2vw' : '20px 4vw' , fontSize:'20px', fontWeight:'bold', display:'grid', color:'#a4243d'}}>
+          Categories
         </Box>
         <Box sx={isDesktop ? styles.topCatContDesk : styles.topCatCont}>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
             onClick={() => navigate('/categories/nutrisoft-chicken')}>
-            <img src={CatNutrisoft} style={isDesktop ? styles.posterImgDesk : styles.posterImg} />
-            Nutrisoft Chicken
+            <img src={CatNutrisoft1} style={isDesktop ? styles.posterImgDesk : styles.posterImg} />
+            {/* Nutrisoft Chicken */}
           </Box>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
             onClick={() => navigate('/categories/free-range-birds')}>
-            <img src={CatFreeRange} style={isDesktop ? styles.posterImgDesk : styles.posterImg} />
-            Free Range Birds
+            <img src={CatFreeRange1} style={isDesktop ? styles.posterImgDesk : styles.posterImg} />
+            {/* Free Range Birds */}
           </Box>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
             onClick={() => navigate('/categories/village-birds')}>
-            <img src={CatVillageBirds} style={isDesktop ? styles.posterImgDesk : styles.posterImg} />
-            Village Birds
+            <img src={CatVillageBirds1} style={isDesktop ? styles.posterImgDesk : styles.posterImg} />
+            {/* Village Birds */}
           </Box>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
             onClick={() => navigate('/categories/eggs')}>
-            <img src={CatEggs} style={isDesktop ? styles.posterImgDesk : styles.posterImg}/>
-            Eggs
+            <img src={CatEggs1} style={isDesktop ? styles.posterImgDesk : styles.posterImg}/>
+            {/* Eggs */}
           </Box>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont} 
             onClick={() => navigate('/categories/pickles')}>
-            <img src={CatPickles} style={isDesktop ? styles.posterImgDesk : styles.posterImg}/>
-            Pickles
+            <img src={CatPickles1} style={isDesktop ? styles.posterImgDesk : styles.posterImg}/>
+            {/* Pickles */}
           </Box>
           <Box style={isDesktop ? styles.posterContDesk : styles.posterCont}>
-            <img src={Marinates} style={isDesktop ? styles.posterImgDesk :  styles.posterImg}/>
-            Marinates
+            <img src={CatMarinates1} style={isDesktop ? styles.posterImgDesk :  styles.posterImg}/>
+            {/* Marinates */}
           </Box>
         </Box>
 
@@ -798,15 +784,18 @@ function Home() {
                   <Box style={isDesktop ? styles.productItemDesk : styles.productItem} key={item.id}>
                     <Box sx={styles.prodImgCont}
                       onClick={() => navigate(`/products/${item.urlId}`, {state : item})}>
-                      <Box sx={styles.discountCont}>
+                      {/* <Box sx={styles.discountCont}>
                         {Math.trunc(((item.mrp - item.price) / item.mrp) * 100)}% Off
-                      </Box>
+                      </Box> */}
                       <img src={getImgMap()[item.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
                     </Box>
                     <div style={styles.productDescCont}>
                       <Box sx={styles.prodName}
                         onClick={() => navigate(`/products/${item.urlId}`, {state : item})}>
                         {item.name}
+                        <Box sx={{fontSize:'15px', opacity:'0.2'}}>
+                          {item.qty}
+                        </Box>
                       </Box>
                       {
                         item.style ? 
@@ -815,11 +804,13 @@ function Home() {
                         </Box> : null
                       }
                       
-                      <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
+                      {/* <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
                         {item.qty}
-                      </Box>
-                      <Box sx={{textAlign:'left', marginBottom:'5px', fontSize:'16px', display:'flex', alignItems:'end'}}>
-                      ₹ {item.price} <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.5'}}><s>₹ {item.mrp}</s></Box> 
+                      </Box> */}
+                      <Box sx={{textAlign:'left', marginBottom:'5px', fontSize:'20px', display:'flex', alignItems:'end'}}>
+                      ₹ {item.price} <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.2'}}><s>₹ {item.mrp}</s></Box> 
+                      <Box sx={{fontSize:'12px', marginLeft:'5px', color:'#f47f13', borderLeft:'1px solid #eaeaea', paddingLeft:'5px'}}>
+                        {Math.trunc(((item.mrp - item.price) / item.mrp) * 100)}% Off</Box>
                       </Box>
                       {
                         cartData && cartData[item.id] && cartData[item.id].count ?
@@ -851,7 +842,7 @@ function Home() {
                             <Button variant='outlined' style={styles.mainBtn} size='small' disabled sx={{opacity:'0.6'}}>
                               Out of stock
                             </Button> :
-                            <Button variant="contained" style={styles.mainBtn} size='small' onClick={() => addToCart(item)}>
+                            <Button variant="contained" style={styles.mainBtn} size='small' fullWidth onClick={() => addToCart(item)}>
                               Add To Cart
                             </Button>  
                           }
@@ -919,6 +910,41 @@ function Home() {
         onClose={toggleDrawer(false)}
       >
         {list('bottom')}
+      </Drawer>
+    </React.Fragment>
+
+    <React.Fragment key={'left'}>
+      <Drawer
+        anchor={'left'}
+        open={sideNavAnchor}
+        onClose={toggleSideNavDrawer(false)}
+      >
+        <Box sx={{width:'60vw', padding:'4vw', background:'#a4243d', height:'100%', color:'#FFF0D9'}}>
+         
+          <Box sx={{fcolor:'#FFF0D9', 
+                    fontSize:'20px', padding:'10px 5vw', cursor:'pointer'}}
+                    onClick={() => goToProfile()}>
+
+            My Orders
+          </Box>
+          
+
+
+          <Box style={styles.mobMenuItem}
+            onClick={() => navigate('/recipies')}>
+            Recipies
+          </Box>
+          
+          <Box style={styles.mobMenuItem} sx={{borderTop:'1px solid #FFF0D9', marginTop:'10px'}}
+            onClick={() => navigate('/contactus')}>
+            Contact Us
+          </Box>
+
+          <Box style={styles.mobMenuItem}>
+            FAQ's
+          </Box>
+
+        </Box>
       </Drawer>
     </React.Fragment>
 
