@@ -68,7 +68,7 @@ function FullPageLoader() {
       </Box>
     
       {
-        Capacitor.getPlatform() != 'web' ? null : <BottomNavBar />
+        Capacitor.getPlatform() == 'web' ? null : <BottomNavBar />
       }
 
     </>
