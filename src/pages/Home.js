@@ -96,7 +96,6 @@ const styles = {
     background:'#a4243d',
     zIndex:'2',
     // boxShadow: '0px 0px 5px 0px #7e7e7e',
-    padding:'0 4vw',
     display:'flex',
     justifyContent:'space-between',
     alignItems:'center'
@@ -621,7 +620,7 @@ function Home() {
         {
           isDesktop ? 
           null : 
-          <Box style={styles.navbar}>
+          <Box style={styles.navbar} sx={{padding : Capacitor.getPlatform() == 'ios' ? '5vh 4vw 0 4vw' : '0 4vw' }}>
             <Box onClick={() => setSideNavAnchor(true)}>
               <MenuIcon sx={{color:'#FFF0D9'}} />
             </Box>
@@ -673,7 +672,7 @@ function Home() {
 
                 {
                   filteredItemsData.length ?
-                  <Box sx={{display:'flex', position:'absolute', top:'17vh', left:0, background:'white', 
+                  <Box sx={{display:'flex', position:'absolute', top: Capacitor.getPlatform() == 'ios' ? '20vh' : '17vh', left:0, background:'white', 
                             width:'100vw', justifyContent:'flex-start', flexDirection:'column', zIndex:'333' }}>
                     {
                       filteredItemsData.map((item) => {
@@ -919,7 +918,7 @@ function Home() {
         open={sideNavAnchor}
         onClose={toggleSideNavDrawer(false)}
       >
-        <Box sx={{width:'60vw', padding:'4vw', background:'#a4243d', height:'100%', color:'#FFF0D9'}}>
+        <Box sx={{width:'60vw', padding: Capacitor.getPlatform() == 'ios' ? '5vh 4vw 0 4vw' : '4vw', background:'#a4243d', height:'100%', color:'#FFF0D9'}}>
          
           <Box sx={{fcolor:'#FFF0D9', 
                     fontSize:'20px', padding:'10px 5vw', cursor:'pointer'}}
