@@ -63,10 +63,12 @@ function FullPageLoader() {
         </Snackbar>        
       }
 
-      <Outlet />
-
+      <Box sx={{paddingBottom: Capacitor.getPlatform() == 'web' ? null : '20vw'}}>
+        <Outlet />
+      </Box>
+    
       {
-        Capacitor.getPlatform() == 'web' ? null : <BottomNavBar />
+        Capacitor.getPlatform() != 'web' ? null : <BottomNavBar />
       }
 
     </>

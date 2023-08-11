@@ -229,7 +229,7 @@ const styles = {
   },
   posterImg : {
     width:'100%',
-    height:'90px',
+    height:'100px',
     marginBottom:'10px',
     boxShadow:'0 0 5px 0px #b3b1b1',
     borderRadius:'2px'
@@ -673,7 +673,7 @@ function Home() {
 
                 {
                   filteredItemsData.length ?
-                  <Box sx={{display:'flex', position:'absolute', top:'20vh', left:0, background:'white', 
+                  <Box sx={{display:'flex', position:'absolute', top:'17vh', left:0, background:'white', 
                             width:'100vw', justifyContent:'flex-start', flexDirection:'column', zIndex:'333' }}>
                     {
                       filteredItemsData.map((item) => {

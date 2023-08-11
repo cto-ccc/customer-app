@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { BottomNavigation, BottomNavigationAction } from '@mui/material'
+import { Badge, BottomNavigation, BottomNavigationAction } from '@mui/material'
 import PersonIcon from '@mui/icons-material/Person';
 import AutoAwesomeMosaicIcon from '@mui/icons-material/AutoAwesomeMosaic';
 import ShareIcon from '@mui/icons-material/Share';
@@ -20,11 +20,14 @@ import ProfileActIcon from '../assets/nav-profile-act.png'
 import CatActIcon from '../assets/nav-cat-act.png'
 import CartActIcon from '../assets/cart-act.png'
 
+
 function BottomNavBar() {
   const [activeIndex, setActiveIndex] = useState(0)
   const {showPopup} = useContext(CommonContext)
   const {getUserId, isUserLoggedIn} = useContext(AuthContext)
-  const ref = React.useRef(null);
+  const ref = React.useRef(null)
+  const { updateCart, cartData, isDesktop } = useContext(CommonContext)
+
   const navigate    = useNavigate()
 
   async function goToProfile() {
@@ -63,9 +66,18 @@ function BottomNavBar() {
       <BottomNavigationAction label="Categories" sx={{color:window.location.pathname == '/allCategories' ? '#a4243d' : '#bfbfbf'}}
        icon={<img className='nav-ic' src={window.location.pathname == '/allCategories' ? CatActIcon : CatIcon} />}/> 
       <BottomNavigationAction label="Cart" sx={{color:window.location.pathname == '/cart' ? '#a4243d' : '#bfbfbf'}}
-       icon={<img className='nav-ic' src={window.location.pathname == '/cart' ? CartActIcon : CartIcon} />} />
+       icon={<Badge showZero={false} badgeContent={cartData.totalCount} sx={{
+        "& .MuiBadge-badge": {
+          color:'white',
+          backgroundColor:'#a4243d',
+          top:'4px'
+        }
+      }}>
+        <img className='nav-ic' src={window.location.pathname == '/cart' ? CartActIcon : CartIcon} />
+     </Badge>} />
+     
       <BottomNavigationAction label="Profile" sx={{color:window.location.pathname == '/profile' ? '#a4243d' : '#bfbfbf'}}
-      icon={<img className='nav-ic' src={window.location.pathname == '/profile' ? ProfileActIcon : ProfileIcon} />} />
+      icon={ <img className='nav-ic' src={window.location.pathname == '/profile' ? ProfileActIcon : ProfileIcon} />} />
     </BottomNavigation>
     </Paper>
   )

@@ -8,7 +8,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { useForm } from "react-hook-form";
 import { TextField, Button } from '@mui/material'
-import { btnCurvedStyle } from '../services/api'
+import { btnCurvedStyle, newCustomerEnquiry } from '../services/api'
 import { styled } from "@mui/material/styles";
 import { CommonContext } from '../contexts/CommonContext'
 import NavHeader from '../components/NavHeader'
@@ -72,12 +72,19 @@ const StyledTextField = styled(TextField)({
 function ContactUs() {
 
   const { register : registerUser, handleSubmit : signupUser, reset : resetSignup, formState : {errors:errorSignup} } = useForm()
-  const { isDesktop } = useContext(CommonContext)
+  const { isDesktop, showLoader, hideLoader, showAlert } = useContext(CommonContext)
 
   const signUpNewUser = (data) => {
-
     
-    console.log("======", data)
+    showLoader()
+    newCustomerEnquiry((data)).then((response) => {
+      showAlert("Enquiry sent successfully !")
+      resetSignup()
+      hideLoader()
+    }).catch((error) => {
+      showAlert("Failed to send query")
+      hideLoader()
+    })
   }
 
   return (
@@ -131,6 +138,11 @@ function ContactUs() {
               <StyledTextField 
                   placeholder="Enter your first name"
                   label="First Name"
+                  {...registerUser("firstName", {
+                    required: "Required field"
+                  })}
+                  error={Boolean(errorSignup?.firstName)}
+                  helperText={errorSignup?.firstName?.message}
                   sx={{marginRight: isDesktop ? '40px' : 0, marginBottom:'20px'}}
                   inputProps={{ style: { color: '#fff0d9' } }}
                   variant="standard" focused/>
@@ -138,6 +150,11 @@ function ContactUs() {
                   <StyledTextField 
                   placeholder="Enter your last name"
                   label="Last Name"
+                  {...registerUser("lastName", {
+                    required: "Required field"
+                  })}
+                  error={Boolean(errorSignup?.lastName)}
+                  helperText={errorSignup?.lastName?.message}
                   inputProps={{ style: { color: '#fff0d9' } }}
                   variant="standard" focused/>
               </Box>
@@ -147,6 +164,15 @@ function ContactUs() {
               <StyledTextField 
                   placeholder="Enter your email"
                   label="Email Address"
+                  {...registerUser("emailId", {
+                    required: "Required field",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
+                  error={Boolean(errorSignup?.emailId)}
+                  helperText={errorSignup?.emailId?.message}
                   sx={{marginRight: isDesktop ? '40px' : 0, marginBottom:'20px'}}
                   inputProps={{ style: { color: '#fff0d9' } }}
                   variant="standard" focused/>
@@ -154,6 +180,15 @@ function ContactUs() {
                   <StyledTextField 
                   placeholder="Enter your mobile number"
                   label="Mobile Number"
+                  {...registerUser("mobileNo", {
+                    required: "Required field",
+                    pattern: {
+                      value: /^[7896]\d{9}$/,
+                      message: "Invalid mobile number",
+                    },
+                  })}
+                  error={Boolean(errorSignup?.mobileNo)}
+                  helperText={errorSignup?.mobileNo?.message}
                   inputProps={{ style: { color: '#fff0d9' } }}
                   variant="standard" focused/>
               </Box>
@@ -164,6 +199,11 @@ function ContactUs() {
                     fullWidth
                   placeholder="Enter your message"
                   label="Write your message here"
+                  {...registerUser("userMsg", {
+                    required: "Required field"
+                  })}
+                  error={Boolean(errorSignup?.userMsg)}
+                  helperText={errorSignup?.userMsg?.message}
                   inputProps={{ style: { color: '#fff0d9' } }}
                   variant="standard" focused/>
               </Box>

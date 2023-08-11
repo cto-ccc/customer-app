@@ -63,7 +63,7 @@ function AboutUs() {
                   OUR HUMBLE BEGINNING
                 </Box>
                 <Box>
-                  Our journey began in 2009. It's when Mr. Hemambar Reddy realizes his love and desire to raise Country Chickens. With his insightful knowledge regarding them and how the meat industry should work, he joined hands with Mr. Saikesh & Mr. Sami to bring about Country Chicken Co. Our collective goal has always been to support local farmers and bring natural, wholesome Country Chickens to each home in India. After 12 years in the business, we produce some of the highest quality Country Chicken meat. And our mission continues to create a healthier future.                </Box>
+                  Our journey began in 2009. It's when Mr. Suribabu realizes his love and desire to raise Country Chickens. With his insightful knowledge regarding them and how the meat industry should work, he joined hands with Mr. Saikesh & Mr. Sami to bring about Country Chicken Co. Our collective goal has always been to support local farmers and bring natural, wholesome Country Chickens to each home in India. After 12 years in the business, we produce some of the highest quality Country Chicken meat. And our mission continues to create a healthier future.                </Box>
               </Box>
             </Box>
           </Grid>

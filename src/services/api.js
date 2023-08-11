@@ -483,6 +483,26 @@ export const getAllCCCBlogs = (async(id) => {
 })
 
 
+export const newCustomerEnquiry = (async(data) => {
+  return new Promise(async(resolve, reject) => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/newCustomerEnquiry`, {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      "body": JSON.stringify(data)
+    }).then((response) => response.json())
+    .then(function(data) { 
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
+    })
+  })
+})
+
 
 
 

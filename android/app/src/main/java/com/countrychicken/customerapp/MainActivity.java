@@ -1,6 +1,6 @@
 package com.countrychicken.customerapp;
 import android.os.Bundle;
-import com.ionicframework.capacitor.Checkout;
+//import com.ionicframework.capacitor.Checkout;
 import com.getcapacitor.BridgeActivity;
 
 public class MainActivity extends BridgeActivity {
@@ -8,6 +8,6 @@ public class MainActivity extends BridgeActivity {
   public void onCreate(Bundle savedInstanceState) {
     registerPlugin(CashfreePaymentPlugin.class);
     super.onCreate(savedInstanceState);
-    registerPlugin(Checkout.class);
+//    registerPlugin(Checkout.class);
   }
 }

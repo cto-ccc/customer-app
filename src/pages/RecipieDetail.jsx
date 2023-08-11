@@ -6,12 +6,17 @@ import ComponentLoader from '../components/ComponentLoader';
 import Box from '@mui/material/Box';
 import {Helmet} from "react-helmet";
 import NavHeader from '../components/NavHeader';
+import { CommonContext } from '../contexts/CommonContext';
 
 const styles = {
   metaItem : {
     display:'flex',
     flexDirection:'column', 
-    margin:'0 20px'
+    margin:'5px 20px'
+  },
+  recImg : {
+    width:'100%',
+    height:'450px'
   }
 }
 
@@ -20,10 +25,10 @@ function RecipieDetail() {
   const { id }   = useParams()
   const [loading, setLoading]            = useState(true)
   const [recipieDet, setRecipieDet]      = useState(null)
+  const { isDesktop } = useContext(CommonContext)
 
   const getBlogDetails = async() => {
     const resp = await getRecipieData(id)
-    console.log("======", resp)
     if (resp)
       setRecipieDet(resp)
     setLoading(false)
@@ -51,13 +56,13 @@ function RecipieDetail() {
           {recipieDet.title}
         </Box>
         <Box>
-          <img src={recipieDet.imgUrl} />
+          <img src={recipieDet.imgUrl} style={isDesktop ? null : styles.recImg} />
         </Box>
 
         <Box sx={{border:'1px solid #a4243d', borderRadius:'10px', display:'flex', flexDirection:'column', padding:'20px',
                   marginTop:'20px', width:'fit-content', flexDirection:'column'}}>
             
-           <Box sx={{display:'flex', borderBottom:'1px solid #a4243d', paddingBottom:'20px'}}>
+           <Box sx={{display:'flex', borderBottom:'1px solid #a4243d', paddingBottom:'20px', flexDirection: isDesktop ? 'row' : 'column'}}>
 
             <Box style={styles.metaItem}>
               <Box>
@@ -101,7 +106,7 @@ function RecipieDetail() {
             Nutritional Facts (Per Serving)
           </Box>
 
-          <Box sx={{display:'flex'}}>
+          <Box sx={{display:'flex', flexDirection: isDesktop ? 'row' : 'column'}}>
 
             <Box style={styles.metaItem}>
               <Box>
