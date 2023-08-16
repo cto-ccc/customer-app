@@ -35,7 +35,7 @@ export const btnCurvedStyle = {
 }
 
 export const getCustomizedProducts = () => {
-  return ['C009', 'C013', 'C017', 'C029', 'C021',  'CC009', 'CC013', 'CC017', 'CC029', 'CC021', 'C019', 'C023', 'C011', 'C016', 'C067']
+  return ['C009', 'C013', 'C017', 'C029', 'C021',  'CC009', 'CC013', 'CC017', 'CC029', 'CC021', 'C019', 'C023', 'C011', 'C016', 'C067', 'C025']
 }
 
 export const getImgMap = () => {
