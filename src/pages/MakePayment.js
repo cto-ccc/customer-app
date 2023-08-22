@@ -74,10 +74,12 @@ function MakePayment() {
       totalAmount    : location.state.itemDetails.totalAmount,
       storeDetails   : location.state.storeDetails,
       paymentMode    : location.state.paymentMode,
+      deliveryType   : location.state.delType,
       customerId     : await getCustomerId(),
       txnId          : txnId,
       deliveryDate   : location.state.delDate,
-      deliverySlot   : getTimeSlots().filter((slot) => slot.id == location.state.delSlotId)[0].pranaId
+      deliverySlot   : getTimeSlots().filter((slot) => slot.id == location.state.delSlotId)[0].pranaId,
+      shippingCost   : getDeliveryCharge(location.state.delType)
     } 
 
     let ordersObj = JSON.parse(JSON.stringify(location.state.itemDetails))
@@ -125,7 +127,7 @@ function MakePayment() {
         "accept"        : "application/json"
       },
       "body": JSON.stringify({
-        amount     : location.state.itemDetails.totalAmount + getDeliveryCharge(),
+        amount     : location.state.itemDetails.totalAmount + getDeliveryCharge(location.state.delType),
         mobileNo   : await getUserId(),
         customerId : await getCustomerId()
       })

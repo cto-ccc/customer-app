@@ -198,7 +198,7 @@ function Landing() {
 
       <Box sx={{display:'flex', flexDirection:'column', padding:'70px 10vw', background:'#a4243d'}}>
         <Box sx={{textAlign:'center', fontSize:'60px', color:'#FFF0D9', marginBottom:'20px', fontFamily:'Foregen'}}>
-          OUR OFFERINGS
+          ORDER NOW
         </Box>
         <Box sx={{display:'flex', justifyContent:'space-between', margin:'10px 0'}}>
           <img src={CatFreeRange} style={styles.catImg}

@@ -59,7 +59,9 @@ function OrderSummary() {
       deliverySlot   : getTimeSlots().filter((slot) => slot.id == location.state.delSlotId)[0].pranaId,
       totalDiscount  : location.state.totalDiscount,
       storeDetails   : location.state.storeDetails,
-      instructions   : location.state.instructions
+      instructions   : location.state.instructions,
+      deliveryType   : location.state.delType,
+      shippingCost   : getDeliveryCharge(location.state.delType)
     } 
 
     if (couponCacheData?.couponCode) {
@@ -168,10 +170,10 @@ function OrderSummary() {
           
           <Box sx={{display:'flex', justifyContent:'space-between', padding:'0px 15px 15px 15px'}}>
             <Box>
-              Delivery Fee 
+              Delivery Fee
             </Box>
             <Box>
-              ₹ {getDeliveryCharge()}
+              ₹ {getDeliveryCharge(location.state.delType)} 
             </Box>
           </Box>
           
@@ -194,7 +196,9 @@ function OrderSummary() {
               To Pay
             </Box>
             <Box sx={{fontWeight:'bold'}}>
-              ₹ {location.state.itemDetails.totalAmount + getDeliveryCharge() - (couponCacheData?.couponValue || 0)}
+              ₹ {location.state.itemDetails.totalAmount 
+                + (getDeliveryCharge(location.state.delType))
+                - (couponCacheData?.couponValue || 0)}
             </Box>
           </Box>
         </Box> 

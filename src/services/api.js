@@ -111,8 +111,12 @@ export const getTimeSlots = () => {
   ]
 }
 
-export const getDeliveryCharge = () => {
-  return 35
+export const getDeliveryCharge = (type) => {
+  if (type == 'self_pickup') {
+    return 0 
+  } else {
+    return 35
+  }
 }
 
 export const getMetaData = () => {

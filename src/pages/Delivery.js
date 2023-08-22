@@ -69,6 +69,7 @@ function Delivery() {
   const [selectedAddrIndex, setSelectedAddrIndex] = useState(null)
 
   const [delSlot, setDelSlot] = useState(null)
+  const [delType, setDelType] = useState('delivery')
   const [delDate, setDelDate] = useState('Today')
   const [storeDetails, setStoreDetails] = useState(null)
   const [map, setMap] = useState(null)
@@ -266,6 +267,7 @@ function Delivery() {
       paymentMode    : paymentMode,
       delSlotId      : delSlot,
       delDate        : delDate,
+      delType        : delType,
       storeDetails   : storeDetails,
       itemDetails    : await getCartData(),
       instructions   : location?.state?.instructions
@@ -511,6 +513,27 @@ function Delivery() {
                 )
               })
             }
+          </Select>
+        </Box>
+
+        <Box mb={3} sx={{padding:'20px 20px', background:'white'}}>
+          <Box sx={{mb:1, fontSize:'18px'}}>
+            Delivery Type
+          </Box>
+          <Select
+            labelId="demo-select-small"
+            placeholder="Delivery Time"
+            fullWidth
+            value={delType}
+            onChange={(e) => setDelType(e.target.value)}>
+
+            <MenuItem key="delivery" value="delivery">
+              Home delivery 
+            </MenuItem>
+            <MenuItem key="self_pickup" value="self_pickup">
+              Self pickup from store 
+            </MenuItem>
+
           </Select>
         </Box>
 
