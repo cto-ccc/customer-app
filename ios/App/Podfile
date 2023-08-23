@@ -25,6 +25,8 @@ target 'App' do
   # Add your Pods here
 end
 
+pod 'CashfreePG', '~> 2.0.7'
+
 post_install do |installer|
   assertDeploymentTarget(installer)
 end

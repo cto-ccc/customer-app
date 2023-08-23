@@ -29,8 +29,8 @@ function MakePayment() {
 
   useEffect(() => {
     logAction('PAGE_VIEW', 'make-payment')
-    initiatePaymentWithCashFree()
-    // initiatePaymentWithRazorpay()
+    // initiatePaymentWithCashFree()
+    initiatePaymentWithRazorpay()
     // initiatePaymentWithCashFreeSDK()
   }, [])
 
