@@ -66,7 +66,7 @@ function BottomNavBar() {
       <BottomNavigationAction label="Categories" sx={{color:window.location.pathname == '/allCategories' ? '#a4243d' : '#bfbfbf'}}
        icon={<img className='nav-ic' src={window.location.pathname == '/allCategories' ? CatActIcon : CatIcon} />}/> 
       <BottomNavigationAction label="Cart" sx={{color:window.location.pathname == '/cart' ? '#a4243d' : '#bfbfbf'}}
-       icon={<Badge showZero={false} badgeContent={cartData.totalCount} sx={{
+       icon={<Badge showZero={false} badgeContent={cartData?.totalCount} sx={{
         "& .MuiBadge-badge": {
           color:'white',
           backgroundColor:'#a4243d',
