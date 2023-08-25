@@ -40,6 +40,7 @@ function OrderStatus() {
 
   useEffect(() => {
     clearCart()
+    console.log("======location state======", location.state)
     setTimeout(() => {
       LocalNotifications.schedule({notifications : [{
         title : 'CountryChickenCo',

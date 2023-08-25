@@ -14,7 +14,7 @@ const styles = {
 }
 
 function ItemsSummary(props) {
-
+  
   return (
     <Box style={styles.shadowBox}> 
       {

@@ -64,6 +64,8 @@ function OrderSummary() {
       shippingCost   : getDeliveryCharge(location.state.delType)
     } 
 
+    console.log("======order data=========", orderData)
+
     if (couponCacheData?.couponCode) {
       orderData.couponCode           = couponCacheData.couponCode
       orderData.couponDiscountAmount = couponCacheData.couponValue
@@ -71,6 +73,8 @@ function OrderSummary() {
     }
         
     let ordersObj = JSON.parse(JSON.stringify(location.state.itemDetails))
+
+    console.log("=========orders obj=========", ordersObj)
     delete ordersObj.totalAmount
     delete ordersObj.totalCount
     delete ordersObj.totalDiscount
@@ -79,6 +83,7 @@ function OrderSummary() {
     orderData.itemDetails = Object.values(ordersObj)
     showLoader()
     createNewOrder(orderData).then((response) => {
+      console.log("=====create new order response=========", response)
       navigate('/orderStatus', {state:{orderId : response, orderData : orderData}, replace:true})
       hideLoader()
     }).catch((error) => {

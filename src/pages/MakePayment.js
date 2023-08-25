@@ -6,7 +6,7 @@ import { useLocation, useNavigate, useHistory } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { getFirebaseError } from '../services/error-codes';
 import { createNewOrder, getDeliveryCharge, getTimeSlots, logAction } from '../services/api';
-// import { Checkout } from 'capacitor-razorpay';
+import { Checkout } from 'capacitor-razorpay';
 import PaymentFailed from '../assets/payment-failed.png'
 import { Capacitor } from '@capacitor/core';
 import CashfreePaymentBridge from '../components/CashfreePaymentBridge';
@@ -29,39 +29,36 @@ function MakePayment() {
 
   useEffect(() => {
     logAction('PAGE_VIEW', 'make-payment')
-    initiatePaymentWithCashFree()
-    // initiatePaymentWithRazorpay()
+    // initiatePaymentWithCashFree()
+    initiatePaymentWithRazorpay()
     // initiatePaymentWithCashFreeSDK()
   }, [])
 
 
-  // const payWithRazorpay = async(orderId) => {
-  //   const options = {
-  //     key         : `${process.env.REACT_APP_RAZORPAY_KEY}`,
-  //     amount      : location.state.itemDetails.totalAmount,
-  //     description : 'Buy Fresh Chicken Online',
-  //     image       : 'https://countrychickenco.in/download/logo/icon.png',
-  //     order_id    : orderId,
-  //     currency    : 'INR',
-  //     name        : 'Country Chicken Co',
-  //     prefill: {
-  //       contact   : location.state.addressDetails.userId
-  //     },
-  //     theme: {
-  //       color     : '#a4243d'
-  //     }
-  //   }
-  //   try {
-  //     let data = (await Checkout.open(options))
-  //     placeOrder(data.response.razorpay_payment_id)
-  //     //Handle payment success
-  //     console.log("Payment success", data)
-  //   } catch (error) {
-  //     //Handle payment failure
-  //     console.log("Payment failed : ", error)
-  //     setLoading(false)
-  //   }
-  // }
+  const payWithRazorpay = async(orderId) => {
+    const options = {
+      key         : `${process.env.REACT_APP_RAZORPAY_KEY}`,
+      amount      : location.state.itemDetails.totalAmount,
+      description : 'Buy Fresh Chicken Online',
+      image       : 'https://ibb.co/p1hVMsV',
+      order_id    : orderId,
+      currency    : 'INR',
+      name        : 'Country Chicken Co',
+      theme: {
+        color     : '#a4243d'
+      }
+    }
+    try {
+      let data = (await Checkout.open(options))
+      placeOrder(data.response.razorpay_payment_id)
+      //Handle payment success
+      console.log("Payment success", data)
+    } catch (error) {
+      //Handle payment failure
+      console.log("Payment failed : ", error)
+      setLoading(false)
+    }
+  }
 
   const placeOrder = async(txnId) => {
 
@@ -99,24 +96,24 @@ function MakePayment() {
     })  
   }
 
-  // async function initiatePaymentWithRazorpay() {
-  //   const orderResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/createRazorpayOrder`, {
-  //     "method"  : "POST",
-  //     "headers" : {
-  //       "content-type"  : "application/json",
-  //       "accept"        : "application/json"
-  //     },
-  //     "body": JSON.stringify({
-  //       amount   : location.state.itemDetails.totalAmount + getDeliveryCharge(),
-  //       currency : "INR",
-  //       receipt  : "Country Chicken Co Payment"
-  //     })
-  //   }).then((response) => response.json())
-  //   .then(function(data) { 
-  //     payWithRazorpay(data.id)
-  //   })
-  //   .catch((error) => console.log(error))
-  // }
+  async function initiatePaymentWithRazorpay() {
+    const orderResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/createRazorpayOrder`, {
+      "method"  : "POST",
+      "headers" : {
+        "content-type"  : "application/json",
+        "accept"        : "application/json"
+      },
+      "body": JSON.stringify({
+        amount   : location.state.itemDetails.totalAmount + getDeliveryCharge(),
+        currency : "INR",
+        receipt  : "Country Chicken Co Payment"
+      })
+    }).then((response) => response.json())
+    .then(function(data) { 
+      payWithRazorpay(data.id)
+    })
+    .catch((error) => console.log(error))
+  }
 
   async function initiatePaymentWithCashFree() {
 
@@ -207,9 +204,9 @@ function MakePayment() {
         loading ?
         <Box>
           {/* Enable For RazorPay */}
-          {/* Loading... Please Wait */}
+          Loading... Please Wait
 
-          <div id="payment-form" className={isDesktop ? 'gateway-cont-desk' : 'gateway-cont-mob' }></div>
+          {/* <div id="payment-form" className={isDesktop ? 'gateway-cont-desk' : 'gateway-cont-mob' }></div> */}
         </Box> : 
         <Box sx={{textAlign:'center'}}>
           <Box sx={{mb:2}}>

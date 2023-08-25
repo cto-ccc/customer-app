@@ -3,6 +3,10 @@
   "appName": "Country Chicken Co",
   "webDir": "build",
   "bundledWebRuntime": false,
+  "server": {
+    "url": "http://192.168.29.143:3000",
+    "cleartext": true
+  },
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 1500,
