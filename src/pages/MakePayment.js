@@ -163,7 +163,7 @@ function MakePayment() {
           }
         }
 
-        if (Capacitor.getPlatform() == 'web' || Capacitor.getPlatform() == 'ios') {
+        if (Capacitor.getPlatform() == 'web') {
 
           const cashfree = new window.Cashfree(data.payment_session_id)
           cashfree.drop(document.getElementById("payment-form"), dropConfig)
