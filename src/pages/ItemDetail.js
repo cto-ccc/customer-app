@@ -16,9 +16,7 @@ import ComponentLoader from '../components/ComponentLoader';
 const styles = {
   prodImg : {
     width:'100%',
-    height:'300px',
-    borderRadius:'5px',
-    borderBottom:'1px solid #eaeaea'
+    height:'300px'
   },
   productGridCont: {
     // margin:'20px'
@@ -27,12 +25,8 @@ const styles = {
   productGridContDesk : {
     padding:'20px',
     position:'relative',
-    background:'white',
     height:'min-content',
     margin:'10px'
-  },
-  subLabel: {
-    fontWeight:'500'
   },
   activeExtra : {
     background : '#F47F13',
@@ -57,7 +51,7 @@ const styles = {
   },
   incCont:{
     display:'flex',
-    width:'30%'
+    // width:'30%'
   },
   videoItem : {
     padding:'10px'
@@ -74,6 +68,14 @@ const styles = {
     width:'auto',
     borderRadius:'0 3px 3px 0'
   },
+  priceCard : {
+    display:'flex',
+    boxShadow:'0px 0px 5px 0px rgba(0, 0, 0, 0.15)', 
+    padding:'15px', margin:'20px 15px 0 0', 
+    background:'#FFF5E8', 
+    borderRadius:'10px',
+    flexDirection:'column'
+  }
 }
 function ItemDetail() {
 
@@ -252,39 +254,107 @@ function ItemDetail() {
           <Grid container>
         {/* <Box sx={{padding:'10px', border:'1px solid #eaeaea', boxShadow:'0 0 5px 5px #eaeaea'}}> */}
           <Grid xs={12} sm={12} md={5} lg={5} style={isDesktop ? styles.productGridContDesk : styles.productGridCont}>
-              <Box sx={styles.discountCont}>
+              {/* <Box sx={styles.discountCont}>
                 {Math.trunc(((productData.mrp - productData.price) / productData.mrp) * 100)}% Off
-              </Box>
+              </Box> */}
             <img src={getImgMap()[productData.imgUrl]} style={styles.prodImg}/>
           </Grid>
           <Grid xs={12} sm={12} md={6} lg={6} style={isDesktop ? styles.productGridContDesk : styles.productGridCont}>
-            <Box sx={{fontSize:'20px', fontWeight:'600', mt:2, mb:1, color:'#a4243d'}}>
-              {productData.name} {productData.style ? `(${productData.style})` : null}
+            <Box sx={{fontSize:'30px', mt:2, color:'#a4243d', fontFamily:'Foregen'}}>
+              {productData.name} 
             </Box>
-            {/* <Box sx={{mb:1}}>
+            <Box sx={{mb:1}}>
               {productData.style ? `(${productData.style})` : null}
-            </Box> */}
-            <Box sx={{fontSize:'17px', mb:1}}>
-              {productData.qty}
             </Box>
-            <Box sx={{display:'flex',alignItems:'baseline',  mb:1}}>
-              <Box sx={{fontSize:'20px', mr:1, color:'#a4243d'}}>
-                ₹ {productData.price} 
-              </Box>
-              <Box sx={{fontSize:'15px'}}>
+            {/* <Box sx={{fontSize:'17px', mb:1}}>
+              {productData.qty}
+            </Box> */}
+            <Box sx={{display:'flex',alignItems:'baseline',  mb:1, borderBottom:'1px solid #afa5a5', paddingBottom:'15px'}}>
+              <Box sx={{fontSize:'15px', mr:1}}>
                 <s>₹ {productData.mrp}</s> 
               </Box>
-              <Box sx={{fontSize:'13px', marginLeft:'5px'}}>
-                ({Math.trunc(((productData.mrp - productData.price) / productData.mrp) * 100)}% Off)
+              <Box sx={{fontSize:'25px', mr:1, fontWeight:'bold', display:'flex', alignItems:'baseline'}}>
+                ₹ {productData.price} 
+                <Box sx={{fontSize:'13px', fontWeight:'100', marginLeft:'2px'}}>
+                  /1kg Live
+                </Box>
+              </Box>             
+              <Box sx={{fontSize:'15px', marginLeft:'5px', color:'#f47f13'}}>
+                {Math.trunc(((productData.mrp - productData.price) / productData.mrp) * 100)}% Off
               </Box>
             </Box>
-            <Box mb={2} mt={1}>
+          
+            {
+             productData.aka ?
+             <Box sx={{display:'flex', fontSize:'14px'}}>
+                <Box>Aka :</Box>
+                <Box sx={{width:'250px'}}>&nbsp;{productData.aka}</Box> 
+              </Box> : null
+            }
+            {
+             productData.preferredBy ?
+             <Box sx={{display:'flex', marginTop:'2px', fontSize:'14px'}}>
+                <Box>Preferred By :</Box>
+                <Box>&nbsp;{productData.preferredBy}</Box> 
+              </Box> : null
+            }
+            {
+             productData.age ?
+             <Box sx={{display:'flex', marginTop:'2px', fontSize:'14px'}}>
+                <Box>Age :</Box>
+                <Box>&nbsp;{productData.age}</Box> 
+              </Box> : null
+            }
+            {
+             productData.dishes ?
+             <Box sx={{ marginTop:'2px', fontSize:'14px'}}>
+                Suggested Dishes : &nbsp;{productData.dishes}
+              </Box> : null
+            }
+            {
+             productData.healthBenefits ?
+             <Box sx={{display:'flex', flexDirection:'column', marginTop:'10px'}}>
+                <Box>Health Benefits :</Box>
+                <Box>&nbsp;{productData.healthBenefits}</Box> 
+              </Box> : null
+            }
+            <Box sx={{display:'flex', flexDirection: isDesktop ? 'row' : 'column'}}>
+
+              <Box style={styles.priceCard}>
+                
+                <Box sx={{display:'flex', marginBottom:'15px'}}>
+                <Box sx={{display:'flex', borderRight:'1px solid #404040'}}>
+                  <Box sx={{width:'min-content', marginRight:'15px'}}>
+                    Live Weight
+                  </Box>
+                  <Box sx={{marginRight:'10px'}}>
+                    1Kg
+                  </Box>
+                </Box>
+                <Box sx={{display:'flex'}}>
+                  <Box sx={{width:'min-content', marginLeft:'10px', marginRight:'15px'}}>
+                    Meat Weight
+                  </Box>
+                  <Box>
+                    0.45Kg
+                  </Box>
+                </Box>
+                </Box>
+ 
+
+                <Box sx={{color:'#a4243d', fontSize:'15px', marginBottom:'10px'}}>
+                  Final Price - 1Kg x ₹299:₹299
+                </Box>
+
+            
+            <Box>
             {
                       cartData && cartData[productData.id] && cartData[productData.id].count ?
                       <Box style={styles.incCont}>
                         <Box sx={{border:'1px solid #dddddd', 
                                   display:'flex', 
                                   borderRadius:'5px', 
+                                  marginRight:'10px',
                                   background:'white', border:'1px solid #c3c3c3'}}>
                           <Box onClick={() => updateCart(productData, false)}
                             sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
@@ -301,63 +371,64 @@ function ItemDetail() {
                             +
                           </Box>
                         </Box>
+                     
+                        <Button fullWidth variant='contained' 
+                              onClick={() => addToCart(productData)}>View Cart</Button>
                       </Box> : 
                       <Box>
                         {
                           productData.stockQty == 0 ? 
-                            <Button variant='outlined' sx={{width: isDesktop ? '50%' : '100%', opacity:'0.6'}} disabled>
+                            <Button variant='outlined' fullWidth disabled>
                               Out of stock
                             </Button> :
-                            <Button sx={{width: isDesktop ? '50%' : '100%'}} variant='contained'
+                            <Button fullWidth variant='contained'
                               onClick={() => addToCart(productData)}>Add To Cart</Button>
-                        }
-                        
+                        }                        
                       </Box>
                     }
         
             </Box>
-            {
-             productData.aka ?
-             <Box sx={{display:'flex'}}>
-                <Box style={styles.subLabel} sx={{width:'100px'}}>Aka</Box>
-                <Box sx={{width:'15px'}}>:</Box>
-                <Box style={styles.subValue} sx={{width:'250px'}}>{productData.aka}</Box> 
-              </Box> : null
-            }
-            {
-             productData.preferredBy ?
-             <Box sx={{display:'flex', marginTop:'5px'}}>
-                <Box style={styles.subLabel} sx={{width:'100px'}}>Preferred By</Box>
-                <Box sx={{width:'15px'}}>:</Box>
-                <Box style={styles.subValue}>{productData.preferredBy}</Box> 
-              </Box> : null
-            }
-            {
-             productData.age ?
-             <Box sx={{display:'flex', marginTop:'5px'}}>
-                <Box style={styles.subLabel} sx={{width:'100px'}}>Age</Box>
-                <Box sx={{width:'15px'}}>:</Box>
-                <Box style={styles.subValue}>{productData.age}</Box> 
-              </Box> : null
-            }
-            {
-             productData.dishes ?
-             <Box sx={{display:'flex', flexDirection:'column', marginTop:'10px'}}>
-                <Box style={styles.subLabel}>Suggested Dishes:</Box>
-                <Box style={styles.subValue}> {productData.dishes}</Box> 
-              </Box> : null
-            }
-            {
-             productData.healthBenefits ?
-             <Box sx={{display:'flex', flexDirection:'column', marginTop:'10px'}}>
-                <Box style={styles.subLabel}>Health Benefits :</Box>
-                <Box style={styles.subValue}> {productData.healthBenefits}</Box> 
-              </Box> : null
-            }
+            
+              </Box>
 
+              <Box style={styles.priceCard}>
+                
+                <Box sx={{display:'flex', marginBottom:'15px'}}>
+                <Box sx={{display:'flex', borderRight:'1px solid #404040'}}>
+                  <Box sx={{width:'min-content', marginRight:'15px'}}>
+                    Live Weight
+                  </Box>
+                  <Box sx={{marginRight:'10px'}}>
+                    1.5Kg
+                  </Box>
+                </Box>
+                <Box sx={{display:'flex'}}>
+                  <Box sx={{width:'min-content', marginLeft:'10px', marginRight:'15px'}}>
+                    Meat Weight
+                  </Box>
+                  <Box>
+                    0.9Kg
+                  </Box>
+                </Box>
+                </Box>
+ 
+
+                <Box sx={{color:'#a4243d', fontSize:'15px', marginBottom:'10px'}}>
+                  Final Price - 1.5Kg x ₹299:₹449
+                </Box>
+
+                <Button variant='contained' fullWidth
+                              onClick={() => addToCart(productData)}>Add To Cart</Button>
+              </Box>
+        
+
+              
+
+            </Box>
+{/* 
             <Box sx={{whiteSpace:'pre-line', textAlign:'justify', wordBreak:'break-word', marginTop:'10px'}}>
               {productData?.description}
-            </Box>
+            </Box> */}
           </Grid>
         {/* </Box> */}
       </Grid>

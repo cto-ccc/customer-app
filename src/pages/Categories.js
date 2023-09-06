@@ -14,7 +14,7 @@ import Kadaknath from '../assets/kadaknath.png'
 import Warrior from '../assets/warrior.png'
 import TenderChicken from '../assets/tender-chicken.png'
 import ComponentLoader from '../components/ComponentLoader';
-import { getCategoryData, getCustomizedProducts, getImgMap, getMetaData, logAction } from '../services/api';
+import { getAllCategories, getCategoryData, getCustomizedProducts, getImgMap, getMetaData, logAction } from '../services/api';
 import Drawer from '@mui/material/Drawer';
 import {Helmet} from "react-helmet";
 import NavHeader from '../components/NavHeader';
@@ -25,26 +25,43 @@ const styles = {
   productItem : {
     margin:'10px',
     width:'90%',
-    background:'white',
+    background:'#FFF5E8',
     borderRadius:'5px',
-    boxShadow:'0px 0px 5px 2px #eaeaea'
+    boxShadow:'0px 0px 15px 0px rgba(0, 0, 0, 0.15)'
   },
   productGridCont : {
     display:'flex',
     alignItems:'center',
-    justifyContent:'center'
+    justifyContent:'center',
+    width:'100%'
   },
   productImg : {
     width:'100%',
     height:'180px',
-    borderRadius:'5px 5px 0 0'
+    borderRadius:'5px 5px 0 0',
+    borderRight:'1px solid #eaeaea',
+    marginRight:'10px'
   },
   productDescCont : {
     padding:'15px',
     textAlign:'left',
     // background:'#ffebeb',
     // borderRadius:'25px 25px 20px 20px'
-    borderTop:'1px solid #eaeaea'
+    borderTop:'1px solid #eaeaea',
+    display:'flex',
+    flexDirection:'column',
+    justifyContent:'space-around'
+  },
+  productDescContDesk : {
+    padding:'15px',
+    textAlign:'left',
+    // background:'#ffebeb',
+    // borderRadius:'25px 25px 20px 20px'
+    borderTop:'1px solid #eaeaea',
+    display:'flex',
+    flexDirection:'column',
+    justifyContent:'space-around',
+    width:'60%'
   },
   incCont : {
     display : 'flex',
@@ -99,16 +116,41 @@ const styles = {
   },
   prodName : {
     textAlign:'left', 
-    marginBottom:'5px', 
+    marginBottom:'2px', 
     fontWeight:'450', 
-    fontSize:'15px',
+    fontSize:'25px',
     cursor:'pointer',
     display:'flex',
     justifyContent:'space-between',
     alignItems:'center',
-    "&:hover": {
-      color:'#a4243d'
-    }
+    color:'#a4243d',
+    fontFamily:'Foregen',
+    textTransform:'uppercase'
+  },
+  catBox : {
+    padding:'5px', 
+    border:'1px solid #a4243d', 
+    padding:'5px 20px', 
+    margin:'0 10px 25px 0', 
+    fontSize:'12px',
+    color:'#a4243d',
+    cursor:'pointer',
+    width:'fit-content',
+    float:'left',
+    borderRadius:'5px'
+  },
+  catBoxAct : {
+    padding:'5px', 
+    border:'1px solid #a4243d', 
+    padding:'5px 20px', 
+    margin:'0 10px 25px 0', 
+    fontSize:'12px',
+    color:'white',
+    background:'#a4243d',
+    cursor:'pointer',
+    width:'fit-content',
+    float:'left',
+    borderRadius:'5px'
   }
 }
 
@@ -135,14 +177,14 @@ function Categories() {
 
   const [metaData, setMetaData] = useState(getMetaData())
 
-  async function addToCart(item) {
-    if (getCustomizedProducts().includes(item.id)) {
-      setAnchor(true)
-      setSelectedItem(item)
-    } else {
-      updateCart(item, true)
-    }
-  }
+  // async function addToCart(item) {
+  //   if (getCustomizedProducts().includes(item.id)) {
+  //     setAnchor(true)
+  //     setSelectedItem(item)
+  //   } else {
+  //     updateCart(item, true)
+  //   }
+  // }
 
   const getProductData = async() => {
     const resp = await getCategoryData(id)
@@ -287,25 +329,36 @@ function Categories() {
   }, [])
 
   return (
-    <Box sx={{padding:'4vw', marginTop:'7vh', paddingBottom:'8vh'}}>
+    <Box sx={{padding: isDesktop ? '4vw 10vw' : '4vw', marginTop:'7vh', paddingBottom:'8vh'}}>
       {
         loading ? 
         <ComponentLoader /> : 
-        <Box>
+        <Box sx={{display:'flex', flexDirection:'column'}}>
           <Helmet>
             <title>{metaData[id].title}</title>
             <meta name='description' content={metaData[id].description} />
             <meta name='keywords' content={metaData[id].keywords} />
           </Helmet>
           <NavHeader />
-          <Box sx={{color:'#a4243d', fontSize:'20px', ml:2,mb:1, fontWeight:'bold'}}>
-            {title}
+          <Box sx={{color:'#a4243d', fontSize:'40px', ml:'4vw',mb:1, fontWeight:'400', fontFamily:'Foregen'}}>
+            ORDER NOW
           </Box>
-          <Grid container>
+          <Box sx={{display:'block', ml:'4vw'}}>
+            {
+              getAllCategories().map((category) => {
+                return <Box style={category.id == id ? styles.catBoxAct : styles.catBox}
+                
+                onClick={() => navigate(`/categories/${category.id}`,  {replace:true})}>
+                  {category.title}
+                </Box>  
+              })
+            }
+          </Box>
+          <Grid container sx={{flexDirection:'column'}}>
             {
               categoryData.map((chick) => {
               return <Grid xs={12} sm={6} md={4} lg={3} style={styles.productGridCont} key={chick.id}>
-                <Box style={styles.productItem}>
+                <Box style={styles.productItem} sx={{display: isDesktop ? 'flex' : null}}>
                   <Box sx={{textAlign:'center', height:'250px', position:'relative', cursor:'pointer', display:'flex', alignItems:'center' }}
                     onClick={() => navigate(`/products/${chick.urlId}`, {state : chick})}>
                     {/* <Box sx={styles.discountCont}>
@@ -313,65 +366,56 @@ function Categories() {
                     </Box> */}
                     <img src={getImgMap()[chick.imgUrl]} style={styles.productImg}/>
                   </Box>
-                  <div style={styles.productDescCont}>
-                    <Box sx={styles.prodName}
-                      onClick={() => navigate(`/products/${chick.urlId}`, {state : chick})}>
-                      {chick.name} 
-                      <Box sx={{fontSize:'15px', opacity:'0.2'}}>
-                        {chick.qty}
+                  <div style={isDesktop ? styles.productDescContDesk : styles.productDescCont}>
+                    <Box>
+                      <Box sx={styles.prodName}
+                        onClick={() => navigate(`/products/${chick.urlId}`, {state : chick})}>
+                        {chick.name} 
                       </Box>
+                      {
+                        chick.style ? 
+                          <Box sx={{textAlign:'left', marginBottom:'5px',fontSize:'15px', fontWeight:'bold'}}>
+                            ({chick.style})
+                          </Box> : null
+                      }
                     </Box>
+
+                    <Box>
                     {
-                      chick.style ? 
-                        <Box sx={{textAlign:'left', marginBottom:'5px',fontSize:'11px'}}>
-                          ({chick.style})
+                      chick.aka ? 
+                        <Box sx={{textAlign:'left', marginBottom:'2px',fontSize:'13px'}}>
+                          Aka : {chick.aka}
                         </Box> : null
                     }
-                    {/* <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
-                      {chick.qty}
-                    </Box> */}
-                    <Box sx={{textAlign:'left', marginBottom:'10px', fontSize:'20px', display:'flex', alignItems:'end'}}>
-                    ₹ {chick.price} <Box sx={{fontSize:'15px', marginLeft:'5px', opacity:'0.2'}}><s>₹ {chick.mrp}</s></Box> 
-                    <Box sx={{fontSize:'12px', marginLeft:'5px', color:'#f47f13', borderLeft:'1px solid #eaeaea', paddingLeft:'5px'}}>
-                        {Math.trunc(((chick.mrp - chick.price) / chick.mrp) * 100)}% Off</Box>
-                    </Box>
                     {
-                      cartData && cartData[chick.id] && cartData[chick.id].count ?
-                      <Box style={styles.incCont}>
-                        <Box sx={{border:'1px solid #dddddd', 
-                                  display:'flex', 
-                                  borderRadius:'5px', 
-                                  background:'white', border:'1px solid #c3c3c3'}}>
-                          <Box onClick={() => updateCart(chick, false)}
-                            sx={{padding:'5px 15px 5px 15px', fontSize:'20px', cursor:'pointer'}}>
-                            -
-                          </Box>
-                          <Box sx={{padding:'5px 10px', 
-                                    borderRight:'1px solid #bababa', 
-                                    borderLeft:'1px solid #bababa', fontSize:'20px',
-                                    background:'#a4243d !important', color:'white'}}>
-                            {cartData[chick.id].count}
-                          </Box>
-                          <Box  onClick={() => updateCart(chick, true)}
-                            sx={{padding:'5px 15px 5px 15px', fontSize:'20px', cursor:'pointer'}}>
-                            +
-                          </Box>
-                        </Box>
-                      </Box> : 
-                      <Box sx={{textAlign:'right'}}>
-                        {
-                          chick.stockQty == 0 ?
-                          <Button variant="outlined" style={styles.mainBtn} disabled sx={{opacity:'0.6'}}>
-                            Out of stock
-                          </Button>
-                            :
-                          <Button variant="contained" style={styles.mainBtn} fullWidth onClick={() => addToCart(chick)}>
-                            Add To Cart
-                          </Button>
-                        }
-                        
-                      </Box>
+                      chick.age ? 
+                        <Box sx={{textAlign:'left', marginBottom:'5px',fontSize:'13px'}}>
+                          Age : {chick.age}
+                        </Box> : null
                     }
+                    </Box>
+
+                    <Box>
+                      <Box sx={{fontSize:'11px'}}>
+                        Starting from
+                      </Box>
+                      <Box sx={{textAlign:'left', marginBottom:'10px', display:'flex', alignItems:'baseline'}}>
+                      <Box sx={{fontSize:'15px', marginRight:'5px', opacity:'0.2'}}><s>₹ {chick.mrp}</s></Box> 
+                      <Box sx={{fontWeight:'bold', fontSize:'20px',}}>
+                        ₹ {chick.price} 
+                      </Box>
+                      <Box sx={{fontSize:'11px'}}>
+                        /kg live
+                      </Box>
+                      <Box sx={{fontSize:'12px', marginLeft:'5px', color:'#f47f13', borderLeft:'1px solid #eaeaea', paddingLeft:'5px'}}>
+                        {Math.trunc(((chick.mrp - chick.price) / chick.mrp) * 100)}% Off</Box>
+                      </Box>
+                    </Box>
+
+                    <Button variant="contained" style={styles.mainBtn} fullWidth 
+                    onClick={() => navigate(`/products/${chick.urlId}`, {state : chick})}>
+                      Show Now
+                    </Button>
                     
                   </div>
                 </Box>
