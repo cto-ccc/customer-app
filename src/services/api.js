@@ -304,7 +304,7 @@ export const getLanding = (async(userData) => {
         "content-type": "application/json",
         "accept": "application/json"
       },
-      "body": JSON.stringify({userData : userData})
+      "body": JSON.stringify(userData)
     }).then((response) => response.json())
     .then(function(data) { 
       if (data.error) {
@@ -319,7 +319,7 @@ export const getLanding = (async(userData) => {
   })
 })
 
-export const getCategoryData = (async(key) => {
+export const getCategoryData = (async(params) => {
   return new Promise(async(resolve, reject) => {
     const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/getCategoryData`, {
       "method": "POST",
@@ -327,7 +327,7 @@ export const getCategoryData = (async(key) => {
         "content-type": "application/json",
         "accept": "application/json"
       },
-      "body": JSON.stringify({id : key})
+      "body": JSON.stringify(params)
     }).then((response) => response.json())
     .then(function(data) { 
       if (data.error) {

@@ -78,7 +78,7 @@ const styles = {
 function ItemDetail() {
 
   const location = useLocation()
-  const {isDesktop, cartData, updateCart} = useContext(CommonContext)
+  const {isDesktop, cartData, updateCart, locCode} = useContext(CommonContext)
   const { id }   = useParams()
 
   const [anchor, setAnchor] = useState(false)
@@ -135,7 +135,7 @@ function ItemDetail() {
   }
 
   const getProductDetails = async() => {
-    const resp = await getProductData({id : id})
+    const resp = await getProductData({id : id, locCode : locCode})
     setProductData(resp)
     setLoading(false)
   }

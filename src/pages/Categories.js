@@ -117,7 +117,7 @@ function Categories() {
   const location = useLocation()
   const navigate = useNavigate()
   const { id }   = useParams()
-  const {isDesktop, cartData, updateCart} = useContext(CommonContext)
+  const {isDesktop, cartData, updateCart, locCode} = useContext(CommonContext)
 
   const [loading, setLoading] = useState(true)
 
@@ -145,7 +145,7 @@ function Categories() {
   }
 
   const getProductData = async() => {
-    const resp = await getCategoryData(id)
+    const resp = await getCategoryData({id : id, locCode : locCode})
     setTitle(resp.title)
     setCategoryData(resp.data)
     setLoading(false)

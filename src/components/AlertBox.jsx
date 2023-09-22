@@ -7,12 +7,15 @@ import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import { Box } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 function AlertBox() {
-  const { alert, alertText, setAlert, popup } = useContext(CommonContext)
+  const { alert, alertText, setAlert, popup, setPopup } = useContext(CommonContext)
 
   const handleClose = () => {
     setAlert(false)
+    setPopup(false)
   }
 
 
@@ -22,11 +25,12 @@ function AlertBox() {
         {
           popup ? 
           <>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
+            <Box sx={{padding:'10px'}}>
+              <Box sx={{textAlign:'right', marginBottom:'5px', cursor:'pointer'}}  onClick={handleClose}>
+                <CloseIcon />
+              </Box>
                 {alertText}
-              </DialogContentText>
-            </DialogContent>
+            </Box>
           </>
           :
           <>

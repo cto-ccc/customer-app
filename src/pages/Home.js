@@ -70,7 +70,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FooterLogo from '../assets/lan-footer.png'
 
 import * as React from 'react';
-import { getCustomizedProducts, getImgMap, getLanding, getMetaData, logAction } from '../services/api';
+import { getCustomizedProducts, getImgMap, getLanding, getMetaData, getNearestStoreDetails, logAction } from '../services/api';
 import { Capacitor } from '@capacitor/core';
 import Footer from '../Footer';
 import { Helmet } from 'react-helmet';
@@ -84,6 +84,7 @@ import CatNutrisoft1 from '../assets/land-cat-nutrisoft.png'
 import CccWhiteLogo from '../assets/ccc-white-logo.png'
 import FavouriteLogo from '../assets/favourites.png'
 import LandingLogo from '../assets/lan-logo.png'
+import BogoOffer from '../assets/bogo-offer.jpg'
 
 const styles = {
   navbar : {
@@ -373,13 +374,16 @@ const styles = {
   },
   mobMenuItem : {
     padding:'10px 20px'
+  },
+  bannerImg : {
+    width:'100%'
   }
 }
 
 function Home() {
 
   const navigate = useNavigate()
-  const { updateCart, cartData, isDesktop } = useContext(CommonContext)
+  const { updateCart, cartData, isDesktop, showAlert, setLocCode, setPopup } = useContext(CommonContext)
   const { isUserLoggedIn, getCustomerIdFromCache } = useContext(AuthContext)
   const [anchor, setAnchor] = useState(false)
   const [sideNavAnchor, setSideNavAnchor] = useState(false)
@@ -401,7 +405,37 @@ function Home() {
   const [metaData, setMetaData] = useState(getMetaData()['home'])
 
   const printCurrentPosition = async() => {
-    getLanding(navigator.userAgent).then((resp) => {
+
+    await Geolocation.getCurrentPosition()
+    .then((resp) => {
+      console.log("current position is : ", resp.coords)
+
+      const latLng = {
+        lat : resp.coords.latitude,
+        lng : resp.coords.longitude
+      }
+
+      getNearestStoreDetails(latLng).then((resp) => {
+        const params = {
+          locCode : resp.locCode,
+          userAgent : navigator.userAgent
+        }
+        setLocCode(resp.locCode)
+        fetchLanding(params)
+      }).catch((err) => {
+        const params = {
+          userAgent : navigator.userAgent
+        }
+        fetchLanding(params)
+      })
+    })
+    .catch((err) => {
+      requestForLocPermission()
+    })
+  }
+
+  const fetchLanding = async(params) => {
+    getLanding(params).then((resp) => {
       setItemsData(resp)
       let allCatItems = []
       resp.forEach((item) => {
@@ -409,8 +443,20 @@ function Home() {
       })
       setAllItemsData(allCatItems)
       setLoading(false)
+
     }).catch((err) => {
       setLoading(false)
+    })
+  }
+
+  const requestForLocPermission = async() => {
+    await Geolocation.requestPermissions('location').then((resp) => {
+      if (resp.location == 'granted')
+        printCurrentPosition()
+      else 
+        showAlert("Location permission is disabled. Please enable location to continue")
+    }).catch((err) => {
+      showAlert("Location permission is disabled. Please enable location to continue")
     })
   }
 
@@ -598,6 +644,12 @@ function Home() {
   useEffect(() => {
     logAction('PAGE_VIEW', 'home')
     printCurrentPosition()
+    setPopup(true)
+    setTimeout(() => {
+      showAlert(<>
+        <img src={BogoOffer} style={styles.bannerImg} />
+       </>)
+    }, 1000)
   }, [])
 
   return (

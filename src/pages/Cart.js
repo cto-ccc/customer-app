@@ -174,7 +174,7 @@ function Cart() {
                                 Smoked & Turmeric (+15 /-)
                               </Box>
                             }
-                                            
+
                         </Box> : null
                       }
 
@@ -207,11 +207,19 @@ function Cart() {
                           <Box>
                             ₹ {cartData[item].price * cartData[item].count}
                           </Box>
-                          
                         </Box>
                       </Box>
+                      <Box>
+                        {
+                          cartData[item].count < cartData[item]?.minOrderQty ? 
+                          <Box sx={{fontSize:'13px', color:'red'}}>
+                            Minimum order quantity for this item is {cartData[item].minOrderQty} . Please add &nbsp;
+                            {cartData[item].minOrderQty - cartData[item].count} more item to continue.
+                          </Box> : null
+                        }
+                      </Box>
                     </Box>
-
+                      
                   </Box>
                 }
                 </Box>
@@ -279,9 +287,30 @@ function Cart() {
             </Box>
 
             <Box sx={{padding:'20px'}}>
-              <Button fullWidth onClick={() => checkout()} variant="contained">
-                Checkout 
-              </Button>
+              {
+                Object.keys(cartData).some((item, index) => {
+                  if(item == 'totalCount' || item == 'totalAmount' || item == 'totalDiscount')
+                  {
+
+                  } else {
+                    return cartData[item]?.minOrderQty > cartData[item].count
+                  }
+                }) ? 
+                <Box>  
+                  <Box sx={{color:'red', marginBottom:'10px'}}>
+                    Items in your cart do not have minimum quantity
+                  </Box>
+                  <Button fullWidth disabled variant="contained" sx={{opacity:'0.5'}}>
+                    Checkout 
+                  </Button>
+                </Box> : 
+                <Box> 
+                  <Button fullWidth onClick={() => checkout()} variant="contained">
+                    Checkout 
+                  </Button>
+                </Box>
+              }
+
             </Box>
             </Grid>
             <Grid item xs={12} sm={12} md={6} lg={6}>
