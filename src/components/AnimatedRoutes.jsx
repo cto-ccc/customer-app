@@ -51,9 +51,9 @@ function AnimatedRoutes() {
                 <Route path="/" element={isDesktop ? < Landing /> : <Home />}/>
                 <Route path="/home" element={<Home />}/>
                 <Route path="/categories/:id" element={<Categories />}/>
-                <Route path="/products/:id" element={<ItemDetail />}/>
               </Route>
 
+              <Route path="/products/:id" element={<ItemDetail />}/>
               <Route path="/cart" element={<Cart />}/>
               <Route path="/profile" element={<Profile />}/>
               <Route path="/delivery" element={<Delivery />}/>

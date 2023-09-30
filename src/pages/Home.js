@@ -126,21 +126,21 @@ const styles = {
   },
   productItem : {
     margin:'10px 15px 10px 10px',
-    background:'white',
+    background:'#FFF5E8',
     borderRadius:'5px',
     width:'220px',
     height:'315px',
-    boxShadow:'0px 0px 2px 1px #eaeaea'
+    boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)'
   },
 
   productItemDesk : {
     margin:'10px',
-    background:'white',
+    background:'#FFF5E8',
     borderRadius:'5px',
     width:'230px',
-    height:'330px',
+    height:'320px',
     // marginRight:'25px',
-    boxShadow:'0px 0px 5px 2px #eaeaea'
+    boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)'
   },
 
   productCatTitle : {
@@ -178,7 +178,7 @@ const styles = {
   },
 
   productDescCont : {
-    padding:'15px',
+    padding:'5px 15px',
     height:'120px',
     textAlign:'left',
     alignItems:'center',
@@ -379,7 +379,7 @@ const styles = {
 function Home() {
 
   const navigate = useNavigate()
-  const { updateCart, cartData, isDesktop } = useContext(CommonContext)
+  const { updateCart, cartData, isDesktop, showAlert } = useContext(CommonContext)
   const { isUserLoggedIn, getCustomerIdFromCache } = useContext(AuthContext)
   const [anchor, setAnchor] = useState(false)
   const [sideNavAnchor, setSideNavAnchor] = useState(false)
@@ -401,10 +401,16 @@ function Home() {
   const [metaData, setMetaData] = useState(getMetaData()['home'])
 
   const printCurrentPosition = async() => {
-    getLanding(navigator.userAgent).then((resp) => {
-      setItemsData(resp)
+    
+    const params = {
+      packageVersion : process.env.REACT_APP_VERSION,
+      platform : Capacitor.getPlatform()
+    }
+
+    getLanding(params).then((resp) => {
+      setItemsData(resp.productsData)
       let allCatItems = []
-      resp.forEach((item) => {
+      resp.productsData.forEach((item) => {
         allCatItems = allCatItems.concat(item.data)
       })
       setAllItemsData(allCatItems)
@@ -647,7 +653,7 @@ function Home() {
           
                 <Box>
                   <Box sx={{display:'flex', alignItems:'center', padding:'0 10px',
-                            height:'10vh', background:'white',justifyContent:'flex-end'}}>
+                            height:'10vh',justifyContent:'flex-end'}}>
                     <OutlinedInput
                       size='small'
                       placeholder="Search on Country Chicken Co"
@@ -740,7 +746,8 @@ function Home() {
             <img src={CatPickles1} style={isDesktop ? styles.posterImgDesk : styles.posterImg}/>
             {/* Pickles */}
           </Box>
-          <Box style={isDesktop ? styles.posterContDesk : styles.posterCont}>
+          <Box style={isDesktop ? styles.posterContDesk : styles.posterCont}
+            onClick={() => showAlert('Marinates are currently unavailable !')}>
             <img src={CatMarinates1} style={isDesktop ? styles.posterImgDesk :  styles.posterImg}/>
             {/* Marinates */}
           </Box>
@@ -792,7 +799,7 @@ function Home() {
                       <Box sx={styles.prodName}
                         onClick={() => navigate(`/products/${item.urlId}`, {state : item})}>
                         {item.name}
-                        <Box sx={{fontSize:'15px', opacity:'0.2'}}>
+                        <Box sx={{fontSize:'15px', opacity:'0.4'}}>
                           {item.qty}
                         </Box>
                       </Box>
@@ -807,9 +814,19 @@ function Home() {
                         {item.qty}
                       </Box> */}
                       <Box sx={{textAlign:'left', marginBottom:'5px', fontSize:'20px', display:'flex', alignItems:'end'}}>
-                      ₹ {item.price} <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.2'}}><s>₹ {item.mrp}</s></Box> 
-                      <Box sx={{fontSize:'12px', marginLeft:'5px', color:'#f47f13', borderLeft:'1px solid #eaeaea', paddingLeft:'5px'}}>
-                        {Math.trunc(((item.mrp - item.price) / item.mrp) * 100)}% Off</Box>
+                      ₹ {item.price} 
+                        {
+                          item.enableBogo ? null : 
+                          <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.2'}}><s>₹ {item.mrp}</s></Box> 
+                        }
+                      
+                        <Box sx={{fontSize:'12px', marginLeft:'5px', color:'#f47f13', borderLeft:'1px solid #eaeaea', paddingLeft:'5px'}}>
+                        {
+                          item?.enableBogo ? 
+                            <Box sx={{marginBottom:'5px'}}>Buy One Get One FREE</Box> : 
+                            <>{Math.trunc(((item.mrp - item.price) / item.mrp) * 100)}% Off</>
+                        }                    
+                        </Box>
                       </Box>
                       {
                         cartData && cartData[item.id] && cartData[item.id].count ?
@@ -841,11 +858,11 @@ function Home() {
                             <Button variant='outlined' style={styles.mainBtn} size='small' disabled sx={{opacity:'0.6'}}>
                               Out of stock
                             </Button> :
-                            <Button variant="contained" style={styles.mainBtn} size='small' fullWidth onClick={() => addToCart(item)}>
-                              Add To Cart
+                            <Button variant="contained" style={styles.mainBtn} size='small' fullWidth 
+                            onClick={() => navigate(`/products/${item.urlId}`, {state : cartData[item.id]})}>
+                              Shop Now
                             </Button>  
-                          }
-                          
+                          }      
                         </Box>
                       }
                     </div>

@@ -57,7 +57,7 @@ function OrderDetails() {
             <Box sx={{width:'15%', textAlign:'center'}}>
               Qty
             </Box>
-            <Box sx={{width:'20%'}}>
+            <Box sx={{width:'20%', textAlign:'right'}}>
               Total
             </Box>
           </Box>
@@ -81,13 +81,13 @@ function OrderDetails() {
                   </Box> */}
                 </Box>
                 <Box sx={{width:'15%'}}>
-                  {item.price}
+                ₹{item.price}
                 </Box>
                 <Box sx={{width:'15%', textAlign:'center'}}>
                   {item.quantity}
                 </Box>
-                <Box sx={{width:'20%'}}>
-                  {item.quantity * item.price}
+                <Box sx={{width:'20%', textAlign:'right'}}>
+                ₹ {item.quantity * item.price}
                 </Box>
               </Box>
             })
@@ -95,17 +95,34 @@ function OrderDetails() {
 
           <Box sx={{display:'flex', borderTop:'1px solid #eaeaea', justifyContent:'space-between'}} mt={2} pt={2}>
             <Box sx={{width:'50%'}}>
-              Delivery Cost
+            Coupon Discount
             </Box>
             <Box sx={{width:'15%'}}>
 
             </Box>
-            <Box sx={{width:'20%'}}>
-              {
-                location.state.shipping_cost
+            <Box sx={{width:'20%', textAlign:'right'}}>
+            - ₹ {
+                (location.state?.coupon_discount_amount || 0)
               }
             </Box>
           </Box>
+
+          <Box sx={{display:'flex', justifyContent:'space-between'}} mt={1}>
+            <Box sx={{width:'50%'}}>
+            Delivery Cost 
+            </Box>
+            <Box sx={{width:'15%'}}>
+
+            </Box>
+            <Box sx={{width:'20%', textAlign:'right'}}>
+             ₹ {
+                location.state.shipping_cost
+              }
+
+            </Box>
+          </Box>
+
+
 
           <Box sx={{display:'flex', fontWeight:'bold', borderTop:'1px solid #eaeaea'}} mt={2} pt={2}>
             <Box sx={{width:'50%'}}>
@@ -119,8 +136,8 @@ function OrderDetails() {
                 location.state.uiProducts.length
               }
             </Box>
-            <Box sx={{width:'20%'}}>
-              {
+            <Box sx={{width:'20%', textAlign:'right'}}>
+             ₹ {
                 location.state.order_amount + location.state.shipping_cost
               }
             </Box>

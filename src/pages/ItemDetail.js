@@ -11,12 +11,14 @@ import Drawer from '@mui/material/Drawer';
 import { Helmet } from 'react-helmet';
 import NavHeader from '../components/NavHeader';
 import ComponentLoader from '../components/ComponentLoader';
+import { Checkbox } from '@mui/material';
+import { Capacitor } from '@capacitor/core';
 
 
 const styles = {
   prodImg : {
     width:'100%',
-    height:'300px'
+    height:'250px'
   },
   productGridCont: {
     // margin:'20px'
@@ -70,17 +72,21 @@ const styles = {
   },
   priceCard : {
     display:'flex',
-    boxShadow:'0px 0px 5px 0px rgba(0, 0, 0, 0.15)', 
-    padding:'15px', margin:'20px 15px 0 0', 
-    background:'#FFF5E8', 
-    borderRadius:'10px',
-    flexDirection:'column'
+    // background:'#FFF5E8', 
+    // boxShadow:'0px 0px 5px 0px rgba(0, 0, 0, 0.15)', 
+    padding:'5px', 
+    margin:'20px 0 0 0', 
+    border:'1px solid black',
+    borderRadius:'5px',
+    fontSize:'14px',
+    flexDirection:'column',
+    // width:'100%'
   }
 }
 function ItemDetail() {
 
-  const location = useLocation()
-  const {isDesktop, cartData, updateCart} = useContext(CommonContext)
+  const navigate = useNavigate()
+  const {isDesktop, cartData, updateCart, showPopup} = useContext(CommonContext)
   const { id }   = useParams()
 
   const [anchor, setAnchor] = useState(false)
@@ -91,6 +97,8 @@ function ItemDetail() {
   const [cutType, setCutType] = useState('medium')
   const [productData, setProductData] = useState({})
   const [loading, setLoading] = useState(true)
+
+  const [bogoApplied, setBogoApplied] = useState(false)
 
 
   async function addToCart(item) {
@@ -134,12 +142,31 @@ function ItemDetail() {
     setFlavourType('normal')
     setCutType('medium')
     setAnchor(false)
+    if (activeItem.enableBogo) handleBogoApplied(true)
   }
 
   const getProductDetails = async() => {
     const resp = await getProductData({id : id})
     setProductData(resp)
+    if (cartData[resp.id]?.count && cartData[resp.id]?.enableBogo) 
+      setBogoApplied(true)
     setLoading(false)
+  }
+
+  const handleBogoApplied = (status) => {
+    setBogoApplied(status)
+    if (status && !bogoApplied)
+      showPopup(<>
+        <Box sx={{color:'#a4243d', display:'flex', textAlign:'center', padding:'10px 20px'}}>
+          <Box>
+            You just got  
+            <Box sx={{fontWeight:'bold', fontSize:'30px'}}>1kg FREE Country Chicken ! </Box>       
+          </Box>
+        </Box>
+        <Box sx={{textAlign:'center', margin:'20px 0'}}>
+          You have saved ₹{productData.price}
+        </Box>
+      </>)
   }
 
   const list = (anchor) => (
@@ -226,8 +253,8 @@ function ItemDetail() {
         
       </Box>
 
-      <Box sx={{mt:3, display:'flex', justifyContent:'flex-end'}}>
-        <Button variant='contained'
+      <Box sx={{mb:2, display:'flex', justifyContent:'flex-end'}}>
+        <Button variant='contained' fullWidth
           onClick={() => addItemFromExtras()}>
           Add Item
         </Button>
@@ -241,7 +268,7 @@ function ItemDetail() {
     getProductDetails()
   }, [])
   return (
-    <Box sx={{padding:'4vw', marginTop:'7vh'}}>
+    <Box sx={{padding: '4vw', marginTop:'7vh'}}>
       {
         loading ? 
         <ComponentLoader /> : 
@@ -263,26 +290,31 @@ function ItemDetail() {
             <Box sx={{fontSize:'30px', mt:2, color:'#a4243d', fontFamily:'Foregen'}}>
               {productData.name} 
             </Box>
-            <Box sx={{mb:1}}>
+            <Box sx={{mb:2}}>
               {productData.style ? `(${productData.style})` : null}
             </Box>
             {/* <Box sx={{fontSize:'17px', mb:1}}>
               {productData.qty}
             </Box> */}
-            <Box sx={{display:'flex',alignItems:'baseline',  mb:1, borderBottom:'1px solid #afa5a5', paddingBottom:'15px'}}>
-              <Box sx={{fontSize:'15px', mr:1}}>
-                <s>₹ {productData.mrp}</s> 
-              </Box>
-              <Box sx={{fontSize:'25px', mr:1, fontWeight:'bold', display:'flex', alignItems:'baseline'}}>
-                ₹ {productData.price} 
-                <Box sx={{fontSize:'13px', fontWeight:'100', marginLeft:'2px'}}>
-                  /1kg Live
+
+            {
+              productData.livePrice ? null : 
+              <Box sx={{display:'flex',alignItems:'baseline',  mb:1, borderBottom:'1px solid #afa5a5', paddingBottom:'15px'}}>
+                <Box sx={{fontSize:'15px', mr:1}}>
+                  <s>₹ {productData.mrp}</s> 
                 </Box>
-              </Box>             
-              <Box sx={{fontSize:'15px', marginLeft:'5px', color:'#f47f13'}}>
-                {Math.trunc(((productData.mrp - productData.price) / productData.mrp) * 100)}% Off
+                <Box sx={{fontSize:'25px', mr:1, fontWeight:'bold', display:'flex', alignItems:'baseline'}}>
+                  ₹ {productData.price} 
+                  <Box sx={{fontSize:'13px', fontWeight:'100', marginLeft:'2px'}}>
+                    /{productData.qty}
+                  </Box>
+                </Box>             
+                <Box sx={{fontSize:'15px', marginLeft:'5px', color:'#f47f13'}}>
+                  {Math.trunc(((productData.mrp - productData.price) / productData.mrp) * 100)}% Off
+                </Box>
               </Box>
-            </Box>
+            }
+
           
             {
              productData.aka ?
@@ -318,36 +350,117 @@ function ItemDetail() {
                 <Box>&nbsp;{productData.healthBenefits}</Box> 
               </Box> : null
             }
-            <Box sx={{display:'flex', flexDirection: isDesktop ? 'row' : 'column'}}>
 
-              <Box style={styles.priceCard}>
-                
-                <Box sx={{display:'flex', marginBottom:'15px'}}>
-                <Box sx={{display:'flex', borderRight:'1px solid #404040'}}>
-                  <Box sx={{width:'min-content', marginRight:'15px'}}>
-                    Live Weight
-                  </Box>
-                  <Box sx={{marginRight:'10px'}}>
-                    1Kg
-                  </Box>
-                </Box>
-                <Box sx={{display:'flex'}}>
-                  <Box sx={{width:'min-content', marginLeft:'10px', marginRight:'15px'}}>
-                    Meat Weight
+            {
+              productData.livePrice ? 
+              <>
+                <Box sx={{display:'flex', borderTop:'1px solid black', paddingTop:'15px', margin:'10px 0 0 0'}}>
+                  <Box sx={{marginRight:'20px'}}>
+                    Live Weight*: 1.5kg 
                   </Box>
                   <Box>
-                    0.45Kg
+                    Meat Weight*: 1kg
                   </Box>
                 </Box>
-                </Box>
- 
+              </> : null
+            }
 
-                <Box sx={{color:'#a4243d', fontSize:'15px', marginBottom:'10px'}}>
-                  Final Price - 1Kg x ₹299:₹299
+
+
+            <Box sx={{display:'flex', flexDirection: 'column'}}>
+
+              {
+                productData.livePrice ? 
+                <>
+                <Box style={styles.priceCard} sx={{opacity:'0.3'}}>
+                  
+                  <Box sx={{display:'flex', alignItems:'center'}}>
+                    <Box sx={{display:'flex', flexDirection:'column', width:'30%'}}>
+                      <Box sx={{fontSize:'20px'}}>
+                        Live Bird
+                      </Box>
+                      <Box sx={{marginRight:'10px'}}>
+                        ₹{productData.livePrice}/Kg
+                      </Box>
+                    </Box>
+
+                    <Box sx={{borderLeft:'1px solid black', borderRight:'1px solid black', padding : '0 10px', margin:'0 10px', width:'40%', textAlign:'center'}}>
+                      <Box sx={{fontSize:'15px'}}>
+                        Weight : 1.5Kg
+                      </Box>
+                      <Box sx={{fontSize:'13px'}}>
+                        ₹{productData.livePrice} x 1.5kg = ₹{productData.livePrice * 1.5}
+                      </Box>
+                    </Box>
+
+                    <Box sx={{display:'flex', flexDirection:'column', width:'30%'}}>
+                      <Box sx={{fontSize:'20px', fontWeight:'bold'}}>
+                        ₹{productData.livePrice * 1.5}/kg
+                      </Box>
+                      <Box sx={{fontSize:'10px'}}>
+                        Available at stores
+                      </Box>
+                    </Box>
+                  </Box>
+
+              
                 </Box>
 
-            
-            <Box>
+                <Box style={styles.priceCard} sx={{ color:'#a4243d', borderColor:'#a4243d !important'}}>
+                  <Box sx={{display:'flex', alignItems:'center'}}>
+                    <Box sx={{display:'flex', flexDirection:'column', width:'30%'}}>
+                      <Box sx={{fontSize:'20px'}}>
+                        Meat
+                      </Box>
+                      <Box sx={{marginRight:'10px'}}>
+                        ₹{productData.price}/Kg
+                      </Box>
+                    </Box>
+
+                    <Box sx={{borderLeft:'1px solid #a4243d', borderRight:'1px solid #a4243d', padding : '0 10px', margin:'0 10px', width:'40%', textAlign:'center'}}>
+                      <Box sx={{fontSize:'15px'}}>
+                        Live Bird : 1.5Kg =
+                      </Box>
+                      <Box sx={{fontSize:'13px'}}>
+                        1Kg Meat
+                      </Box>
+                    </Box>
+
+                    <Box sx={{display:'flex', flexDirection:'column', width:'30%'}}>
+                      <Box sx={{fontSize:'20px', fontWeight:'bold'}}>
+                        ₹{productData.price}/kg
+                      </Box>
+                      <Box sx={{fontSize:'10px', color:'black', opacity:'0.3'}}>
+                        Apply coupon and get 1kg meat FREE
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+                </> : null
+              }
+
+
+
+                {
+                  productData.enableBogo ? 
+                  <>
+                    <Box sx={{textAlign:'center'}} mt={2}>
+                      { bogoApplied ? 'Enjoy 1kg FREE Meat' : 'Buy 1Kg Meat and get 1Kg Meat FREE'}
+                    </Box>
+                    <Box sx={{display:'flex', alignItems:'baseline', border:'1px solid #F47F13', borderRadius:'10px', 
+                              justifyContent:'center', margin:'10px 0 0 0', background: bogoApplied ? '#F47F13' : null}}>
+                      <Box>
+                        <Checkbox  sx={{'&.Mui-checked': {color: bogoApplied ? 'white' : '#F47F13'}}}
+                          checked={bogoApplied} onChange={(event) => handleBogoApplied(event.target.checked)}/>
+                      </Box>
+                      <Box sx={{color: bogoApplied ? 'white' : '#F47F13'}}>
+                        {bogoApplied ? 'Coupon Applied' : 'Apply Coupon'} : BOGO
+                      </Box>
+                    </Box>
+                  </> : null
+                }
+
+              <Box sx={{marginTop:'25px'}}>
             {
                       cartData && cartData[productData.id] && cartData[productData.id].count ?
                       <Box style={styles.incCont}>
@@ -373,7 +486,7 @@ function ItemDetail() {
                         </Box>
                      
                         <Button fullWidth variant='contained' 
-                              onClick={() => addToCart(productData)}>View Cart</Button>
+                              onClick={() => navigate('/cart')}>View Cart</Button>
                       </Box> : 
                       <Box>
                         {
@@ -388,10 +501,8 @@ function ItemDetail() {
                     }
         
             </Box>
-            
-              </Box>
 
-              <Box style={styles.priceCard}>
+              {/* <Box style={styles.priceCard}>
                 
                 <Box sx={{display:'flex', marginBottom:'15px'}}>
                 <Box sx={{display:'flex', borderRight:'1px solid #404040'}}>
@@ -422,7 +533,7 @@ function ItemDetail() {
               </Box>
         
 
-              
+               */}
 
             </Box>
 {/* 

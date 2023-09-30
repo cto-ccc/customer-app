@@ -42,7 +42,46 @@ code {
   border-color: #a4243d !important;
   text-transform: none !important;
   color: #a4243d !important;
+}
 
+.MuiAccordionSummary-content  {
+  margin:0px !important;
+}
+
+.MuiAccordionSummary-root {
+  min-height: 0px !important;
+  background: #FFF5E8 !important;
+}
+
+.MuiAccordion-root {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0px !important;
+  background: #FFF5E8 !important;
+}
+
+.MuiAccordion-root::before {
+  background: #FFF5E8 !important;
+}
+
+.MuiAccordion-root .MuiButtonBase-root {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0px !important;
+}
+
+.Mui-expanded {
+  margin:0px !important;
+}
+
+.MuiAccordionDetails-root {
+  padding: 5px !important;
+  background: #FFF5E8 !important;
+}
+
+.MuiRadio-root .MuiSvgIcon-root {
+  height: 15px !important;
+  color: #a4243d;
 }
 
 .MuiRadio-root {

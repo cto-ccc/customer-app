@@ -296,7 +296,6 @@ export const createNewOrder = (async(orderData) => {
 
 
 export const getUserProductOrders = (async(userData) => {
-  console.log("===getting user orders===", userData)
   return new Promise(async(resolve, reject) => {
     const orderResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/getUserOrders`, {
       "method": "POST",
@@ -322,7 +321,7 @@ export const getUserProductOrders = (async(userData) => {
 
 export const getLanding = (async(userData) => {
   return new Promise(async(resolve, reject) => {
-    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/getLanding`, {
+    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/v1/getLanding`, {
       "method": "POST",
       "headers": {
         "content-type": "application/json",
@@ -345,7 +344,7 @@ export const getLanding = (async(userData) => {
 
 export const getCategoryData = (async(key) => {
   return new Promise(async(resolve, reject) => {
-    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/getCategoryData`, {
+    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/v1/getCategoryData`, {
       "method": "POST",
       "headers": {
         "content-type": "application/json",
@@ -392,7 +391,7 @@ export const getNearestStoreDetails = (async(data) => {
 
 export const getProductData = (async(data) => {
   return new Promise(async(resolve, reject) => {
-    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/getProductData`, {
+    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/v1/getProductData`, {
       "method": "POST",
       "headers": {
         "content-type": "application/json",

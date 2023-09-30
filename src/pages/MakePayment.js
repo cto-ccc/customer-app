@@ -21,7 +21,7 @@ function MakePayment() {
 
   const location = useLocation()
   
-  const { showLoader, hideLoader, showAlert, showSnackbar, isDesktop } = useContext(CommonContext)
+  const { showLoader, hideLoader, showAlert, showSnackbar, isDesktop, couponCacheData } = useContext(CommonContext)
   const { getUserId, getCustomerId } = useContext(AuthContext)
   const [loading, setLoading] = useState(true)
 
@@ -75,6 +75,7 @@ function MakePayment() {
       storeDetails   : location.state.storeDetails,
       paymentMode    : location.state.paymentMode,
       deliveryType   : location.state.delType,
+      totalDiscount  : location.state.totalDiscount,
       customerId     : await getCustomerId(),
       txnId          : txnId,
       deliveryDate   : location.state.delDate,
@@ -82,10 +83,24 @@ function MakePayment() {
       shippingCost   : getDeliveryCharge(location.state.delType)
     } 
 
+
+    if (location.state.itemDetails?.bogoDiscount) {
+      orderData.couponCode           = 'BOGO'
+      orderData.couponDiscountAmount = location.state.itemDetails.bogoDiscount
+      orderData.couponDiscountType   = 'discount_coupon'
+    }
+
+    if (couponCacheData?.couponCode) {
+      orderData.couponCode           = couponCacheData.couponCode
+      orderData.couponDiscountAmount = couponCacheData.couponValue
+      orderData.couponDiscountType   = 'discount_coupon'
+    }
+
     let ordersObj = JSON.parse(JSON.stringify(location.state.itemDetails))
     delete ordersObj.totalAmount
     delete ordersObj.totalCount
     delete ordersObj.totalDiscount
+    delete ordersObj.bogoDiscount
     orderData.orderTitle  = ordersObj[Object.keys(ordersObj)[0]].name
 
     orderData.itemDetails = Object.values(ordersObj)

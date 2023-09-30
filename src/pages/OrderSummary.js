@@ -64,6 +64,12 @@ function OrderSummary() {
       shippingCost   : getDeliveryCharge(location.state.delType)
     } 
 
+    if (location.state.itemDetails?.bogoDiscount) {
+      orderData.couponCode           = 'BOGO'
+      orderData.couponDiscountAmount = location.state.itemDetails.bogoDiscount
+      orderData.couponDiscountType   = 'discount_coupon'
+    }
+
     if (couponCacheData?.couponCode) {
       orderData.couponCode           = couponCacheData.couponCode
       orderData.couponDiscountAmount = couponCacheData.couponValue
@@ -74,9 +80,11 @@ function OrderSummary() {
     delete ordersObj.totalAmount
     delete ordersObj.totalCount
     delete ordersObj.totalDiscount
+    delete ordersObj.bogoDiscount
     orderData.orderTitle  = ordersObj[Object.keys(ordersObj)[0]].name
 
     orderData.itemDetails = Object.values(ordersObj)
+
     showLoader()
     createNewOrder(orderData).then((response) => {
       navigate('/orderStatus', {state:{orderId : response, orderData : orderData}, replace:true})
@@ -101,74 +109,84 @@ function OrderSummary() {
       <Box sx={{fontSize:'14px', fontWeight:'400', marginBottom:'10px'}}>
         Your order will be delivered from {location.state.storeDetails.storeName} store
       </Box>
-
-      <Box sx={{margin:'20px 0 10px 5px', fontSize:'18px',color:'#a4243d', marginTop:'20px'}}>
-        Item Details
+      <Box sx={{mb:1, fontSize:'20px', fontFamily:'Foregen', color:'#a4243d', mt:3}}>
+        ITEM DETAILS
       </Box>
       <ItemsSummary itemDetails={location.state.itemDetails} />
 
-        <Box sx={{margin:'30px 0 10px 5px', fontSize:'18px', color:'#a4243d'}}>
-          Delivery Details
+        <Box sx={{mb:1, fontSize:'20px', fontFamily:'Foregen', color:'#a4243d', mt:3}}>
+          DELIVERING TO
         </Box>
-        <Box style={styles.shadowBox}>
-          <Box sx={{padding:'15px', marginBottom:'25px'}}>
+        <Box sx={{padding:'15px', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}>
+          <Box>
 
-            <Box sx={{ marginBottom:'5px', display:'flex'}}>
-              <Box sx={{width:'50px', fontSize:'18px',}}>
-                Date 
-              </Box>
-              <Box>
-                : {location.state.delDate}
-              </Box>
-            </Box>
-            <Box sx={{ display:'flex'}}>
-              <Box sx={{width:'50px', fontSize:'18px',}}>
-                Slot 
-              </Box>
-              <Box>
-                : {getTimeSlots().filter((slot) => slot.id == location.state.delSlotId)[0].time}
-              </Box>
-            </Box>
-
-            <Box sx={{marginTop:'18px', fontSize:'18px'}}>
-              Address :
-            </Box>
-            <Box sx={{marginBottom:'5px', marginTop:'5px'}}>
+            <Box sx={{marginBottom:'5px'}}>
               {location.state.addressDetails.userName}
             </Box>
-            <Box>
-              {location.state.addressDetails.houseDetails}, {location.state.addressDetails.streetDetails}
+            <Box SX={{fontSize:'15px'}}>
+              {location.state.addressDetails.houseDetails}, {location.state.addressDetails.streetDetails},
+              {location.state.addressDetails.landmark}, {location.state.addressDetails.pincode}
             </Box>
-            <Box>
-              {location.state.addressDetails.landmark}
-            </Box>
-            <Box>
-              {location.state.addressDetails.pincode}
-            </Box>   
 
-            <Box sx={{marginTop:'18px', fontSize:'18px'}}>
-              Instructions :
-            </Box>
-            <Box sx={{marginBottom:'5px', marginTop:'5px'}}>
-              {location.state.instructions}
-            </Box>
           </Box>
         </Box>  
 
-        <Box sx={{margin:'30px 0 10px 5px', fontSize:'18px',color:'#a4243d'}}>
-          Bill Details
+        <Box sx={{mb:1, fontSize:'20px', fontFamily:'Foregen', color:'#a4243d', mt:3}}>
+          DELIVERY SLOT
         </Box>
-        <Box style={styles.shadowBox} sx={{marginBottom:'40px'}}> 
-          <Box sx={{display:'flex', justifyContent:'space-between', padding:'15px 15px'}}>
+        <Box sx={{padding:'15px', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}>
+          {location.state.delDate}, {getTimeSlots().filter((slot) => slot.id == location.state.delSlotId)[0].time}
+
+          <Box>
+          {
+              location.state.instructions ? 
+              <>
+                <Box sx={{marginBottom:'5px', marginTop:'5px'}}>
+                  {location.state.instructions}
+                </Box>
+              </> : null
+            }
+          </Box>
+        </Box>
+
+        <Box sx={{mb:1, fontSize:'20px', fontFamily:'Foregen', color:'#a4243d', mt:3}}>
+          BILL DETAILS
+        </Box>
+        <Box sx={{padding:'15px', mb:4, background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}> 
+          <Box sx={{display:'flex', justifyContent:'space-between'}}>
             <Box>
               Item Total 
             </Box>
             <Box>
-              ₹ {location.state.itemDetails.totalAmount}
+              ₹ {Number(location.state.itemDetails.totalAmount) +  Number(location.state.itemDetails.totalDiscount) + Number(location.state.itemDetails.bogoDiscount)}
             </Box>
           </Box>
+
+          {
+            location.state.itemDetails?.bogoDiscount ? 
+              <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 0'}}>
+                <Box>
+                  BOGO Discount
+                </Box>
+                <Box sx={{color:'#a4243d'}}>
+                  -₹{location.state.itemDetails.bogoDiscount}
+                </Box>
+              </Box> : null
+          }
+
+          {
+            location.state.itemDetails?.totalDiscount ? 
+              <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 0'}}>
+                <Box>
+                  Discount on MRP
+                </Box>
+                <Box sx={{color:'#a4243d'}}>
+                  -₹{location.state.itemDetails.totalDiscount}
+                </Box>
+              </Box> : null
+          }
           
-          <Box sx={{display:'flex', justifyContent:'space-between', padding:'0px 15px 15px 15px'}}>
+          <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 0'}}>
             <Box>
               Delivery Fee
             </Box>
@@ -191,7 +209,7 @@ function OrderSummary() {
             </Box> : null
           }
 
-          <Box sx={{display:'flex', justifyContent:'space-between', padding:'15px 15px', borderTop:'1px solid #eaeaea'}}>
+          <Box sx={{display:'flex', justifyContent:'space-between',  borderTop:'1px solid #eaeaea', padding:'5px 0'}}>
             <Box>
               To Pay
             </Box>

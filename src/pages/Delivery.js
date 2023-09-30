@@ -30,12 +30,8 @@ import { useLocation } from 'react-router-dom'
 const styles = {
   titleCont : {
     fontSize : '25px',
-    marginBottom:'10px'
-  },
-  shadowBox : {
-    background : 'white',
-    padding:'20px',
-    marginTop:'10px'
+    marginBottom:'10px',
+    fontFamily:'Foregen'
   }
 }
 
@@ -308,7 +304,7 @@ function Delivery() {
     
       <Box>
         <NavHeader />
-        <Box style={styles.shadowBox}>
+        <Box>
         <Box style={styles.titleCont}>
           Delivery Details
         </Box>
@@ -316,9 +312,9 @@ function Delivery() {
             {
               address.map((address, index) => {
                 return <Box key={index}>
-                  <Box sx={{display:'flex', borderBottom:'1px solid #eaeaea', padding:'10px 0'}}>
-                    <FormControlLabel value={index} control={<Radio />} label={
-                      <Box>
+                  <Box sx={{padding:'10px', margin:'5px 0', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}>
+                    <FormControlLabel value={index} control={<Radio/>} label={
+                      <Box sx={{fontSize:'15px'}}>
                         <Box>
                           {address.userName}
                         </Box>
@@ -346,7 +342,7 @@ function Delivery() {
                 Add New address
               </Box>
               
-              <Box> 
+              <Box sx={{padding:'10px', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}> 
               <form onSubmit={handleSubmit(onFormSubmit)}>
               <Autocomplete onLoad={onAutoCompleteLoad} onPlaceChanged={onPlaceChanged}>
                 <input
@@ -479,25 +475,30 @@ function Delivery() {
           }       
         </Box>
 
-        <Box mt={3} sx={{padding:'10px 20px 10px 20px', background:'white'}}>
-          <Box sx={{mb:1, fontSize:'18px'}}>
-            Delivery Date
-          </Box>
-          <ToggleButtonGroup
-            color="primary"
-            value={delDate}
-            exclusive
-            onChange={onDelDateChange}
-          >
-            <ToggleButton  sx={{textTransform:'none'}} value="Today">Today</ToggleButton>
-            <ToggleButton  sx={{textTransform:'none'}} value="Tomorrow">Tomorrow</ToggleButton>
-          </ToggleButtonGroup>
+
+        <Box sx={{mb:1, fontSize:'20px', fontFamily:'Foregen', color:'#a4243d', mt:4}}>
+          SELECT DELIVERY SLOT
         </Box>
 
-        <Box mb={3} sx={{padding:'20px 20px', background:'white'}}>
-          <Box sx={{mb:1, fontSize:'18px'}}>
-            Delivery Slot
+        <Box mb={3}  sx={{padding:'15px 10px', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}>
+        
+          <Box sx={{mb:2}}>
+            <ToggleButtonGroup
+                color="primary"
+                value={delDate}
+                exclusive
+                onChange={onDelDateChange}
+              >
+              <ToggleButton  sx={{textTransform:'none', padding:'3px 20px', 
+                             color: delDate == 'Today' ? 'white !important' : 'black !important',
+                             background: delDate == 'Today' ? '#a4243d !important' : 'FFF5E8 !important'}} value="Today">Today</ToggleButton>
+              <ToggleButton  sx={{textTransform:'none', padding:'3px 20px',
+                              color: delDate == 'Tomorrow' ? 'white !important' : 'black !important',
+                              background: delDate == 'Tomorrow' ? '#a4243d !important' : 'FFF5E8 !important'}} value="Tomorrow">Tomorrow</ToggleButton>
+            </ToggleButtonGroup>
           </Box>
+
+
           <Select
             labelId="demo-select-small"
             placeholder="Delivery Time"
@@ -516,10 +517,12 @@ function Delivery() {
           </Select>
         </Box>
 
-        <Box mb={3} sx={{padding:'20px 20px', background:'white'}}>
-          <Box sx={{mb:1, fontSize:'18px'}}>
-            Delivery Type
-          </Box>
+
+        <Box sx={{mb:1, fontSize:'20px', fontFamily:'Foregen', color:'#a4243d'}}>
+          SELECT DELIVERY TYPE
+        </Box>
+        <Box mb={3} sx={{padding:'10px', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}>
+          
           <Select
             labelId="demo-select-small"
             placeholder="Delivery Time"
@@ -537,10 +540,10 @@ function Delivery() {
           </Select>
         </Box>
 
-        <Box sx={{margin:'30px 0'}} style={styles.shadowBox}>
-          <Box style={styles.titleCont}>
-            Payment Details
-          </Box>
+        <Box sx={{mb:1, fontSize:'20px', fontFamily:'Foregen', color:'#a4243d'}}>
+        PAYMENT MODE
+        </Box>
+        <Box sx={{padding:'10px', mb:3, background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}>
           <FormControl onChange={handlePaymentChange}>
             <RadioGroup defaultValue="online">
               <Box sx={{display:'flex', flexDirection:'column'}}>

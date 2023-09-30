@@ -10,12 +10,12 @@ const styles = {
     top:0,
     left:0,
     alignItems:'center',
-    boxShadow:'0px 0px 3px 1px #eaeaea',
+    // boxShadow:'0px 0px 3px 1px #eaeaea',
     display:'flex',
     height:'7vh',
     zIndex:3,
     width:'100vw',
-    background:'white'
+    background:'#FFF0D9'
   }
 }
 

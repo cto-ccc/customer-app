@@ -17,6 +17,8 @@ export const CommonProvider = (props) => {
   const [cartData, setCartData] = useState({})
   const [couponCacheData, setCouponCacheData] = useState({})
 
+  const [popup, setPopup] = useState(false)
+
   const [isDesktop, setIsDesktop] = useState(
     window.matchMedia("(min-width: 768px)").matches
   )
@@ -38,21 +40,29 @@ export const CommonProvider = (props) => {
     itemData = JSON.parse(JSON.stringify(itemData))
     const newCartData = cartData || {}
 
+    // Item present in cart
     if (newCartData[itemData.id]) {
 
       if (isIncrease && newCartData[itemData.id].count == 15) {
         showAlert("Maximum quantity you can order is 15")
         return
       }
+      
+      itemData.price = (newCartData[itemData.id].price)
 
-      itemData.price = newCartData[itemData.id].price
+      let itemQty   = itemData?.enableBogo ? 2 : 1
+      newCartData[itemData.id].count = newCartData[itemData.id].count + (isIncrease ? itemQty : -itemQty)
 
-      newCartData[itemData.id].count = newCartData[itemData.id].count + (isIncrease ? 1 : -1)
+      if (newCartData[itemData.id].count <= 0) delete newCartData[itemData.id]
+    } 
 
-      if (newCartData[itemData.id].count == 0) delete newCartData[itemData.id]
-    } else {
+    // Item not present in cart
+    else {
 
       if (itemData.extras) {
+
+        // if (itemData.enableBogo) itemData.price = itemData.price / 2
+        
         if (itemData.extras.skinType=='skinless') itemData.price = itemData.price + 100
         if (itemData.extras.flavourType=='smoketurmeric') itemData.price = itemData.price + 15
 
@@ -66,21 +76,29 @@ export const CommonProvider = (props) => {
         } 
       }
 
-      itemData.count = 1
+      itemData.count = itemData.enableBogo ? 2 : 1
       newCartData[itemData.id] = itemData
     }
 
-
-
     if (isIncrease) {
-      newCartData.totalCount    = (newCartData.totalCount || 0)    + 1
-      newCartData.totalAmount   = (newCartData.totalAmount || 0)   + itemData.price 
+      newCartData.totalCount    = (newCartData.totalCount || 0)    + (itemData.enableBogo ? 2 : 1)
+      newCartData.totalAmount   = (newCartData.totalAmount || 0)   + itemData.price
       newCartData.totalDiscount = (newCartData.totalDiscount || 0) + (itemData.mrp - itemData.price)
+      if (itemData.enableBogo)
+        newCartData.bogoDiscount  = (newCartData.bogoDiscount || 0)  + (itemData.price)
     } else {
-      newCartData.totalCount    = newCartData.totalCount    - 1
-      newCartData.totalAmount   = newCartData.totalAmount   - itemData.price
-      newCartData.totalDiscount = newCartData.totalDiscount - (itemData.mrp - itemData.price)
+      newCartData.totalCount    = newCartData.totalCount    - (itemData.enableBogo ? 2 : 1)
+      newCartData.totalAmount   = newCartData.totalAmount   - (itemData.price)
+      newCartData.totalDiscount = newCartData.totalDiscount - (itemData.mrp - itemData.price) 
+      if (itemData.enableBogo)
+        newCartData.bogoDiscount  = newCartData.bogoDiscount  - (itemData.price)
     }
+
+    newCartData.totalCount    = Math.max(0, newCartData.totalCount)
+    newCartData.totalAmount   = Math.max(0, newCartData.totalAmount)
+    newCartData.totalDiscount = Math.max(0, newCartData.totalDiscount)
+    newCartData.bogoDiscount  = Math.max(0, newCartData.bogoDiscount)
+
     setCartData({...newCartData})
     await Preferences.set({key: 'cartData', value: JSON.stringify(newCartData)})
   }
@@ -119,6 +137,7 @@ export const CommonProvider = (props) => {
   }
 
   const showAlert = (alertText) => {
+    setPopup(false)
     setAlertText(alertText)
     setAlert(true)
   }
@@ -138,6 +157,12 @@ export const CommonProvider = (props) => {
     setSnackbar(false)
     setSnackbarText(null)
     setSnackbarType('success')
+  }
+
+  const showPopup = (popupData) => {
+    setPopup(true)
+    setAlertText(popupData)
+    setAlert(true)
   }
 
   const value = {
@@ -164,6 +189,9 @@ export const CommonProvider = (props) => {
     addCouponToCart,
     getCouponData,
     clearCouponData,
+    showPopup,
+    setPopup,
+    popup,
     isDesktop
   }
 

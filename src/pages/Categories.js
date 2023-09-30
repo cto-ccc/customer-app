@@ -346,7 +346,7 @@ function Categories() {
           <Box sx={{display:'block', ml:'4vw'}}>
             {
               getAllCategories().map((category) => {
-                return <Box style={category.id == id ? styles.catBoxAct : styles.catBox}
+                return <Box style={category.id == id ? styles.catBoxAct : styles.catBox} key={category.id}
                 
                 onClick={() => navigate(`/categories/${category.id}`,  {replace:true})}>
                   {category.title}
@@ -400,23 +400,37 @@ function Categories() {
                         Starting from
                       </Box>
                       <Box sx={{textAlign:'left', marginBottom:'10px', display:'flex', alignItems:'baseline'}}>
-                      <Box sx={{fontSize:'15px', marginRight:'5px', opacity:'0.2'}}><s>₹ {chick.mrp}</s></Box> 
+                      {
+                        chick.enableBogo ? null : 
+                        <Box sx={{fontSize:'15px', marginRight:'5px', opacity:'0.2'}}><s>₹ {chick.mrp}</s></Box> 
+                      }
                       <Box sx={{fontWeight:'bold', fontSize:'20px',}}>
                         ₹ {chick.price} 
                       </Box>
                       <Box sx={{fontSize:'11px'}}>
-                        /kg live
+                        /{chick.qty}
                       </Box>
+                      
                       <Box sx={{fontSize:'12px', marginLeft:'5px', color:'#f47f13', borderLeft:'1px solid #eaeaea', paddingLeft:'5px'}}>
-                        {Math.trunc(((chick.mrp - chick.price) / chick.mrp) * 100)}% Off</Box>
+                        {
+                          chick.enableBogo ? 
+                            <Box sx={{marginBottom:'5px'}}>Buy One Get One FREE</Box> : 
+                            <>{Math.trunc(((chick.mrp - chick.price) / chick.mrp) * 100)}% Off</>
+                        }    </Box>
                       </Box>
                     </Box>
-
-                    <Button variant="contained" style={styles.mainBtn} fullWidth 
-                    onClick={() => navigate(`/products/${chick.urlId}`, {state : chick})}>
-                      Show Now
-                    </Button>
                     
+                    {
+                      chick.stockQty == 0 ?
+                      <Button variant='outlined' style={styles.mainBtn} size='small' disabled sx={{opacity:'0.6'}}>
+                        Out of stock
+                      </Button> :
+                      <Button variant="contained" style={styles.mainBtn} fullWidth 
+                      onClick={() => navigate(`/products/${chick.urlId}`, {state : chick})}>
+                        Shop Now
+                      </Button>
+                    } 
+
                   </div>
                 </Box>
               </Grid>
