@@ -5,6 +5,9 @@ import AnimatedRoutes from './components/AnimatedRoutes';
 import { AuthContextProvider } from './contexts/AuthContext';
 import TagManager from 'react-gtm-module'
 import { useEffect } from 'react';
+import { CapacitorUpdater } from '@capgo/capacitor-updater'
+
+CapacitorUpdater.notifyAppReady()
 
 function App() {
   

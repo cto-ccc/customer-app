@@ -19,6 +19,9 @@
       "layoutName": "launch_screen",
       "useDialog": true
     },
+    "CapacitorUpdater": {
+			"autoUpdate": false
+		},
     "LocalNotifications": {
       "smallIcon": "ic_noti",
       "iconColor": "#a4243d",

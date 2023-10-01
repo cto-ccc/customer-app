@@ -18,6 +18,9 @@ export const CommonProvider = (props) => {
   const [couponCacheData, setCouponCacheData] = useState({})
 
   const [popup, setPopup] = useState(false)
+  const [blocker, setBlocker] = useState(false)
+
+  const [updatePercent, setUpdatePercent] = useState(10)
 
   const [isDesktop, setIsDesktop] = useState(
     window.matchMedia("(min-width: 768px)").matches
@@ -201,7 +204,11 @@ export const CommonProvider = (props) => {
     showPopup,
     setPopup,
     popup,
-    isDesktop
+    isDesktop,
+    blocker, 
+    setBlocker,
+    updatePercent,
+    setUpdatePercent
   }
 
   return <CommonContext.Provider value={value}> {props.children} </CommonContext.Provider>

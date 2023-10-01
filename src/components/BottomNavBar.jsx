@@ -39,8 +39,9 @@ function BottomNavBar() {
   }
 
   return (
-    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, height:'7vh', zIndex:'444' }} elevation={3}>
+    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, height:'7vh', zIndex:'444', background:'#FFF0D9' }} elevation={3}>
     <BottomNavigation
+      sx={{background:'#FFF0D9'}}
       onChange={(event, newIndex) => {
         setActiveIndex(newIndex)
         switch (newIndex) {

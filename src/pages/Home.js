@@ -66,6 +66,10 @@ import CatNutrisoft1 from '../assets/land-cat-nutrisoft.png'
 import CccWhiteLogo from '../assets/ccc-white-logo.png'
 import FavouriteLogo from '../assets/favourites.png'
 import LandingLogo from '../assets/lan-logo.png'
+import { CapacitorUpdater } from '@capgo/capacitor-updater'
+import { App as CapApp } from '@capacitor/app';
+import AppBlocker from '../components/AppBlocker';
+
 
 const styles = {
   navbar : {
@@ -358,10 +362,12 @@ const styles = {
   }
 }
 
+let updateData = null
+
 function Home() {
 
   const navigate = useNavigate()
-  const { updateCart, cartData, isDesktop, showAlert } = useContext(CommonContext)
+  const { updateCart, cartData, isDesktop, showAlert, showPopup, setBlocker, setUpdatePercent } = useContext(CommonContext)
   const { isUserLoggedIn, getCustomerIdFromCache } = useContext(AuthContext)
   const [anchor, setAnchor] = useState(false)
   const [sideNavAnchor, setSideNavAnchor] = useState(false)
@@ -382,21 +388,43 @@ function Home() {
   const [latLong, setLatLong] = useState(null)
   const [metaData, setMetaData] = useState(getMetaData()['home'])
 
+
+  CapacitorUpdater.addListener('download', (event) => {
+    console.log("***Download in progress***", JSON.stringify(event))
+    setUpdatePercent(event.percent)
+  })
+
   const printCurrentPosition = async() => {
     
     const params = {
       packageVersion : process.env.REACT_APP_VERSION,
-      platform : Capacitor.getPlatform()
+      platform       : Capacitor.getPlatform()
     }
 
-    getLanding(params).then((resp) => {
-      setItemsData(resp.productsData)
-      let allCatItems = []
-      resp.productsData.forEach((item) => {
-        allCatItems = allCatItems.concat(item.data)
-      })
-      setAllItemsData(allCatItems)
-      setLoading(false)
+    getLanding(params).then(async(resp) => {
+
+      if (resp.action == 'UPDATE' && Capacitor.getPlatform() != 'web') {
+
+        setBlocker(true)
+
+        updateData = await CapacitorUpdater.download({
+          version : resp.currVersion,
+          url     : resp.newBuildUrl
+        })
+        
+        await CapacitorUpdater.set(updateData)
+        setBlocker(false)
+      } else {
+       
+        setItemsData(resp.productsData)
+        let allCatItems = []
+        resp.productsData.forEach((item) => {
+          allCatItems = allCatItems.concat(item.data)
+        })
+        setAllItemsData(allCatItems)
+        setLoading(false)
+      }
+
     }).catch((err) => {
       setLoading(false)
     })
@@ -950,6 +978,10 @@ function Home() {
           </Box>
 
         </Box>
+        <Box sx={{textAlign:'center', background:'#a4243d', color:'#FFF0D9', padding:'5px 0'}}>
+          v{ process.env.REACT_APP_VERSION }
+        </Box>
+  
       </Drawer>
     </React.Fragment>
 

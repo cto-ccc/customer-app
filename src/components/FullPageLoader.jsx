@@ -7,6 +7,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import BottomNavBar from './BottomNavBar';
 import { Capacitor } from '@capacitor/core';
+import AppBlocker from './AppBlocker';
 
 const Alert = React.forwardRef(function Alert(
   props,
@@ -33,7 +34,7 @@ const styles = {
   }
 }
 function FullPageLoader() {
-  const {loader, loadingText, snackbar, hideSnackbar, snackbarText, snackbarType, setSnackbarType, isDesktop } = useContext(CommonContext)
+  const {loader, loadingText, snackbar, hideSnackbar, snackbarText, snackbarType, setSnackbarType, isDesktop, blocker } = useContext(CommonContext)
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -63,14 +64,17 @@ function FullPageLoader() {
         </Snackbar>        
       }
 
-      <Box sx={{paddingBottom: Capacitor.getPlatform() == 'web' ? null : '20vw', 
-                paddingTop : Capacitor.getPlatform() == 'ios' ? '4vh' : ''}}>
-        <Outlet />
-      </Box>
-    
       
       {
-        Capacitor.getPlatform() == 'web' ? null : <BottomNavBar />
+        blocker ? 
+        <AppBlocker /> : 
+        <Box sx={{paddingBottom: Capacitor.getPlatform() == 'web' ? null : '20vw', 
+                  paddingTop : Capacitor.getPlatform() == 'ios' ? '4vh' : ''}}>
+          <Outlet />
+        </Box>
+      }
+      {
+        (Capacitor.getPlatform() == 'web' || blocker) ? null : <BottomNavBar />
       }
       
     </>
