@@ -498,8 +498,39 @@ function Delivery() {
             </ToggleButtonGroup>
           </Box>
 
+          {/* {
+            delDate == 'Today' ? 
+            <Box sx={{background:'white', padding:'10px'}}>
+              <Box mb={2}>
+              Due to an exceptionally high demand, we've temporarily run out of stock.
+                </Box>
 
+              <Box sx={{color:'#a4243d', fontSize:'20px'}}>
+                Please select a slot for tomorrow to continue order.
+              </Box>
+            
+
+          </Box> :  */}
           <Select
+              labelId="demo-select-small"
+              placeholder="Delivery Time"
+              fullWidth
+              value={delSlot}
+              onChange={(e) => changeDeliverySlot(e.target.value)}>
+              {
+                timeSlots.map((item) => {
+                  return (
+                    <MenuItem key={item.id} disabled={filteredSlots.indexOf(item.id) == -1} value={item.id}>
+                      {item.time} {filteredSlots.indexOf(item.id) == -1 ? '(Not Available)' : null}
+                    </MenuItem>
+                  )
+                })
+              }
+            </Select>
+
+          {/* } */}
+
+          {/* <Select
             labelId="demo-select-small"
             placeholder="Delivery Time"
             fullWidth
@@ -514,7 +545,7 @@ function Delivery() {
                 )
               })
             }
-          </Select>
+          </Select> */}
         </Box>
 
 

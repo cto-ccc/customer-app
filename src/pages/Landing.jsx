@@ -40,14 +40,15 @@ const styles = {
     height:'50vh'
   },
   circle : {
-    height:'70px',
-    width:'80px',
+    height:'auto',
+    width:'auto',
     borderRadius:'50%',
+    padding:'15px',
     background:'#A4243D',
     display:'flex',
     alignItems:'center',
     justifyContent:'center',
-    marginRight:'30px'
+    marginRight:'20px'
   },
   subIc : {
     height:'40px',
@@ -109,7 +110,7 @@ function Landing() {
         <Box style={styles.circle}>
           <img src={LandingDel} style={styles.subIc}/>
         </Box>
-        <Box sx={{width:'40vw'}}>
+        <Box sx={{width:'40vw', mr:4}}>
           <Box sx={{fontWeight:'bold'}}>
             Live Cut, Swiftly Delivered to Your Doorstep
           </Box>

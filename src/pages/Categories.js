@@ -405,7 +405,7 @@ function Categories() {
                         <Box sx={{fontSize:'15px', marginRight:'5px', opacity:'0.2'}}><s>₹ {chick.mrp}</s></Box> 
                       }
                       <Box sx={{fontWeight:'bold', fontSize:'20px',}}>
-                        ₹ {chick.price} 
+                        ₹ {chick.livePrice || chick.price} 
                       </Box>
                       <Box sx={{fontSize:'11px'}}>
                         /{chick.qty}

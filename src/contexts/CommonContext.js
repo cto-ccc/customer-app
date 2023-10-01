@@ -50,7 +50,7 @@ export const CommonProvider = (props) => {
       
       itemData.price = (newCartData[itemData.id].price)
 
-      let itemQty   = itemData?.enableBogo ? 2 : 1
+      let itemQty = itemData?.enableBogo ? 2 : 1
       newCartData[itemData.id].count = newCartData[itemData.id].count + (isIncrease ? itemQty : -itemQty)
 
       if (newCartData[itemData.id].count <= 0) delete newCartData[itemData.id]
@@ -59,21 +59,24 @@ export const CommonProvider = (props) => {
     // Item not present in cart
     else {
 
-      if (itemData.extras) {
+      // To calculate Discount on MRP
+      itemData.priceWithoutCust = itemData.price
 
-        // if (itemData.enableBogo) itemData.price = itemData.price / 2
+      if (itemData.extras) {
         
-        if (itemData.extras.skinType=='skinless') itemData.price = itemData.price + 100
-        if (itemData.extras.flavourType=='smoketurmeric') itemData.price = itemData.price + 15
+        if (itemData.extras.skinType    == 'skinless')      itemData.price = itemData.price + 100
+        if (itemData.extras.flavourType == 'smoketurmeric') itemData.price = itemData.price + 15
 
         //Specific for nutrisoft
         if (itemData.extras.boneType=='boneless') {
-          itemData.price = itemData.price + 300
+          itemData.price           = itemData.price + 300
           itemData.extras.skinType = 'skinless'
         } 
+
         if (itemData.extras.boneType=='withBones' && itemData.id == 'C067') {
           itemData.extras.skinType = 'skinless'
         } 
+
       }
 
       itemData.count = itemData.enableBogo ? 2 : 1
@@ -81,17 +84,23 @@ export const CommonProvider = (props) => {
     }
 
     if (isIncrease) {
-      newCartData.totalCount    = (newCartData.totalCount || 0)    + (itemData.enableBogo ? 2 : 1)
-      newCartData.totalAmount   = (newCartData.totalAmount || 0)   + itemData.price
-      newCartData.totalDiscount = (newCartData.totalDiscount || 0) + (itemData.mrp - itemData.price)
+
+      newCartData.totalCount    = (newCartData.totalCount    || 0)  + (itemData.enableBogo ? 2 : 1)
+      newCartData.totalAmount   = (newCartData.totalAmount   || 0)  + itemData.price
+
+      newCartData.totalDiscount = (newCartData.totalDiscount || 0)  + (itemData.mrp - itemData.priceWithoutCust)
+
       if (itemData.enableBogo)
         newCartData.bogoDiscount  = (newCartData.bogoDiscount || 0)  + (itemData.price)
     } else {
+
       newCartData.totalCount    = newCartData.totalCount    - (itemData.enableBogo ? 2 : 1)
       newCartData.totalAmount   = newCartData.totalAmount   - (itemData.price)
-      newCartData.totalDiscount = newCartData.totalDiscount - (itemData.mrp - itemData.price) 
+
+      newCartData.totalDiscount = newCartData.totalDiscount - (itemData.mrp - itemData.priceWithoutCust) 
+
       if (itemData.enableBogo)
-        newCartData.bogoDiscount  = newCartData.bogoDiscount  - (itemData.price)
+        newCartData.bogoDiscount = newCartData.bogoDiscount  - (itemData.price)
     }
 
     newCartData.totalCount    = Math.max(0, newCartData.totalCount)

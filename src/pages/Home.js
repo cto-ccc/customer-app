@@ -21,24 +21,6 @@ import HomeBanner6 from '../assets/desk-banner3.png'
 import OfferBanner1 from '../assets/offer-banner1.png'
 import OfferBanner2 from '../assets/offer-banner2.png'
 
-import Marinates from '../assets/cat-marinates.png'
-import CatEggs from '../assets/cat-eggs.png'
-import CatPickles from '../assets/cat-pickle.png'
-import CatNutrisoft from '../assets/cat-nutrisoft.png'
-import CccLogo from '../assets/ccc-logo.png'
-import RaisedByNature from '../assets/raised-by-nature.png'
-
-
-import MysoreQueen from '../assets/mysore-queen.png'
-import Kadaknath from '../assets/kadaknath.png'
-import Warrior from '../assets/warrior.png'
-import TenderChicken from '../assets/tender-chicken.png'
-import PicklesLogo from '../assets/pickle.png'
-import EggsLogo from '../assets/eggs.png'
-import ThirtyEggsLogo from '../assets/thirty-eggs.png'
-
-import CatFreeRange from '../assets/cat-freerange.png'
-import CatVillageBirds from '../assets/cat-villagebirds.png'
 
 import User from '../assets/user.png'
 import HomeLogo from '../assets/home-logo.png'
@@ -799,9 +781,9 @@ function Home() {
                       <Box sx={styles.prodName}
                         onClick={() => navigate(`/products/${item.urlId}`, {state : item})}>
                         {item.name}
-                        <Box sx={{fontSize:'15px', opacity:'0.4'}}>
+                        {/* <Box sx={{fontSize:'15px', opacity:'0.4'}}>
                           {item.qty}
-                        </Box>
+                        </Box> */}
                       </Box>
                       {
                         item.style ? 
@@ -813,8 +795,15 @@ function Home() {
                       {/* <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
                         {item.qty}
                       </Box> */}
+                      {
+                        item.livePrice ? 
+                        <Box sx={{fontSize:'10px', opacity:'0.5'}}>
+                          Starting From
+                        </Box> : null
+                      }
+                      
                       <Box sx={{textAlign:'left', marginBottom:'5px', fontSize:'20px', display:'flex', alignItems:'end'}}>
-                      ₹ {item.price} 
+                      ₹ {item.livePrice || item.price}
                         {
                           item.enableBogo ? null : 
                           <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.2'}}><s>₹ {item.mrp}</s></Box> 
@@ -824,7 +813,7 @@ function Home() {
                         {
                           item?.enableBogo ? 
                             <Box sx={{marginBottom:'5px'}}>Buy One Get One FREE</Box> : 
-                            <>{Math.trunc(((item.mrp - item.price) / item.mrp) * 100)}% Off</>
+                            <>{Math.trunc(((item.mrp - (item.livePrice || item.price)) / item.mrp) * 100)}% Off</>
                         }                    
                         </Box>
                       </Box>
@@ -855,7 +844,7 @@ function Home() {
                         <Box sx={{textAlign:'right'}}>
                           {
                             item.stockQty == 0 ?
-                            <Button variant='outlined' style={styles.mainBtn} size='small' disabled sx={{opacity:'0.6'}}>
+                            <Button variant='outlined' style={styles.mainBtn} size='small' fullWidth disabled sx={{opacity:'0.6'}}>
                               Out of stock
                             </Button> :
                             <Button variant="contained" style={styles.mainBtn} size='small' fullWidth 

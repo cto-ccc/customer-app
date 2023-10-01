@@ -117,19 +117,19 @@ function Footer() {
               Our Chickens
             </Box>
             <Box sx={{marginLeft:'4vw'}}>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
                 onClick={() => navigate('products/tender-country-chicken')}>
                 Tender Country Chicken
               </Box>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
                 onClick={() => navigate('products/mysore-country-chicken')}>
                 Queen of Country Chicken
               </Box>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
                 onClick={() => navigate('products/classic-country-chicken')}>
                 Classic Country Chicken
               </Box>
-              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px'}}
+              <Box sx={{display:'flex', alignItems:'center', marginBottom:'10px', cursor:'pointer'}}
                 onClick={() => navigate('products/young-warrior')}>
                 Warrior Country Chicken
               </Box>

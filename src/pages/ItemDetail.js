@@ -384,21 +384,18 @@ function ItemDetail() {
                       </Box>
                     </Box>
 
-                    <Box sx={{borderLeft:'1px solid black', borderRight:'1px solid black', padding : '0 10px', margin:'0 10px', width:'40%', textAlign:'center'}}>
+                    <Box sx={{borderLeft:'1px solid black', padding : '0 10px', margin:'0 10px', width:'40%', textAlign:'center'}}>
                       <Box sx={{fontSize:'15px'}}>
-                        Weight : 1.5Kg
-                      </Box>
-                      <Box sx={{fontSize:'13px'}}>
-                        ₹{productData.livePrice} x 1.5kg = ₹{productData.livePrice * 1.5}
+                        AVAILABLE AT STORES
                       </Box>
                     </Box>
 
                     <Box sx={{display:'flex', flexDirection:'column', width:'30%'}}>
                       <Box sx={{fontSize:'20px', fontWeight:'bold'}}>
-                        ₹{productData.livePrice * 1.5}/kg
+                        {/* ₹{productData.livePrice * 1.5}/kg */}
                       </Box>
                       <Box sx={{fontSize:'10px'}}>
-                        Available at stores
+                        {/* Available at stores */}
                       </Box>
                     </Box>
                   </Box>

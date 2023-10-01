@@ -41,7 +41,7 @@ export const getCustomizedProducts = () => {
 export const getAllCategories = () => {
   return [{
     id : 'free-range-birds',
-    title : 'Free Range Birds'
+    title : 'Free Range Farm Birds'
   },
   {
     id : 'nutrisoft-chicken',

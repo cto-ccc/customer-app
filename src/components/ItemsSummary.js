@@ -126,7 +126,7 @@ function ItemsSummary(props) {
                     <AccordionSummary>
                       <Box sx={{display:'flex', justifyContent:'space-between', fontSize:'11px', margin:'5px', width:'100%'}}>
                         <Box>
-                          Live Weight:1.5kg | Meat Weight: 1kg
+                          Meat Weight: 1kg { props.itemDetails[item].enableBogo ? '+ 1kg' : null}
                         </Box>
                         <Box sx={{display:'flex', alignItems:'end'}}>
                           Expand <KeyboardArrowDownIcon sx={{fontSize:'12px'}}/>
@@ -140,9 +140,7 @@ function ItemsSummary(props) {
                           Item Price
                         </Box>
                         <Box>
-                          ₹{props.itemDetails[item].price - 
-                          (props.itemDetails[item].extras?.flavourType == 'normal' ? 0 : 15) - 
-                          (props.itemDetails[item].extras?.skinType == 'withskin' ? 0 : 100) }
+                          ₹{props.itemDetails[item].priceWithoutCust}
                         </Box>
                       </Box>
                                               
@@ -158,12 +156,24 @@ function ItemsSummary(props) {
                         </Box>
                       }
 
+                      { 
+                        props.itemDetails[item].extras?.boneType == 'withBones' ? null : 
+                        <Box sx={{display:'flex', justifyContent:'space-between', fontSize:'11px', marginTop:'5px', opacity:'0.5'}}>
+                          <Box>
+                            Boneless
+                          </Box>
+                          <Box>
+                            ₹300
+                          </Box>
+                        </Box>
+                      }
+
                       <Box sx={{display:'flex', justifyContent:'space-between', fontSize:'11px', marginTop:'5px', opacity:'0.5'}}>
                         <Box>
                           {props.itemDetails[item].extras?.skinType == 'withskin' ? 'With Skin' : 'Skinless'}
                         </Box>
                         <Box>
-                          ₹{props.itemDetails[item].extras?.skinType == 'withskin' ? '0' : '100'}
+                          ₹{props.itemDetails[item].extras?.skinType == 'withskin' ? '0' : (props.itemDetails[item].id == 'C067' ? 0 : '100')}
                         </Box>
                       </Box>
 
