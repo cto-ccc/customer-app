@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import { getCustomizedProducts, getImgMap, getProductData, getRecepieVideos, logAction } from '../services/api';
+import { getAllRecipiesData, getCustomizedProducts, getImgMap, getProductData, getRecepieVideos, logAction } from '../services/api';
 import Grid from '@mui/material/Unstable_Grid2';
 import { CommonContext } from '../contexts/CommonContext';
 import Button from '@mui/material/Button'
@@ -13,6 +13,7 @@ import NavHeader from '../components/NavHeader';
 import ComponentLoader from '../components/ComponentLoader';
 import { Checkbox } from '@mui/material';
 import { Capacitor } from '@capacitor/core';
+import Recipeies from './Recipies';
 
 
 const styles = {
@@ -81,6 +82,25 @@ const styles = {
     fontSize:'14px',
     flexDirection:'column',
     // width:'100%'
+  },
+  productItem : {
+    margin:'10px',
+    background:'#a4243d',
+    borderRadius:'5px',
+    boxShadow:'0px 0px 5px 2px #eaeaea',
+    width:'250px',
+    fontFamily:'Foregen',
+    display:'flex',
+    flexDirection:'column',
+    width:'80%',
+    alignItems:'center',
+    cursor:'pointer'
+  },
+  recImg : {
+    height:'200px',
+    width:'150px',
+    borderRadius:'5px',
+    // width:'100%'
   }
 }
 function ItemDetail() {
@@ -97,6 +117,7 @@ function ItemDetail() {
   const [cutType, setCutType] = useState('medium')
   const [productData, setProductData] = useState({})
   const [loading, setLoading] = useState(true)
+  const [recipieData, setRecipieData] = useState([])
 
   const [bogoApplied, setBogoApplied] = useState(false)
 
@@ -148,9 +169,15 @@ function ItemDetail() {
   const getProductDetails = async() => {
     const resp = await getProductData({id : id})
     setProductData(resp)
-    if (cartData[resp.id]?.count && cartData[resp.id]?.enableBogo) 
+    if (cartData && cartData[resp.id]?.count && cartData[resp.id]?.enableBogo) 
       setBogoApplied(true)
     setLoading(false)
+    getRecipiesData()
+  }
+
+  const getRecipiesData = async() => {
+    const resp = await getAllRecipiesData()
+    setRecipieData(resp.recipies)
   }
 
   const handleBogoApplied = (status) => {
@@ -290,7 +317,7 @@ function ItemDetail() {
             <Box sx={{fontSize:'30px', mt:2, color:'#a4243d', fontFamily:'Foregen'}}>
               {productData.name} 
             </Box>
-            <Box sx={{mb:2}}>
+            <Box sx={{mb:2, color:'#404040', fontWeight:'700'}}>
               {productData.style ? `(${productData.style})` : null}
             </Box>
             {/* <Box sx={{fontSize:'17px', mb:1}}>
@@ -318,28 +345,28 @@ function ItemDetail() {
           
             {
              productData.aka ?
-             <Box sx={{display:'flex', fontSize:'14px'}}>
+             <Box sx={{display:'flex', fontSize:'14px', color:'#404040'}}>
                 <Box>Aka :</Box>
                 <Box sx={{width:'250px'}}>&nbsp;{productData.aka}</Box> 
               </Box> : null
             }
             {
              productData.preferredBy ?
-             <Box sx={{display:'flex', marginTop:'2px', fontSize:'14px'}}>
+             <Box sx={{display:'flex', marginTop:'2px', fontSize:'14px',  color:'#404040'}}>
                 <Box>Preferred By :</Box>
                 <Box>&nbsp;{productData.preferredBy}</Box> 
               </Box> : null
             }
             {
              productData.age ?
-             <Box sx={{display:'flex', marginTop:'2px', fontSize:'14px'}}>
+             <Box sx={{display:'flex', marginTop:'2px', fontSize:'14px', color:'#404040'}}>
                 <Box>Age :</Box>
                 <Box>&nbsp;{productData.age}</Box> 
               </Box> : null
             }
             {
              productData.dishes ?
-             <Box sx={{ marginTop:'2px', fontSize:'14px'}}>
+             <Box sx={{ marginTop:'2px', fontSize:'14px', color:'#404040'}}>
                 Suggested Dishes : &nbsp;{productData.dishes}
               </Box> : null
             }
@@ -354,7 +381,7 @@ function ItemDetail() {
             {
               productData.livePrice ? 
               <>
-                <Box sx={{display:'flex', borderTop:'1px solid black', paddingTop:'15px', margin:'10px 0 0 0'}}>
+                <Box sx={{display:'flex', borderTop:'1px solid #404040', paddingTop:'15px', margin:'10px 0 0 0', color:'#404040'}}>
                   <Box sx={{marginRight:'20px'}}>
                     Live Weight*: 1.5kg 
                   </Box>
@@ -364,8 +391,6 @@ function ItemDetail() {
                 </Box>
               </> : null
             }
-
-
 
             <Box sx={{display:'flex', flexDirection: 'column'}}>
 
@@ -546,14 +571,13 @@ function ItemDetail() {
       
 
 
-      {
-        isDesktop ? 
+      {/* {
+        isDesktop ?  */}
         <Box>
-          <Box sx={{fontSize:'25px', marginTop:'20px', marginBottom:'0px', marginLeft:'10px', color:'#a4243d'}}>
-            Recipie Videos
+          <Box sx={{fontSize:'25px', marginTop:'30px', marginBottom:'0px', marginLeft:'10px', color:'#a4243d', fontFamily:'Foregen'}}>
+            RECOMMENDED RECIPIES
           </Box>
-          <Grid container>
-            {
+            {/* {
               getRecepieVideos().map((video, index) => {
                 return(
                 <Grid xs={12} sm={12} md={3} lg={3}  key={index}>
@@ -567,10 +591,26 @@ function ItemDetail() {
                   </Grid>
                 )
               })
-            }
-          </Grid>
-        </Box> : null
-      }
+            } */}
+            <Box sx={{display:'flex', width:'90vw', overflowX:'scroll'}}>
+              {
+                recipieData.map((recipie, index) => {
+                  return(
+                      <Box key={index} style={styles.productItem}
+                          onClick={() => navigate(`/recipieDetails/${recipie.id}`)}>
+                        
+                          <img src={recipie.imgUrl} style={styles.recImg} />
+                          <Box sx={{ padding:'10px 5px', color:'#FFF0D9', textAlign:'center', fontSize:'20px', width:'60%'}}>
+                            {recipie.title}
+                          </Box>
+                          
+                      </Box>
+                  )
+                })
+              }
+            </Box>
+        </Box> 
+      {/* } */}
 
 
       <React.Fragment key={'bottom'}>

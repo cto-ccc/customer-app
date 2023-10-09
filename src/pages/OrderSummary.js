@@ -56,7 +56,7 @@ function OrderSummary() {
       paymentMode    : location.state.paymentMode,
       customerId     : await getCustomerId(),
       deliveryDate   : location.state.delDate,
-      deliverySlot   : getTimeSlots().filter((slot) => slot.id == location.state.delSlotId)[0].pranaId,
+      deliverySlot   : location.state.delSlotId,
       totalDiscount  : location.state.totalDiscount,
       storeDetails   : location.state.storeDetails,
       instructions   : location.state.instructions,
@@ -84,7 +84,6 @@ function OrderSummary() {
     orderData.orderTitle  = ordersObj[Object.keys(ordersObj)[0]].name
 
     orderData.itemDetails = Object.values(ordersObj)
-
     showLoader()
     createNewOrder(orderData).then((response) => {
       navigate('/orderStatus', {state:{orderId : response, orderData : orderData}, replace:true})
@@ -102,7 +101,7 @@ function OrderSummary() {
         <ComponentLoader /> : 
         <Box>
       <NavHeader />
-      <Box sx={{fontSize:'20px', fontWeight:'700', marginBottom:'10px'}}>
+      <Box sx={{fontSize:'25px', marginBottom:'10px', color:'#404040', fontFamily:'Foregen'}}>
         Order Summary
       </Box>
 
@@ -117,10 +116,10 @@ function OrderSummary() {
         <Box sx={{mb:1, fontSize:'20px', fontFamily:'Foregen', color:'#a4243d', mt:3}}>
           DELIVERING TO
         </Box>
-        <Box sx={{padding:'15px', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}>
+        <Box sx={{padding:'15px', color:'#404040', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}>
           <Box>
 
-            <Box sx={{marginBottom:'5px'}}>
+            <Box sx={{marginBottom:'5px', fontWeight:'bold'}}>
               {location.state.addressDetails.userName}
             </Box>
             <Box SX={{fontSize:'15px'}}>
@@ -134,8 +133,8 @@ function OrderSummary() {
         <Box sx={{mb:1, fontSize:'20px', fontFamily:'Foregen', color:'#a4243d', mt:3}}>
           DELIVERY SLOT
         </Box>
-        <Box sx={{padding:'15px', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}>
-          {location.state.delDate}, {getTimeSlots().filter((slot) => slot.id == location.state.delSlotId)[0].time}
+        <Box sx={{padding:'15px', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px', color:'#404040'}}>
+          {location.state.delDate}, {location.state.delSlotTime}
 
           <Box>
           {
@@ -153,7 +152,7 @@ function OrderSummary() {
           BILL DETAILS
         </Box>
         <Box sx={{padding:'15px', mb:4, background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}> 
-          <Box sx={{display:'flex', justifyContent:'space-between'}}>
+          <Box sx={{display:'flex', justifyContent:'space-between', color:'#404040'}}>
             <Box>
               Item Total 
             </Box>
@@ -164,7 +163,7 @@ function OrderSummary() {
 
           {
             location.state.itemDetails?.bogoDiscount ? 
-              <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 0'}}>
+              <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 0', color:'#404040'}}>
                 <Box>
                   BOGO Discount
                 </Box>
@@ -176,7 +175,7 @@ function OrderSummary() {
 
           {
             location.state.itemDetails?.totalDiscount ? 
-              <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 0'}}>
+              <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 0', color:'#404040'}}>
                 <Box>
                   Discount on MRP
                 </Box>
@@ -186,7 +185,7 @@ function OrderSummary() {
               </Box> : null
           }
           
-          <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 0'}}>
+          <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 0', color:'#404040'}}>
             <Box>
               Delivery Fee
             </Box>

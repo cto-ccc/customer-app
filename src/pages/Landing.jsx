@@ -220,13 +220,13 @@ function Landing() {
           <Button variant='contained' 
           sx={btnCurvedStyle}
             onClick={() => navigate('/home')}>
-            Shop Now
+            Discover
           </Button>
         </Box>
       </Box>
 
       <Box sx={{fontSize:'60px', fontFamily:'Foregen', padding:'50px 10vw', textAlign:'center', color:'#a4243d'}}>
-        LOVED BY 31,564 MEAT LOVERS
+        LOVED BY 32,518 MEAT LOVERS
       </Box>
 
       <Box sx={{display:'flex', background:'#a4243d'}}>

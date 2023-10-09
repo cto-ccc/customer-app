@@ -47,7 +47,7 @@ function CartHolder() {
   return (
     <>
       {
-        cartData && cartData.totalCount && Capacitor.getPlatform() == 'web' ?
+        cartData && cartData.totalCount && !isDesktop && Capacitor.getPlatform() == 'web' ?
         <Box style={isDesktop ? styles.cartContDesk : styles.cartCont}
           onClick={() => navigate(`/cart`)}>
           <Box style={styles.cartViewCont}>

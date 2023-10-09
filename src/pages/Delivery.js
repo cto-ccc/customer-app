@@ -13,7 +13,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Preferences } from '@capacitor/preferences';
 import { CommonContext } from '../contexts/CommonContext';
 import { motion } from 'framer-motion'
-import { addNewAddress, getAllUserAddress, getNearestStoreDetails, logAction } from '../services/api';
+import { addNewAddress, getAllUserAddress, getBranchInfo, getNearestStoreDetails, getUserDeliveryData, logAction } from '../services/api';
 import { getFirebaseError } from '../services/error-codes';
 import { AuthContext } from '../contexts/AuthContext';
 import  ComponentLoader from '../components/ComponentLoader'
@@ -31,7 +31,8 @@ const styles = {
   titleCont : {
     fontSize : '25px',
     marginBottom:'10px',
-    fontFamily:'Foregen'
+    fontFamily:'Foregen',
+    color:'#404040'
   }
 }
 
@@ -70,42 +71,16 @@ function Delivery() {
   const [storeDetails, setStoreDetails] = useState(null)
   const [map, setMap] = useState(null)
 
+  const [allDeliverySlots, setAllDeliverySlots] = useState([])
   const [filteredSlots, setFilteredSlots] = useState([])
-  const [timeSlots, setTimeSlots] = useState([
-    {
-      id : 7,
-      time : '7:30 AM - 8:30AM'
-    },
-    {
-      id : 8,
-      time : '8:30 AM - 9:30AM'
-    },
-    {
-      id : 9,
-      time : '9:30 AM - 10:30AM'
-    },
-    {
-      id : 17,
-      time : '5:30 PM - 6:30PM'
-    },
-    {
-      id : 18,
-      time : '6:30 PM - 7:30PM'
-    },
-    {
-      id : 19,
-      time : '7:30 PM - 8:30PM'
-    },
-    {
-      id : 20,
-      time : '8:30 PM - 9:30PM'
-    }
-  ])
 
   const onDelDateChange = (event, newDate) => {
     setDelSlot(null)
-    setDeliverySlots(newDate)
     setDelDate(newDate)
+    if (!selectedAddrIndex) return
+    // setDeliverySlots(newDate)
+    showLoader()
+    fetchBranchInfo(newDate, storeDetails.branchId)
   }
 
   const changeDeliverySlot = (newSlot) => {
@@ -125,7 +100,7 @@ function Delivery() {
   
   const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds(window['currentLocation'])
-    map.fitBounds(bounds);
+    map.fitBounds(bounds)
     setMap(map)
   }, [])
 
@@ -157,25 +132,21 @@ function Delivery() {
 
   useEffect(() => {
     logAction('PAGE_VIEW', 'delivery')
-    setDeliverySlots('Today')
     getUserAddress()
     window['currentLocation'] = undefined
   }, [])
 
-  const setDeliverySlots = (date) => {
-    if (date == 'Today') {
-      const today = new Date()
-      setFilteredSlots(timeSlots.filter((slot) => slot.id > today.getHours() + 1).map((item) => item.id))
-    } else {
-      setFilteredSlots(timeSlots.map((item) => item.id))
-    }
-  }
+  // const setDeliverySlots = (date) => {
+  //   console.log('=========', date)
+  //   setFilteredSlots(allDeliverySlots.filter((slot) => slot.delTime == date))
+  //   console.log("==========", allDeliverySlots.filter((slot) => slot.delTime == date))
+  // }
 
   const printCurrentPosition = async() => {
 
    await Geolocation.getCurrentPosition()
     .then((resp) => {
-      console.log("current position is : ", resp.coords)
+      // console.log("current position is : ", resp.coords)
       setLatLong({
         lat : resp.coords.latitude,
         lng : resp.coords.longitude
@@ -204,8 +175,10 @@ function Delivery() {
 
   const getUserAddress = async() => { 
 
-    getAllUserAddress(await getUserId()).then((response) => {
-      setAddress(response)
+    getUserDeliveryData(await getUserId()).then((response) => {
+      setAddress(response.addresses)
+      // setAllDeliverySlots(response.timeSlots)
+      // setFilteredSlots(response.timeSlots.filter((slot) => slot.delTime == delDate))
       setLoading(false)
     }).catch((error) => {
       setLoading(false)
@@ -257,12 +230,12 @@ function Delivery() {
       return
     }
 
-
     const summaryProps = {
       addressDetails : deliveryAddress,
       paymentMode    : paymentMode,
       delSlotId      : delSlot,
       delDate        : delDate,
+      delSlotTime    : filteredSlots.filter((slot) => slot.id == delSlot && slot.delTime == delDate)[0].time,
       delType        : delType,
       storeDetails   : storeDetails,
       itemDetails    : await getCartData(),
@@ -277,16 +250,32 @@ function Delivery() {
 
     showLoader()
     const resp = await getNearestStoreDetails(address[event.target.value].latLong)
-    hideLoader()
-
+    
     if (!resp.branchId || !resp.locCode) {
       showAlert("Sorry, Country Chicken Co delivery is currently unavailable for the selected address.")
       return
     } 
-
+    
     setSelectedAddrIndex(event.target.value)
     setStoreDetails(resp)
     setDeliveryAddress(address[event.target.value])
+
+    await fetchBranchInfo('Today', resp.branchId)
+
+    hideLoader()
+  }
+
+  const fetchBranchInfo = async(deliveryDate, branchId) => {
+    const branchInfo = await getBranchInfo({
+      userId       : await getUserId(),
+      branchId     : branchId,
+      deliveryDate : deliveryDate,
+      timeStamp    : Date.now()
+    })
+    setFilteredSlots(branchInfo.slots)
+    setDelSlot(null)
+    setDelDate(deliveryDate)
+    hideLoader()
   }
 
   const handlePaymentChange = async(event) => {
@@ -314,8 +303,8 @@ function Delivery() {
                 return <Box key={index}>
                   <Box sx={{padding:'10px', margin:'5px 0', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}>
                     <FormControlLabel value={index} control={<Radio/>} label={
-                      <Box sx={{fontSize:'15px'}}>
-                        <Box>
+                      <Box sx={{fontSize:'15px', color:'#404040', fontFamily:'Sans'}}>
+                        <Box sx={{fontWeight:'700'}}>
                           {address.userName}
                         </Box>
                         <Box>
@@ -517,15 +506,22 @@ function Delivery() {
               fullWidth
               value={delSlot}
               onChange={(e) => changeDeliverySlot(e.target.value)}>
-              {
-                timeSlots.map((item) => {
-                  return (
-                    <MenuItem key={item.id} disabled={filteredSlots.indexOf(item.id) == -1} value={item.id}>
-                      {item.time} {filteredSlots.indexOf(item.id) == -1 ? '(Not Available)' : null}
-                    </MenuItem>
+
+               {
+                selectedAddrIndex ? 
+                filteredSlots.map((item) => {
+                  return ( 
+                    <MenuItem key={item.id} disabled={item.isDisabled} value={item.id}>
+                      {item.time} {item.isDisabled ? '(Not Available)' : null}
+                    </MenuItem> 
                   )
-                })
-              }
+                }) 
+                :
+                <MenuItem disabled={true} >
+                  Please select an address to add slot
+                </MenuItem> 
+               } 
+
             </Select>
 
           {/* } */}
@@ -577,7 +573,7 @@ function Delivery() {
         <Box sx={{padding:'10px', mb:3, background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}>
           <FormControl onChange={handlePaymentChange}>
             <RadioGroup defaultValue="online">
-              <Box sx={{display:'flex', flexDirection:'column'}}>
+              <Box sx={{display:'flex', flexDirection:'column', color:'#404040'}}>
                 <FormControlLabel value="online" control={<Radio />} label={
                   <Box>
                     Online Payment   

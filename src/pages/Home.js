@@ -304,7 +304,8 @@ const styles = {
     height:'150px',
     width:'450px',
     marginRight:'20px',
-    borderRadius:'3px'
+    borderRadius:'3px',
+    cursor:'pointer'
   },
   offerImg : {
     height:'150px',
@@ -645,7 +646,6 @@ function Home() {
             </Box>
             <Box sx={{display:'flex'}}>
               <img src={FavouriteLogo} />
-              
             </Box>
           </Box>
         }

@@ -374,7 +374,7 @@ function Categories() {
                       </Box>
                       {
                         chick.style ? 
-                          <Box sx={{textAlign:'left', marginBottom:'5px',fontSize:'15px', fontWeight:'bold'}}>
+                          <Box sx={{textAlign:'left', marginBottom:'5px',fontSize:'15px', fontWeight:'700', color:'#404040'}}>
                             ({chick.style})
                           </Box> : null
                       }
@@ -383,20 +383,20 @@ function Categories() {
                     <Box>
                     {
                       chick.aka ? 
-                        <Box sx={{textAlign:'left', marginBottom:'2px',fontSize:'13px'}}>
+                        <Box sx={{textAlign:'left', marginBottom:'2px',fontSize:'13px', color:'#404040'}}>
                           Aka : {chick.aka}
                         </Box> : null
                     }
                     {
                       chick.age ? 
-                        <Box sx={{textAlign:'left', marginBottom:'5px',fontSize:'13px'}}>
+                        <Box sx={{textAlign:'left', marginBottom:'5px',fontSize:'13px', color:'#404040'}}>
                           Age : {chick.age}
                         </Box> : null
                     }
                     </Box>
 
                     <Box>
-                      <Box sx={{fontSize:'11px'}}>
+                      <Box sx={{fontSize:'11px', color:'#404040'}}>
                         Starting from
                       </Box>
                       <Box sx={{textAlign:'left', marginBottom:'10px', display:'flex', alignItems:'baseline'}}>
@@ -404,7 +404,7 @@ function Categories() {
                         chick.enableBogo ? null : 
                         <Box sx={{fontSize:'15px', marginRight:'5px', opacity:'0.2'}}><s>₹ {chick.mrp}</s></Box> 
                       }
-                      <Box sx={{fontWeight:'bold', fontSize:'20px',}}>
+                      <Box sx={{fontWeight:'bold', fontSize:'20px', fontWeight:'700', color:'#404040'}}>
                         ₹ {chick.livePrice || chick.price} 
                       </Box>
                       <Box sx={{fontSize:'11px'}}>
@@ -422,10 +422,10 @@ function Categories() {
                     
                     {
                       chick.stockQty == 0 ?
-                      <Button variant='outlined' style={styles.mainBtn} size='small' disabled sx={{opacity:'0.6'}}>
+                      <Button variant='outlined' size='small' disabled sx={{opacity:'0.6'}}>
                         Out of stock
                       </Button> :
-                      <Button variant="contained" style={styles.mainBtn} fullWidth 
+                      <Button variant="contained" fullWidth 
                       onClick={() => navigate(`/products/${chick.urlId}`, {state : chick})}>
                         Shop Now
                       </Button>

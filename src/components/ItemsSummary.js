@@ -50,7 +50,7 @@ function ItemsSummary(props) {
                   <Box sx={{width:'100%'}}>
                   <Box sx={{fontSize:'15px', fontWeight:'600', display:'flex', marginBottom:'3px', alignItems:'center'}}>
 
-                    <Box sx={{width:'55%'}}>
+                    <Box sx={{width:'55%', color:'#404040'}}>
                       {props.itemDetails[item].name}
                     </Box>
                     
@@ -124,7 +124,7 @@ function ItemsSummary(props) {
                   {props.itemDetails[item].extras ? <>
                   <Accordion>
                     <AccordionSummary>
-                      <Box sx={{display:'flex', justifyContent:'space-between', fontSize:'11px', margin:'5px', width:'100%'}}>
+                      <Box sx={{display:'flex', justifyContent:'space-between', fontSize:'11px', margin:'5px', width:'100%', color:'#404040'}}>
                         <Box>
                           Meat Weight: 1kg { props.itemDetails[item].enableBogo ? '+ 1kg' : null}
                         </Box>

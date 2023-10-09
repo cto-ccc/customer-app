@@ -82,7 +82,9 @@ const styles = {
   },
   navItem : {
     cursor:'pointer',
-    padding:'10px'
+    padding:'10px',
+    color:'#FFF0D9',
+    marginRight:'10px'
   },
   cartCont : {
     cursor:'pointer',
@@ -97,8 +99,8 @@ const styles = {
   lanNavIcon : {
     width:'25px',
     height:'25px',
-    marginRight:'20px',
-    cursor:'pointer'
+    cursor:'pointer',
+    marginRight:'15px'
   },
   lanProfIcon : {
     width:'20px',
@@ -210,7 +212,7 @@ function Header() {
           </Box>
           
 
-          <Box sx={{display:'flex', width:'15vw', justifyContent:'end'}}>
+          <Box sx={{display:'flex', width:'15vw', justifyContent:'end', alignItems:'center'}}>
             
             {/* <Box p={2} onClick={() => navigate('/')} style={styles.navItem}>
               Home
@@ -230,7 +232,7 @@ function Header() {
               Cart
             </Box> */}
 
-{
+            {
               showSearchBar ? 
               <Box sx={{display:'flex', flexDirection:'column', alignItems:'center', width:'30vw'}}>
                 <Box sx={{display:'flex', alignItems:'center', padding:'0 10px', width:'30vw', justifyContent:'flex-end'}}>
@@ -281,7 +283,24 @@ function Header() {
             }
 
             <img src={UserLogo} onClick={() => goToProfile()} style={styles.lanProfIcon}/>
-            <img src={CartLogo} onClick={() => navigate('/cart')} style={styles.lanNavIcon}/>
+
+            <Box sx={{border: '1px solid #FFF0D9', borderRadius:'5px', display:'flex', alignItems:'center', padding:'5px 10px', cursor:'pointer'}}
+                   onClick={() => navigate('/cart')}> 
+              <img src={CartLogo} style={styles.lanNavIcon}/>
+
+              {
+                cartData?.totalCount ? 
+                <Box sx={{ display:'flex', flexDirection:'column'}}>
+                  <Box sx={{display:'flex', fontSize:'12px'}}>
+                  {cartData.totalCount} Items
+                  </Box>
+                  <Box sx={{fontSize:'15px'}}>
+                  ₹ {cartData.totalAmount}
+                  </Box>
+                </Box> : <Box> Cart </Box>
+              }
+              
+            </Box>
           </Box>
 
 

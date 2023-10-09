@@ -31,7 +31,7 @@ const imgMap = {
 
 export const btnCurvedStyle = {
   borderRadius:'20px', background:'#FFF0D9 !important', color:'#a4243d !important', 
-            fontFamily:'Sans', fontWeight:'bold', padding:'8px 40px'
+            fontFamily:'Sans', fontWeight:'bold !important', padding:'8px 40px'
 }
 
 export const getCustomizedProducts = () => {
@@ -748,6 +748,7 @@ export const addNewAddress = (async(data) => {
 })
 
 
+//Might not be used anymore, just leaving here for reference
 export const getAllUserAddress = (async(userId) => {
   return new Promise((resolve, reject) => {
     getDocs(query(collection(db, `users/${userId}/address`))).then((querySnapshot) => {
@@ -758,6 +759,68 @@ export const getAllUserAddress = (async(userId) => {
       resolve(eventItems)
     }).catch(()=> {
       reject([])
+    })
+  })
+})
+
+export const getUserDeliveryData = (async(userId) => {
+  return new Promise(async(resolve, reject) => {
+    const appUpdateResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/v1/getUserAddress`, {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      "body": JSON.stringify({
+        userId :userId
+      })
+    }).then((response) => response.json())
+    .then(function(data) { 
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
+    })
+  })
+})
+
+export const getBranchInfo = (async(data) => {
+  return new Promise(async(resolve, reject) => {
+    const appUpdateResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/v1/getBranchInfo`, {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      "body": JSON.stringify(data)
+    }).then((response) => response.json())
+    .then(function(data) { 
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
+    })
+  })
+})
+
+export const getAllRecipiesData = (async(data) => {
+  return new Promise(async(resolve, reject) => {
+    const appUpdateResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/v1/getRecipies`, {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      "body": JSON.stringify(data)
+    }).then((response) => response.json())
+    .then(function(data) { 
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
     })
   })
 })

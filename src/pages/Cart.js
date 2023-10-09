@@ -92,7 +92,7 @@ function Cart() {
       loading ? <ComponentLoader /> : 
       <Box sx={{ marginTop:'7vh'}}>
         <NavHeader />
-        <Box sx={{fontSize:'25px', fontFamily:'Foregen'}}>
+        <Box sx={{fontSize:'25px', fontFamily:'Foregen', color:'#404040'}}>
           Cart Items
         </Box>
         {
@@ -113,7 +113,7 @@ function Cart() {
 
             {
               isDesktop ? 
-              <Box sx={{fontSize:'20px', fontFamily:'Foregen', mt:3}}>
+              <Box sx={{fontSize:'20px', fontFamily:'Foregen', mt:3, color:'#404040'}}>
                 DELIVERY INSTRUCTIONS
               </Box> : null
             }
@@ -174,7 +174,7 @@ function Cart() {
 
               <Box sx={{background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px', marginTop:'20px', padding:'10px'}}>
 
-                <Box  sx={{fontWeight:'bold', fontFamily:'Foregen', fontSize:'12px'}}>
+                <Box  sx={{fontWeight:'bold', fontFamily:'Foregen', fontSize:'12px', color:'#404040'}}>
                   PRICE DETAILS
                 </Box>
 

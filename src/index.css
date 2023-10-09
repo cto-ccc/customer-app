@@ -36,12 +36,15 @@ code {
   text-transform: none !important;
   color: white !important;
   border-radius: 20px !important;
+  font-family: 'Sans' !important;
+  font-weight: bold !important;
 }
 
 .MuiButton-outlined {
   border-color: #a4243d !important;
   text-transform: none !important;
   color: #a4243d !important;
+  font-family: 'Sans' !important;
 }
 
 .MuiAccordionSummary-content  {
