@@ -186,14 +186,15 @@ function MakePayment() {
         <Box>
           {
             checkPayment ? 
-            <Box sx={{padding:'4vw', fontSize:'23px', display:'flex', flexDirection:'column'}}>
+            <Box sx={{padding:'4vw', fontSize:'25px', display:'flex', flexDirection:'column', flexDirection:'column'}}>
               <Box sx={{textAlign:'center'}}>
                 <img src={Loading} />
               </Box>
               Checking payment status... Please wait. Do not refresh or close the page
             </Box> :
             <>
-              <Box sx={{padding:'4vw', fontSize:'25px', display:'flex', flexDirection:'column', zIndex:1, position:'fixed'}}>
+              <Box sx={{padding:'4vw', fontSize:'25px', display:'flex', flexDirection:'column', zIndex:1,  textAlign:'center', position:'fixed', 
+                    left: isDesktop ? '30%' : '10%', top: isDesktop ? '0' : '30%'}}>
                 <Box sx={{textAlign:'center'}}>
                   <img src={Loading} />
                 </Box>
