@@ -186,13 +186,23 @@ function MakePayment() {
         <Box>
           {
             checkPayment ? 
-            <Box sx={{padding:'4vw', fontSize:'25px', display:'flex', flexDirection:'column'}}>
+            <Box sx={{padding:'4vw', fontSize:'23px', display:'flex', flexDirection:'column'}}>
               <Box sx={{textAlign:'center'}}>
                 <img src={Loading} />
               </Box>
               Checking payment status... Please wait. Do not refresh or close the page
             </Box> :
-            <div id="payment-form" className={isDesktop ? 'gateway-cont-desk' : 'gateway-cont-mob' }></div>
+            <>
+              <Box sx={{padding:'4vw', fontSize:'25px', display:'flex', flexDirection:'column', zIndex:1, position:'fixed'}}>
+                <Box sx={{textAlign:'center'}}>
+                  <img src={Loading} />
+                </Box>
+                Initiating payment... Please wait.
+              </Box>
+              <Box sx={{zIndex:2, position:'relative'}}>
+               <div id="payment-form" className={isDesktop ? 'gateway-cont-desk' : 'gateway-cont-mob' }></div>
+              </Box>
+            </>
           }
         </Box> : 
         <Box sx={{textAlign:'center'}}>

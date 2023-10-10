@@ -19,13 +19,13 @@ const Alert = React.forwardRef(function Alert(
 
 const styles = {
   loader : {
-    position : 'absolute',
-    width : '100%',
-    height : '100vh',
+    position : 'fixed',
     background : 'white',
     opacity:0.6,
     left : '0',
     top : '0',
+    bottom : '0',
+    right:0,
     display:'flex',
     justifyContent:'center',
     alignItems:'center',
