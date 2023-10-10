@@ -10,6 +10,10 @@ import { createNewOrder, getDeliveryCharge, getTimeSlots, logAction } from '../s
 import PaymentFailed from '../assets/payment-failed.png'
 import { Capacitor } from '@capacitor/core';
 import CashfreePaymentBridge from '../components/CashfreePaymentBridge';
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from '../firebase';
+import Loading from '../assets/loading.gif'
+
 
 const styles = {
   paymentLogo : {
@@ -24,47 +28,16 @@ function MakePayment() {
   const { showLoader, hideLoader, showAlert, showSnackbar, isDesktop, couponCacheData } = useContext(CommonContext)
   const { getUserId, getCustomerId } = useContext(AuthContext)
   const [loading, setLoading] = useState(true)
+  const [checkPayment, setCheckPayment] = useState(false)
 
   const navigate = useNavigate()
 
   useEffect(() => {
     logAction('PAGE_VIEW', 'make-payment')
     initiatePaymentWithCashFree()
-    // initiatePaymentWithRazorpay()
-    // initiatePaymentWithCashFreeSDK()
   }, [])
 
-
-  // const payWithRazorpay = async(orderId) => {
-  //   const options = {
-  //     key         : `${process.env.REACT_APP_RAZORPAY_KEY}`,
-  //     amount      : location.state.itemDetails.totalAmount,
-  //     description : 'Buy Fresh Chicken Online',
-  //     image       : 'https://countrychickenco.in/download/logo/icon.png',
-  //     order_id    : orderId,
-  //     currency    : 'INR',
-  //     name        : 'Country Chicken Co',
-  //     prefill: {
-  //       contact   : location.state.addressDetails.userId
-  //     },
-  //     theme: {
-  //       color     : '#a4243d'
-  //     }
-  //   }
-  //   try {
-  //     let data = (await Checkout.open(options))
-  //     placeOrder(data.response.razorpay_payment_id)
-  //     //Handle payment success
-  //     console.log("Payment success", data)
-  //   } catch (error) {
-  //     //Handle payment failure
-  //     console.log("Payment failed : ", error)
-  //     setLoading(false)
-  //   }
-  // }
-
-  const placeOrder = async(txnId) => {
-
+  async function getOrderData() {
     let orderData = {
       userId         : await getUserId(),
       timeStamp      : Date.now(),
@@ -77,12 +50,10 @@ function MakePayment() {
       deliveryType   : location.state.delType,
       totalDiscount  : location.state.totalDiscount,
       customerId     : await getCustomerId(),
-      txnId          : txnId,
       deliveryDate   : location.state.delDate,
-      deliverySlot   : getTimeSlots().filter((slot) => slot.id == location.state.delSlotId)[0].pranaId,
+      deliverySlot   : location.state.delSlotId,
       shippingCost   : getDeliveryCharge(location.state.delType)
     } 
-
 
     if (location.state.itemDetails?.bogoDiscount) {
       orderData.couponCode           = 'BOGO'
@@ -104,34 +75,8 @@ function MakePayment() {
     orderData.orderTitle  = ordersObj[Object.keys(ordersObj)[0]].name
 
     orderData.itemDetails = Object.values(ordersObj)
-    showLoader()
-    createNewOrder(orderData).then((response) => {
-      navigate('/orderStatus', {state:{orderId : response, orderData : orderData}, replace:true})
-      hideLoader()
-    }).catch((error) => {
-      hideLoader()
-      showAlert(getFirebaseError(error.errorCode))
-    })  
+    return orderData
   }
-
-  // async function initiatePaymentWithRazorpay() {
-  //   const orderResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/createRazorpayOrder`, {
-  //     "method"  : "POST",
-  //     "headers" : {
-  //       "content-type"  : "application/json",
-  //       "accept"        : "application/json"
-  //     },
-  //     "body": JSON.stringify({
-  //       amount   : location.state.itemDetails.totalAmount + getDeliveryCharge(),
-  //       currency : "INR",
-  //       receipt  : "Country Chicken Co Payment"
-  //     })
-  //   }).then((response) => response.json())
-  //   .then(function(data) { 
-  //     payWithRazorpay(data.id)
-  //   })
-  //   .catch((error) => console.log(error))
-  // }
 
   async function initiatePaymentWithCashFree() {
 
@@ -142,15 +87,31 @@ function MakePayment() {
         "accept"        : "application/json"
       },
       "body": JSON.stringify({
-        amount     : location.state.itemDetails.totalAmount + getDeliveryCharge(location.state.delType),
-        mobileNo   : await getUserId(),
-        customerId : await getCustomerId()
+        amount       : location.state.itemDetails.totalAmount + getDeliveryCharge(location.state.delType),
+        mobileNo     : await getUserId(),
+        customerId   : await getCustomerId(),
+        platform     : Capacitor.getPlatform(),
+        orderDetails : await getOrderData(),
+        version      : process.env.REACT_APP_VERSION
       })
     }).then((response) => response.json())
       .then(function(data) { 
+        
+        const unsub = onSnapshot(doc(db, "transactions", data.order_id), (doc) => {
+            const txnData = doc.data()
+            
+            if (txnData?.status == 'PAYMENT_SUCCESS') {
+              hideLoader()
+              navigate('/orderStatus', {state:{orderId : txnData.pranaOrderId, orderData : JSON.parse(txnData.orderData)}, replace:true})
+            } else if (txnData?.status == 'PAYMENT_FAILED') {
+              setLoading(false)
+            }
+        })
    
         const success = (data) => {
-          placeOrder(data.transaction.transactionId)
+          //Not handling here
+          // placeOrder(data.transaction.transactionId)
+          setCheckPayment(true)
         }
 
         const failure = (data) => {
@@ -207,7 +168,9 @@ function MakePayment() {
         })
       }).then((response) => response.json())
       .then(function(data) { 
-        placeOrder(data[0].cf_payment_id)
+        //Not handling here
+        // placeOrder(data[0].cf_payment_id)
+        setCheckPayment(true)
       }).catch((error) => 
         console.log("Error in processing payment")
       )
@@ -221,10 +184,16 @@ function MakePayment() {
       {
         loading ?
         <Box>
-          {/* Enable For RazorPay */}
-          {/* Loading... Please Wait */}
-
-          <div id="payment-form" className={isDesktop ? 'gateway-cont-desk' : 'gateway-cont-mob' }></div>
+          {
+            checkPayment ? 
+            <Box sx={{padding:'4vw', fontSize:'25px', display:'flex', flexDirection:'column'}}>
+              <Box sx={{textAlign:'center'}}>
+                <img src={Loading} />
+              </Box>
+              Checking payment status... Please wait. Do not refresh or close the page
+            </Box> :
+            <div id="payment-form" className={isDesktop ? 'gateway-cont-desk' : 'gateway-cont-mob' }></div>
+          }
         </Box> : 
         <Box sx={{textAlign:'center'}}>
           <Box sx={{mb:2}}>

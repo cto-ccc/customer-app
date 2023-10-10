@@ -16,8 +16,8 @@ const styles = {
     boxShadow : '0px 0px 10px 0px #eaeaea'
   },
   cartImg : {
-    width : '230px',
-    height : '150px'
+    width : '200px',
+    height : '125px'
   }
 }
 

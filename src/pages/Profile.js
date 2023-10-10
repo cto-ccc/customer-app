@@ -66,8 +66,8 @@ function Profile() {
       loading ? <ComponentLoader /> : 
       <Box>  
         <NavHeader />
-        <Box sx={{fontSize:'25px'}}>
-          Profile
+        <Box sx={{fontSize:'25px', fontFamily:'Foregen'}}>
+          PROFILE
         </Box>
         <Box style={styles.shadowBox}>
           <Box sx={{display:'flex', flexDirection:'column', padding:'10px'}}>
@@ -92,7 +92,7 @@ function Profile() {
           </Box>
         </Box>
         
-        <Box sx={{fontSize:'23px', marginTop:'20px'}}>
+        <Box sx={{fontSize:'25px', fontFamily:'Foregen', marginTop:'25px'}}>
           Your Order's
         </Box>
         <Box>
@@ -113,16 +113,16 @@ function Profile() {
                   <Box mb={1} sx={{fontWeight:'bold'}}>
                    ₹ {item.order_amount + item.shipping_cost}
                   </Box>
-                  <Box mb={1}>
+                  <Box mb={1} sx={{fontSize:'10px'}}>
                     {/* {new Date(item.timeStamp).toLocaleString()} */}
                     {item.order_date}
                   </Box>
                   <Box mb={1} sx={{textTransform:'capitalize'}}>
                     Order ID : {item.order_id}
                   </Box>  
-                  <Box mb={1} sx={{textTransform:'capitalize'}}>
+                  <Box mb={1} sx={{textTransform:'capitalize', color:'#a4243d'}}>
                     Status : {item.order_status}
-                  </Box>   
+                  </Box>  
                   <Box sx={{textAlign:'right', borderTop:'1px solid #eaeaea', paddingTop:'10px', color:'#a4243d', cursor:'pointer'}}
                     onClick={() => navigate('/orderDetails', {state : item})}>
                     {

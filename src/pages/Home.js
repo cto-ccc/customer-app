@@ -876,7 +876,7 @@ function Home() {
                               Out of stock
                             </Button> :
                             <Button variant="contained" style={styles.mainBtn} size='small' fullWidth 
-                            onClick={() => navigate(`/products/${item.urlId}`, {state : cartData[item.id]})}>
+                            onClick={() => navigate(`/products/${item.urlId}`)}>
                               Shop Now
                             </Button>  
                           }      

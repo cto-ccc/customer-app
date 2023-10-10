@@ -41,8 +41,8 @@ function OrderDetails() {
         loading ? <ComponentLoader /> :
         <Box>
         <NavHeader />
-        <Box mb={2} sx={{fontSize:'20px'}}>
-          Order Details
+        <Box mb={2} sx={{fontSize:'25px', fontFamily:'Foregen'}}>
+          ORDER DETAILS
         </Box>
 
         <Paper sx={{padding:'15px', marginBottom:'15px', marginTop:'10px'}}>
@@ -165,7 +165,7 @@ function OrderDetails() {
             <Box sx={{width:'40%'}}>
               Order Status
             </Box>
-            <Box sx={{textTransform:'capitalize'}}>
+            <Box sx={{textTransform:'capitalize', color:'#a4243d'}}>
             : {location.state.order_status}
             </Box>
           </Box>
@@ -181,7 +181,7 @@ function OrderDetails() {
 
           <Box sx={{display:'flex', flexDirection:'column'}}>
             <Box sx={{width:'60%', marginTop:'10px'}}>
-              Delivery Address 
+              Delivery Address: 
             </Box>
             <Box sx={{width:'100%', marginTop:'2px'}}>
               { location.state.shippingAddressDataa.length > 0 &&
@@ -195,6 +195,21 @@ function OrderDetails() {
           </Box>
 
           {
+            location.state.deliveryPersonInfo?.length ?
+            <Box sx={{mb:2, mt:2}}>
+              <Box>
+                Delivery Partner Assigned :                     
+              </Box>
+              <Box>
+                { location.state.deliveryPersonInfo[0].firstName + ' ' + location.state.deliveryPersonInfo[0].lastName}
+              </Box>
+              <Box>
+                { location.state.deliveryPersonInfo[0].phone}
+              </Box>
+            </Box> : null
+          } 
+
+          {/* {
             location.state.deliveryPersonInfo.length ? 
             <Box sx={{display:'flex', mt:1}}>
             <Box sx={{width:'40%'}}>
@@ -204,7 +219,7 @@ function OrderDetails() {
                 : {location.state.deliveryPersonInfo[0].firstName + ' ' + location.state.deliveryPersonInfo[0].lastName}
               </Box>
             </Box> : null
-          }
+          } */}
 
   
 

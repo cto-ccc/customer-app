@@ -261,8 +261,6 @@ function Delivery() {
     setDeliveryAddress(address[event.target.value])
 
     await fetchBranchInfo('Today', resp.branchId)
-
-    hideLoader()
   }
 
   const fetchBranchInfo = async(deliveryDate, branchId) => {

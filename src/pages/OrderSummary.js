@@ -86,7 +86,7 @@ function OrderSummary() {
     orderData.itemDetails = Object.values(ordersObj)
     showLoader()
     createNewOrder(orderData).then((response) => {
-      navigate('/orderStatus', {state:{orderId : response, orderData : orderData}, replace:true})
+      navigate('/orderStatus', {state:{...response, orderData : orderData}, replace:true})
       hideLoader()
     }).catch((error) => {
       hideLoader()

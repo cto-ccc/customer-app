@@ -95,45 +95,45 @@ export const getRecepieVideos = () => {
   ]
 }
 
-export const getTimeSlots = () => {
-  return [
-    {
-      id : 7,
-      time : '7:30 AM - 8:30AM',
-      pranaId : 4
-    },
-    {
-      id : 8,
-      time : '8:30 AM - 9:30AM',
-      pranaId : 5
-    },
-    {
-      id : 9,
-      time : '9:30 AM - 10:30AM',
-      pranaId : 6
-    },
-    {
-      id : 17,
-      time : '5:30 PM - 6:30PM',
-      pranaId : 7
-    },
-    {
-      id : 18,
-      time : '6:30 PM - 7:30PM',
-      pranaId : 8
-    },
-    {
-      id : 19,
-      time : '7:30 PM - 8:30PM',
-      pranaId : 9
-    },
-    {
-      id : 20,
-      time : '8:30 PM - 9:30PM',
-      pranaId : 10
-    }
-  ]
-}
+// export const getTimeSlots = () => {
+//   return [
+//     {
+//       id : 7,
+//       time : '7:30 AM - 8:30AM',
+//       pranaId : 4
+//     },
+//     {
+//       id : 8,
+//       time : '8:30 AM - 9:30AM',
+//       pranaId : 5
+//     },
+//     {
+//       id : 9,
+//       time : '9:30 AM - 10:30AM',
+//       pranaId : 6
+//     },
+//     {
+//       id : 17,
+//       time : '5:30 PM - 6:30PM',
+//       pranaId : 7
+//     },
+//     {
+//       id : 18,
+//       time : '6:30 PM - 7:30PM',
+//       pranaId : 8
+//     },
+//     {
+//       id : 19,
+//       time : '7:30 PM - 8:30PM',
+//       pranaId : 9
+//     },
+//     {
+//       id : 20,
+//       time : '8:30 PM - 9:30PM',
+//       pranaId : 10
+//     }
+//   ]
+// }
 
 export const getDeliveryCharge = (type) => {
   if (type == 'self_pickup') {

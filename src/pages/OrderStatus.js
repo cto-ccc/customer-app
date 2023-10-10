@@ -20,7 +20,7 @@ const styles = {
     height:'200px'
   },
   shadowBox : {
-    background : 'white',
+    background : '#FFF0D9',
     borderRadius : '13px',
     boxShadow : '0px 0px 10px 0px #eaeaea',
     width:'80vw',
@@ -61,20 +61,20 @@ function OrderStatus() {
   }
 
   return (
-    <Box sx={{background:'white', height:'100vh', padding:'0 4vw', display:'flex', justifyContent:'center'}}>
+    <Box sx={{padding:'0 4vw', display:'flex', justifyContent:'center'}}>
       <Box sx={{display:'flex', alignItems:'center', justifyContent:'center'}}>
         {
           showLoading ? 
           <Box>
             <img src={ChickenWalking} style={styles.loadImg}/>
-            <Box sx={{textAlign:'center'}}>
+            <Box sx={{textAlign:'center', mb:4, fontSize:'20px'}}>
               Confirming order.. Please wait
             </Box>
           </Box>
            : 
-          <Box sx={{display:'flex', flexDirection:'column', alignItems:'center', marginTop:'4vw'}}>
+          <Box sx={{display:'flex', flexDirection:'column', alignItems:'center', marginTop:'14vh'}}>
             <img src={OrderSuccess} style={styles.successImg} />
-            <Box sx={{fontSize:'35px', fontWeight:'bold', textAlign:'center'}}>
+            <Box sx={{fontSize:'35px', fontFamily:'Foregen',color:'#a4243d', textAlign:'center'}}>
               Order Placed Successfully
             </Box>
             <Box style={styles.shadowBox} sx={{margin:'20px 0', fontSize:'19px'}}>
@@ -83,8 +83,8 @@ function OrderStatus() {
                 <Box sx={{width:'40%', marginBottom:'5px'}}>
                   Order ID
                 </Box>
-                <Box>
-                  {location.state.orderId.orderId}
+                <Box sx={{color:'#a4243d'}}>
+                  {location.state.orderId}
                 </Box>
               </Box>
 
@@ -107,7 +107,7 @@ function OrderStatus() {
                 View All Orders
               </Button>
             </Box>
-            <Button variant='contained' onClick={() => goHome()}>
+            <Button variant='contained' onClick={() => goHome()} sx={{mb:4}}>
                 Go to Home Page
             </Button>
           </Box>
