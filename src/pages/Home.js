@@ -965,7 +965,7 @@ function Home() {
 
           <Box style={styles.mobMenuItem}
             onClick={() => navigate('/recipies')}>
-            Recipies
+            Recipes
           </Box>
           
           <Box style={styles.mobMenuItem} sx={{borderTop:'1px solid #FFF0D9', marginTop:'10px'}}

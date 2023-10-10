@@ -575,7 +575,7 @@ function ItemDetail() {
         isDesktop ?  */}
         <Box>
           <Box sx={{fontSize:'25px', marginTop:'30px', marginBottom:'0px', marginLeft:'10px', color:'#a4243d', fontFamily:'Foregen'}}>
-            RECOMMENDED RECIPIES
+            RECOMMENDED RECIPES
           </Box>
             {/* {
               getRecepieVideos().map((video, index) => {

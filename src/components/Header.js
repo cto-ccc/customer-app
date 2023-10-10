@@ -332,7 +332,7 @@ function Header() {
                 </Box>
                 <Box style={styles.menuItem}
                   onClick={() => navigate('/recipies')}>
-                  Our Recipies
+                  Our Recipes
                 </Box>
 
                 <Box sx={{margin:'50px 0 10px 0', paddingLeft:'5vw', cursor:'pointer'}}
