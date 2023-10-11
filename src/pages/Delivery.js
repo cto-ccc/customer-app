@@ -252,7 +252,8 @@ function Delivery() {
     const resp = await getNearestStoreDetails(address[event.target.value].latLong)
     
     if (!resp.branchId || !resp.locCode) {
-      showAlert("Sorry, Country Chicken Co delivery is currently unavailable for the selected address.")
+      showAlert(<><b>We regret to inform you that delivery is not available for the selected address.</b><br /><br /> Please note that we deliver within a maximum radius of 8km and the selected address lies beyond our delivery range.</>)
+      hideLoader()
       return
     } 
     
