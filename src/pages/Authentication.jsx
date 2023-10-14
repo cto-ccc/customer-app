@@ -46,6 +46,7 @@ function Authentication(props) {
   const [isNotiEnabled, setIsNotiEnabled] = useState(false)
   const [showOtp, setShowOtp] = useState(false)
   const [userProfile, setUserProfile] = useState(null)
+  const [impersoning, setImpersoning] = useState(false)
 
   const { showLoader, hideLoader, showAlert, showSnackbar, isDesktop } = useContext(CommonContext)
   const {userLoggedIn, setUserProfileData, isUserLoggedIn} = useContext(AuthContext)
@@ -60,34 +61,13 @@ function Authentication(props) {
   useEffect(() => {
     logAction('PAGE_VIEW', 'authentication')
     async function checkLogin() {
-      // console.log("Check login in auth page")
       const resp = await isUserLoggedIn()
-      // console.log("Response from is user login : ", resp)
       if (resp) {
         navigate("/home", {replace:true})
       }
     }
     checkLogin()
-    // if(showOtp) {
-    //   setUpRecaptha('+91'+userProfile.mobileNo).then((response) => {
-    //     console.log("recaptcha response", response)
-    //     setOtpResult(response)
-    //     setIsCaptchaVerified(true)
-    //     }).catch((error) => {
-    //       console.log('Error', error)
-    //   })
-    // }
   }, [])
-
-  // function setUpRecaptha(number) {
-  //   const recaptchaVerifier = new RecaptchaVerifier(
-  //     "recaptcha-container",
-  //     {},
-  //     auth
-  //   );
-  //   recaptchaVerifier.render();
-  //   return signInWithPhoneNumber(auth, number, recaptchaVerifier);
-  // }
   
   const switchLogin = () => {
     setShowSignIn(!showSignIn) 
@@ -96,6 +76,13 @@ function Authentication(props) {
 
   const loginUser = (data) => {
 
+    if (data.mobileNo == process.env.REACT_APP_CUST_CARE_NO) {
+      setImpersoning(true)
+      showAlert(<><b>You are now logging in as customer</b></>)
+      reset()
+      return
+    }
+
     showLoader()
     setMobileNo(data.mobileNo)
     logAction('login')
@@ -103,10 +90,10 @@ function Authentication(props) {
       if (response) {
         setUserProfile(response)
         sendOtp({
-          channel : Capacitor.getPlatform(),
-          mobileNo : data.mobileNo,
-          firstName : response.f_name,
-          type : 'LOGIN'
+          channel     : Capacitor.getPlatform(),
+          mobileNo    : data.mobileNo,
+          firstName   : response.f_name,
+          type        : 'LOGIN'
         })
       } else {
         showAlert(<>User account is not registered. Please sign up.</>)
@@ -129,7 +116,7 @@ function Authentication(props) {
       } else {
         subscribePushNotification()
         setUserProfile(data)
-        data.type='SIGN_UP'
+        data.type        = 'SIGN_UP'
         sendOtp(data)
       }
       hideLoader()
@@ -140,6 +127,8 @@ function Authentication(props) {
   }
 
   const sendOtp = (data) => {
+
+    data.impersoning = impersoning
     generateSignupOtp(data).then((response) => {
       setShowOtp(true)
       hideLoader()
@@ -349,22 +338,6 @@ function Authentication(props) {
                       helperText={errorSignup?.firstName?.message}
                     />
                   </Box>
-
-                  {/* <Box mb={3}>
-                    <TextField
-                      placeholder="Enter your last name"
-                      label="Last Name"
-                      variant="outlined"
-                      fullWidth
-                      autoComplete='off'
-                      name="lastName"
-                      {...registerUser("lastName", {
-                        required: "Required field"
-                      })}
-                      error={Boolean(errorSignup?.lastName)}
-                      helperText={errorSignup?.lastName?.message}
-                    />
-                  </Box> */}
 
                   <Box mb={3}>
                     <TextField
