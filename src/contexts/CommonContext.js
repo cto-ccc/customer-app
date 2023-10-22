@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { Preferences } from '@capacitor/preferences';
+import { logAction } from '../services/api';
 export const CommonContext = createContext()
 
 export const CommonProvider = (props) => {
@@ -84,6 +85,7 @@ export const CommonProvider = (props) => {
 
       itemData.count = itemData.enableBogo ? 2 : 1
       newCartData[itemData.id] = itemData
+      logAction('ADD_TO_CART', itemData.urlId)
     }
 
     if (isIncrease) {

@@ -52,7 +52,8 @@ function MakePayment() {
       customerId     : await getCustomerId(),
       deliveryDate   : location.state.delDate,
       deliverySlot   : location.state.delSlotId,
-      shippingCost   : getDeliveryCharge(location.state.delType)
+      shippingCost   : getDeliveryCharge(location.state.delType),
+      platform       : Capacitor.getPlatform()
     } 
 
     if (location.state.itemDetails?.bogoDiscount) {
@@ -102,6 +103,9 @@ function MakePayment() {
             
             if (txnData?.status == 'PAYMENT_SUCCESS') {
               hideLoader()
+              JSON.parse(txnData.orderData).itemDetails.forEach(item => {
+                logAction('PLACE_ORDER', item.urlId)
+              })
               navigate('/orderStatus', {state:{orderId : txnData.pranaOrderId, orderData : JSON.parse(txnData.orderData)}, replace:true})
             } else if (txnData?.status == 'PAYMENT_FAILED') {
               setLoading(false)

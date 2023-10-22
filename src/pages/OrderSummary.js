@@ -5,12 +5,13 @@ import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import { useLocation } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext';
-import { createNewOrder, getDeliveryCharge, getTimeSlots } from '../services/api';
+import { createNewOrder, getDeliveryCharge, getTimeSlots, logAction } from '../services/api';
 import { CommonContext } from '../contexts/CommonContext';
 import { getFirebaseError } from '../services/error-codes';
 import ComponentLoader from '../components/ComponentLoader';
 import ItemsSummary from '../components/ItemsSummary';
 import NavHeader from '../components/NavHeader';
+import { Capacitor } from '@capacitor/core';
 
 const styles = {
   cartCont : {
@@ -61,7 +62,8 @@ function OrderSummary() {
       storeDetails   : location.state.storeDetails,
       instructions   : location.state.instructions,
       deliveryType   : location.state.delType,
-      shippingCost   : getDeliveryCharge(location.state.delType)
+      shippingCost   : getDeliveryCharge(location.state.delType),
+      platform       : Capacitor.getPlatform()
     } 
 
     if (location.state.itemDetails?.bogoDiscount) {
@@ -84,6 +86,10 @@ function OrderSummary() {
     orderData.orderTitle  = ordersObj[Object.keys(ordersObj)[0]].name
 
     orderData.itemDetails = Object.values(ordersObj)
+
+    orderData.itemDetails.forEach(item => {
+      logAction('PLACE_ORDER', item.urlId)
+    })
     showLoader()
     createNewOrder(orderData).then((response) => {
       navigate('/orderStatus', {state:{...response, orderData : orderData}, replace:true})
