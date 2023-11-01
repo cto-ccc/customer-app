@@ -90,6 +90,9 @@ function Profile() {
           <Box>
             <Button variant='outlined' onClick={() => logout()}>Logout</Button>
           </Box>
+          <Box sx={{float:'right',marginLeft:'1rem'}}>
+            <Button variant='outlined' onClick={() => navigate('/addresses')}>My Addresses</Button>
+          </Box>
         </Box>
         
         <Box sx={{fontSize:'25px', fontFamily:'Foregen', marginTop:'25px'}}>

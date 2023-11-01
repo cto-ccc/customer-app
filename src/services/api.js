@@ -890,6 +890,17 @@ export const getInputTheme = () => {
     }
   }
 }
+
+export const editAddressApi = (async(addressData) => {
+  const addrCollRef = collection(db, `users/${addressData.userId}/address`)
+  return new Promise((resolve, reject)=> {
+    updateDoc(doc(addrCollRef, addressData.addressId), {houseDeatils : addressData.houseDeatils,landmark : addressData.landmark,pincode:addressData.pincode,streetDetails:addressData.streetDetails,userName:addressData.userName}).then((querySnapshot) => {
+      resolve({})
+    }).catch((error)=> {
+      reject(error)
+    })
+  })
+})
   
 
 
