@@ -137,6 +137,7 @@ export const CommonProvider = (props) => {
   }
 
   const clearCart = async() => {
+    console.log('Clearing cart data')
     setCartData(null)
     return await Preferences.remove({key :  'cartData'})
   }

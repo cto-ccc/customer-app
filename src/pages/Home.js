@@ -558,6 +558,15 @@ function Home() {
     setAnchor(false)
   }
 
+  async function getLandingForIos() {
+    const params = {
+      packageVersion : process.env.REACT_APP_VERSION,
+      platform       : Capacitor.getPlatform(),
+      userMobile     : await getUserId()
+    }
+    getLandingData(params)
+  }
+
   const list = (anchor) => (
     <Box sx={{padding:'4vw'}}>
       <Box sx={{fontSize:'15px', fontWeight:'600', mb:2, color:'#a4243d', borderBottom:'1px solid #eaeaea'}}>
@@ -656,7 +665,13 @@ function Home() {
 
   useEffect(() => {
     logAction('PAGE_VIEW', 'home')
-    printCurrentPosition()
+    if (Capacitor.getPlatform() == 'ios') {
+      //Immediate fix for ver 3 as there is no location access
+      getLandingForIos()
+    } else {
+      printCurrentPosition()
+    }
+    
   }, [])
 
   return (
@@ -757,10 +772,6 @@ function Home() {
             modules={[Pagination, Autoplay]}
             className= {isDesktop ? null : 'mySwiper' }
           >
-             <SwiperSlide
-              onClick={() => navigate('/categories/eggs')}>
-              <img src={isDesktop ? HomeBanner5 : HomeBanner2} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
-            </SwiperSlide>
             <SwiperSlide
               onClick={() => navigate('/categories/free-range-birds')}>
               <img src={isDesktop ? HomeBanner4 : HomeBanner1} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
@@ -768,6 +779,10 @@ function Home() {
             <SwiperSlide
               onClick={() => navigate('/categories/eggs')}>
               <img src={isDesktop ? HomeBanner6 : HomeBanner3} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
+            </SwiperSlide>
+             <SwiperSlide
+              onClick={() => navigate('/categories/eggs')}>
+              <img src={isDesktop ? HomeBanner5 : HomeBanner2} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
             </SwiperSlide>
           </Swiper>
         </Box>
