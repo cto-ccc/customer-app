@@ -31,7 +31,8 @@ import { CommonContext } from '../contexts/CommonContext';
 import Stores from '../pages/Stores';
 import RecipieDetail from '../pages/RecipieDetail';
 import AllCategories from '../pages/AllCategories';
-import Addresses from '../pages/Addresses';
+import MyAddresses from '../pages/MyAddresses';
+import EditAddress from '../pages/EditAddress';
 
 function AnimatedRoutes() {
   
@@ -76,7 +77,8 @@ function AnimatedRoutes() {
               <Route path="/termsAndConditions" element={<TermsAndConditions />}/>
               <Route path="/privacyPolicy" element={<PrivacyPolicy />}/>
               <Route path="/refundPolicy" element={<RefundPolicy />}/>
-              <Route path="/addresses" element={<Addresses />}/>
+              <Route path="/myAddresses" element={<MyAddresses />}/>
+              <Route path="/editAddress" element={<EditAddress />}/>
             </Route>
           </Route>
           </Route>

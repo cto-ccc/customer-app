@@ -37,7 +37,8 @@ const styles = {
     width:'55vw',
     position:'absolute',
     top:'15vh',
-    height:'50vh'
+    height:'50vh',
+    cursor:'pointer'
   },
   circle : {
     height:'auto',
@@ -96,7 +97,8 @@ function Landing() {
       <Box>
 
         <Box sx={{display:'flex', justifyContent:'center', width:'100%'}}>
-          <img src={LandingBanner} style={styles.landBanner} />
+          <img src={LandingBanner} style={styles.landBanner} 
+            onClick={() => navigate('/home')}/>
         </Box>
         <Box sx={{display:'flex', justifyContent:'space-between', paddingTop:'15vh'}}>
           <img src={Village1} style={styles.topBgImg}/>

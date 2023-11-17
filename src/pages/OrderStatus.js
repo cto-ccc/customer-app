@@ -7,6 +7,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { CommonContext } from '../contexts/CommonContext';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import ItemsSummary from '../components/ItemsSummary';
+import { deleteCartDataFromFb } from '../services/api';
+import { Capacitor } from '@capacitor/core';
 
 const styles = {
   loadImg : {
@@ -40,6 +42,7 @@ function OrderStatus() {
 
   useEffect(() => {
     clearCart()
+    deleteCartDataFromFb(location.state.orderData.userId)
     setTimeout(() => {
       LocalNotifications.schedule({notifications : [{
         title : 'CountryChickenCo',

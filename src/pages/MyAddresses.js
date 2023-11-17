@@ -13,7 +13,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Preferences } from '@capacitor/preferences';
 import { CommonContext } from '../contexts/CommonContext';
 import { motion } from 'framer-motion'
-import { addNewAddress, editAddressApi, getAllUserAddress, getBranchInfo, getNearestStoreDetails, getUserDeliveryData, logAction } from '../services/api';
+import { addNewAddress, deleteAddress, editAddressApi, getAllUserAddress, getBranchInfo, getNearestStoreDetails, getUserDeliveryData, logAction } from '../services/api';
 import { getFirebaseError } from '../services/error-codes';
 import { AuthContext } from '../contexts/AuthContext';
 import  ComponentLoader from '../components/ComponentLoader'
@@ -40,57 +40,39 @@ const styles = {
 const placesLibrary = ["places"];
 
 
-function Addresses() {
+function MyAddresses() {
 
   const containerStyle = {
-    width: '80vw',
-    maxWidth:'560px',
-    height: '400px'
-  };
+    width     : '80vw',
+    maxWidth  : '560px',
+    height    : '400px'
+  }
 
   const navigate = useNavigate()
 
-  const [showEditAddress, setShowEditAddress] = useState(false)
   const { register, handleSubmit, control, reset, formState : {errors} } = useForm()
   const { showLoader, hideLoader, showAlert, showSnackbar } = useContext(CommonContext)
   const { getUserId } = useContext(AuthContext)
   const [newAddressDetail, setNewAddressDetail] = useState({})
-  const [deliveryAddress, setDeliveryAddress] = useState(null)
-  const [paymentMode, setPaymentMode] = useState('online')
-  const { getCartData } = useContext(CommonContext)
   const [loading, setLoading] = useState(true)
   const [address, setAddress] = useState([])
   const [latLong, setLatLong] = useState({})
+  const [map, setMap] = useState(null)
   const location = useLocation()
   const [searchResult, setSearchResult] = useState("Result: none")
-  const [userName, setUserName] = useState(null) 
-  const [houseDetails, setHouseDetails] = useState(null)
-  const [streetDetails, setStreetDetails] = useState(null)
-  const [landMark, setLandMark] = useState(null)
-  const [pincode, setPinCode] = useState(null)
-  const [addressId, setAddressId] = useState(null)
-  const [userId, setUserId] = useState(null)
-  const [latitude, setlatitude] = useState(null)
-  const [longitude, setlongitude] = useState(null)
-  const [latLongitude, setlatLongitude] = useState([])
-  const [selectedAddrIndex, setSelectedAddrIndex] = useState(null)
   const [showNewAddress, setShowNewAddress] = useState(false)
 
- 
-  const [map, setMap] = useState(null)
-
- 
-
-  
-
-  
+  useEffect(() => {
+    logAction('PAGE_VIEW', 'myaddresses')
+    window['currentLocation'] = undefined
+    getUserAddress()
+  }, [])
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyCK7GQwFpewtRosu4F4n8xNShe-sDeAd48",
     libraries: placesLibrary
   })
-
 
   const onUnmount = useCallback(function callback(map) {
     setMap(null)
@@ -102,14 +84,42 @@ function Addresses() {
     setMap(map)
   }, [])
 
-
-
   const mapPositionChanged = (e) => {
     setLatLong({
       lat : e.lat(),
       lng : e.lng()
     })
   }
+
+  const requestForLocPermission = async() => {
+    await Geolocation.requestPermissions('location').then((resp) => {
+      if (resp.location == 'granted')
+        printCurrentPosition()
+      else 
+        showAlert("Location permission is disabled. Please enable location to continue")
+    }).catch((err) => {
+      showAlert("Location permission is disabled. Please enable location to continue")
+    })
+  }
+
+  const printCurrentPosition = async() => {
+
+    await Geolocation.getCurrentPosition()
+     .then((resp) => {
+       // console.log("current position is : ", resp.coords)
+       setLatLong({
+         lat : resp.coords.latitude,
+         lng : resp.coords.longitude
+       })
+       window['currentLocation'] = {
+         lat : resp.coords.latitude,
+         lng : resp.coords.longitude
+       }      
+     })
+     .catch((err) => {
+       requestForLocPermission()
+     })
+   }
 
   function onAutoCompleteLoad(autocomplete) {
     setSearchResult(autocomplete);
@@ -130,49 +140,10 @@ function Addresses() {
     }
   }
 
-  useEffect(() => {
-    logAction('PAGE_VIEW', 'delivery')
-    getUserAddress()
-    window['currentLocation'] = undefined
-  }, [])
-
-  
-
-  const printCurrentPosition = async() => {
-
-   await Geolocation.getCurrentPosition()
-    .then((resp) => {
-      // console.log("current position is : ", resp.coords)
-      setLatLong({
-        lat : resp.coords.latitude,
-        lng : resp.coords.longitude
-      })
-      window['currentLocation'] = {
-        lat : resp.coords.latitude,
-        lng : resp.coords.longitude
-      }      
-    })
-    .catch((err) => {
-      requestForLocPermission()
-    })
-  }
-
-  const requestForLocPermission = async() => {
-    await Geolocation.requestPermissions('location').then((resp) => {
-      if (resp.location == 'granted')
-        printCurrentPosition()
-      else 
-        showAlert("Location permission is disabled. Please enable location to continue")
-    }).catch((err) => {
-      showAlert("Location permission is disabled. Please enable location to continue")
-    })
-  }
-
 
   const getUserAddress = async() => { 
     getUserDeliveryData(await getUserId()).then((response) => {
       setAddress(response.addresses)
-      console.log(response.addresses)
       setLoading(false)
     }).catch((error) => {
       setLoading(false)
@@ -181,6 +152,11 @@ function Addresses() {
   }
 
   const onFormSubmit = async(data) => {
+
+    data.houseDetails  = data.houseDetails.replace("'", "")
+    data.landmark      = data.landmark.replace("'", "")
+    data.streetDetails = data.streetDetails.replace("'", "")
+
     data.userId    = await getUserId()
     data.timeStamp = Date.now()
     data.latLong   = latLong
@@ -192,47 +168,15 @@ function Addresses() {
 
     showLoader()
     addNewAddress(data, false).then((response => {
+      showSnackbar("Address added successfully !")
       getUserAddress()
       hideLoader()
       setShowNewAddress(false)
-      setShowEditAddress(false)
     })).catch((error) => {
       hideLoader()
       showAlert(getFirebaseError(error))
     })    
-
     reset()
-    setShowEditAddress(false)
-  }
-
-  const editAddress=(data)=>{
-
-    const addressData = {
-      addressId : addressId,
-      userName : userName,
-      houseDetails : houseDetails,
-      streetDetails : streetDetails,
-      landmark : landMark,
-      pincode : pincode,
-      userId : userId,
-    }
-
-    console.log(addressData);
-
-    showLoader()
-    editAddressApi(addressData).then(() => {
-        showSnackbar("Address updated successfully")
-        showEditAddress(false)
-        hideLoader()
-        setLoading(true)
-        getUserAddress()
-        setShowNewAddress(false)
-        setShowEditAddress(false)
-        hideLoader()
-    }).catch(() => {
-      showAlert("Failed to update address")
-      hideLoader()
-    })
   }
 
   const closeAddNewAddrForm = async() => {
@@ -240,35 +184,17 @@ function Addresses() {
     reset()
   }
 
-
-  const closeEidtupdateAddrForm = async() => {
-    setShowEditAddress(false)
-    reset()
+  const handleDeleteAddr = (address) => {
+    showLoader()
+    deleteAddress(address, false).then((response => {
+      showSnackbar("Address deleted successfully !")
+      getUserAddress()
+      hideLoader()
+    })).catch((error) => {
+      hideLoader()
+      showAlert(getFirebaseError(error))
+    })    
   }
-
-
-  
-
-
-
-  
-
-  function handleEditAddressClick(addressId,houseDetails,streetDetails,landmark,userId,userName,pincode){
-    setShowEditAddress(true)
-    setUserName(userName)
-    setHouseDetails(houseDetails)
-    setStreetDetails(streetDetails)
-    setLandMark(landmark)
-    setPinCode(pincode)
-    setAddressId(addressId)
-    setUserId(userId)
-  }
-
-  
-
-  
-
-  
 
   return (
     <motion.div
@@ -289,9 +215,8 @@ function Addresses() {
             {
               address.map((address, index) => {
                 return <Box key={index}>
-                  <Box sx={{padding:'10px', margin:'5px 0', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}>
-                  
-                      <Box sx={{fontSize:'15px', color:'#404040', fontFamily:'Sans'}}>
+                  <Box sx={{padding:'10px', margin:'10px 0', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}>
+                      <Box sx={{fontSize:'17px', color:'#404040', fontFamily:'Sans'}}>
                         <Box sx={{fontWeight:'700'}}>
                           {address.userName}
                         </Box>
@@ -305,152 +230,15 @@ function Addresses() {
                           {address.pincode}
                         </Box>
                         <Box sx={{marginTop:'1rem'}}>
-                          <Button onClick={() => handleEditAddressClick(address.addressId,address.houseDetails,address.streetDetails,address.landmark,address.userId,address.userName,address.pincode)} variant='outlined'>Edit Address</Button>
+                          <Button size='small' onClick={() => navigate('/editAddress', {state:address})} variant='outlined'>Edit</Button>
+                          <Button size='small' sx={{ml:1}} onClick={() => handleDeleteAddr(address)} variant='outlined'>Delete</Button>
                         </Box>   
                       </Box>
-                  
                   </Box>                                                           
                 </Box>
               })
             }
             
-
-          {
-            showEditAddress ? 
-            <Box sx={{display:'flex', flexDirection:'column'}}>
-              <Box sx={{mt:2, mb:2}}>
-                Edit address Details
-              </Box>
-              
-              <Box sx={{padding:'10px', background:'#FFF5E8', boxShadow:'0px 0px 15px rgba(0, 0, 0, 0.15)', borderRadius:'5px'}}> 
-              <form onSubmit={handleSubmit(editAddress)}>
-              <Autocomplete onLoad={onAutoCompleteLoad} onPlaceChanged={onPlaceChanged}>
-                <input
-                  type="text"
-                  placeholder="Search for your location"
-                  style={{
-                    boxSizing: `border-box`,
-                    border: `1px solid transparent`,
-                    width: `100%`,
-                    height: `40px`,
-                    padding: `0 12px`,
-                    borderRadius: `3px`,
-                    boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                    fontSize: `14px`,
-                    marginBottom:'20px',
-                    outline: `none`,
-                    textOverflow: `ellipses`
-                  }}
-                />
-              </Autocomplete>
-              <Button variant='outlined' size='small' onClick={() => printCurrentPosition()}>Use Current Location</Button>
-              <Box mb={3} mt={2}>
-           
-                  {
-                    isLoaded ? 
-                    (
-                      <GoogleMap
-                        mapContainerStyle={containerStyle}
-                        onLoad={onLoad}
-                        center={window['currentLocation']}
-                        options={{mapTypeControl: false, fullscreenControl:false, minZoom:15}}
-                        onUnmount={onUnmount}
-                      >
-                        <Marker position={window['currentLocation']} draggable={true} onDrag={(e) => mapPositionChanged(e.latLng) } />                             
-                      </GoogleMap>
-                  ) : <></>
-                  }
-                </Box>
-
-                <Box mb={3}>
-                  <TextField
-                    label="Full Name"
-                    variant="outlined"
-                    fullWidth
-                    defaultValue={userName??''}
-                    name="userName"
-                    {...register("userName", {
-                      required: "Required field"
-                    })}
-                    error={Boolean(errors?.userName)}
-                    helperText={errors?.userName?.message}
-                  />
-                </Box>
-
-                <Box mb={3}>
-                  <TextField
-                    label="Flat, House no, Apartment"
-                    variant="outlined"
-                    fullWidth
-                    defaultValue={houseDetails??''}
-                    name="houseDetails"
-                    {...register("houseDetails", {
-                      required: "Required field"
-                    })}
-                    error={Boolean(errors?.houseDetails)}
-                    helperText={errors?.houseDetails?.message}
-                  />
-                </Box>
-                
-
-                <Box mb={3}>
-                  <TextField
-                    label="Area, Street, City"
-                    variant="outlined"
-                    fullWidth
-                    defaultValue={streetDetails??''}
-                    name="streetDetails"
-                    {...register("streetDetails", {
-                      required: "Required field"
-                    })}
-                    error={Boolean(errors?.streetDetails)}
-                    helperText={errors?.streetDetails?.message}
-                  />
-                </Box>
-
-                <Box mb={3}>
-                  <TextField
-                    placeholder="Enter Landmark"
-                    label="Landmark"
-                    variant="outlined"
-                    fullWidth
-                    defaultValue={landMark??''}
-                    name="landmark"
-                    {...register("landmark", {
-                      required: "Required field"
-                    })}
-                    error={Boolean(errors?.landmark)}
-                    helperText={errors?.landmark?.message}
-                  />
-                </Box>
-
-                <Box mb={3}>
-                  <TextField
-                    label="Pincode"
-                    ariant="outlined"
-                    fullWidth
-                    defaultValue={pincode??''}
-                    name="pincode"
-                    {...register("pincode", {
-                      required: "Required field"
-                    })}
-                    error={Boolean(errors?.pincode)}
-                    helperText={errors?.pincode?.message}
-                  />
-                </Box>
-                  
-                <Button onClick={() => closeEidtupdateAddrForm()} sx={{mr:2}} variant="outlined">
-                  Cancel
-                </Button>
-                <Button type="submit" variant="contained">
-                  Update 
-                </Button>
-              </form>
-                
-              </Box>
-            </Box> :  
-            null
-          }
           {
             showNewAddress ? 
             <Box sx={{display:'flex', flexDirection:'column'}}>
@@ -568,7 +356,11 @@ function Addresses() {
                     defaultValue={newAddressDetail.pincode}
                     name="pincode"
                     {...register("pincode", {
-                      required: "Required field"
+                      required: "Required field",
+                      pattern: {
+                        value: /^[1-9][0-9]{5}$/,
+                        message: "Invalid pincode. Pincode must be 6 digits",
+                      }
                     })}
                     error={Boolean(errors?.pincode)}
                     helperText={errors?.pincode?.message}
@@ -585,8 +377,8 @@ function Addresses() {
                 
               </Box>
             </Box> :  
-            <Box sx={{marginTop:'10px'}}>
-              <Button onClick={() => setShowNewAddress(true)} variant="outlined">Add new address</Button>
+            <Box sx={{marginTop:'20px'}}>
+              <Button onClick={() => setShowNewAddress(true)} variant="contained">Add new address</Button>
             </Box>
           }        
         </Box>
@@ -598,4 +390,4 @@ function Addresses() {
   )
 }
 
-export default Addresses
+export default MyAddresses

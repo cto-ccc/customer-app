@@ -24,7 +24,8 @@ export const AuthContextProvider = (props) => {
     isUserLoggedIn,
     getUserId,
     getCustomerId,
-    getCustomerIdFromCache
+    getCustomerIdFromCache,
+    getUserMobile
   }
 
   async function userLoggedIn(userId, customerId) {
@@ -76,6 +77,14 @@ export const AuthContextProvider = (props) => {
     }
   }
 
+  async function getUserMobile() {
+    const { value } = await Preferences.get({ key: 'userId' })
+    if (value) {
+      return value
+    } else {
+      return null
+    }
+  }
 
   async function logout() {
     logAction('logout')

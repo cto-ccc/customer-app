@@ -78,7 +78,6 @@ function Delivery() {
     setDelSlot(null)
     setDelDate(newDate)
     if (!selectedAddrIndex) return
-    // setDeliverySlots(newDate)
     showLoader()
     fetchBranchInfo(newDate, storeDetails.branchId)
   }
@@ -136,12 +135,6 @@ function Delivery() {
     window['currentLocation'] = undefined
   }, [])
 
-  // const setDeliverySlots = (date) => {
-  //   console.log('=========', date)
-  //   setFilteredSlots(allDeliverySlots.filter((slot) => slot.delTime == date))
-  //   console.log("==========", allDeliverySlots.filter((slot) => slot.delTime == date))
-  // }
-
   const printCurrentPosition = async() => {
 
    await Geolocation.getCurrentPosition()
@@ -187,10 +180,15 @@ function Delivery() {
   }
 
   const onFormSubmit = async(data) => {
+
+    data.houseDetails  = data.houseDetails.replace("'", "")
+    data.landmark      = data.landmark.replace("'", "")
+    data.streetDetails = data.streetDetails.replace("'", "")
+
     data.userId    = await getUserId()
     data.timeStamp = Date.now()
     data.latLong   = latLong
-   
+       
     if (!latLong.lat || !latLong.lng) {
       showAlert("Please select your delivery location on map to add address.")
       return
@@ -440,7 +438,11 @@ function Delivery() {
                     defaultValue={newAddressDetail.pincode}
                     name="pincode"
                     {...register("pincode", {
-                      required: "Required field"
+                      required: "Required field",
+                      pattern: {
+                        value: /^[1-9][0-9]{5}$/,
+                        message: "Invalid pincode. Pincode must be 6 digits",
+                      }
                     })}
                     error={Boolean(errors?.pincode)}
                     helperText={errors?.pincode?.message}

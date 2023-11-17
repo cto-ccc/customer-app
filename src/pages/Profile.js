@@ -9,6 +9,7 @@ import { CommonContext } from '../contexts/CommonContext';
 import { getUiProductsData, getUserProductOrders, getUserProfileData, logAction } from '../services/api';
 import { Paper } from '@mui/material';
 import NavHeader from '../components/NavHeader';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const styles = {
   shadowBox : {
@@ -71,27 +72,24 @@ function Profile() {
         </Box>
         <Box style={styles.shadowBox}>
           <Box sx={{display:'flex', flexDirection:'column', padding:'10px'}}>
-            <Box sx={{marginBottom:'5px', fontSize:'20px', fontWeight:'bold', textTransform:'capitalize'}}>
+            <Box sx={{marginBottom:'5px', fontSize:'25px', fontWeight:'bold', textTransform:'capitalize'}}>
               {profileData.f_name} 
             </Box>
             <Box sx={{marginBottom:'5px'}}>
               {profileData.phone}
             </Box>
-            {/* <Box sx={{marginBottom:'5px'}}>
-              {profileData.email}
-            </Box> */}
+            <Box sx={{marginBottom:'5px', border:'1px solid #bfbfbf', padding:'10px', margin:'10px 0', borderRadius:'5px',
+                      display:'flex', justifyContent:'space-between'}} 
+              onClick={() => navigate('/myAddresses')}>
+              My Addresses
+              <ChevronRightIcon />
+            </Box>
           </Box>
         </Box>
 
         <Box sx={{display:'flex', marginTop:'20px'}}>
-          {/* <Box mr={2}>
-            <Button variant='contained'>View Address</Button>
-          </Box> */}
           <Box>
             <Button variant='outlined' onClick={() => logout()}>Logout</Button>
-          </Box>
-          <Box sx={{float:'right',marginLeft:'1rem'}}>
-            <Button variant='outlined' onClick={() => navigate('/addresses')}>My Addresses</Button>
           </Box>
         </Box>
         
@@ -126,7 +124,7 @@ function Profile() {
                   <Box mb={1} sx={{textTransform:'capitalize', color:'#a4243d'}}>
                     Status : {item.order_status}
                   </Box>  
-                  <Box sx={{textAlign:'right', borderTop:'1px solid #eaeaea', paddingTop:'10px', color:'#a4243d', cursor:'pointer'}}
+                  <Box sx={{textAlign:'right', borderTop:'1px solid #bfbfbf', paddingTop:'10px', color:'#a4243d', cursor:'pointer'}}
                     onClick={() => navigate('/orderDetails', {state : item})}>
                     {
                       item.order_status == 'delivered' ? 

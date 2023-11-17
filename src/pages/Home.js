@@ -368,8 +368,8 @@ let updateData = null
 function Home() {
 
   const navigate = useNavigate()
-  const { updateCart, cartData, isDesktop, showAlert, showPopup, setBlocker, setUpdatePercent } = useContext(CommonContext)
-  const { isUserLoggedIn, getCustomerIdFromCache } = useContext(AuthContext)
+  const { updateCart, cartData, isDesktop, showAlert, showPopup, setBlocker, setUpdatePercent, clearCart } = useContext(CommonContext)
+  const { isUserLoggedIn, getCustomerIdFromCache, getUserId } = useContext(AuthContext)
   const [anchor, setAnchor] = useState(false)
   const [sideNavAnchor, setSideNavAnchor] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -395,15 +395,56 @@ function Home() {
     setUpdatePercent(event.percent)
   })
 
+  const requestForLocPermission = async() => {
+    await Geolocation.requestPermissions('location').then(async(resp) => {
+      if (resp.location == 'granted') {
+        printCurrentPosition()
+      } else {
+        showAlert("Location permission is disabled. Please enable location to order from nearest store")
+        const params = {
+          packageVersion : process.env.REACT_APP_VERSION,
+          platform       : Capacitor.getPlatform(),
+          userMobile     : await getUserId()
+        }
+        getLandingData(params)
+      }
+    }).catch(async(err) => {
+      showAlert("Location permission is disabled. Please enable location to order from nearest store")
+      const params = {
+        packageVersion : process.env.REACT_APP_VERSION,
+        platform       : Capacitor.getPlatform(),
+        userMobile     : await getUserId()
+      }
+      getLandingData(params)
+    })
+  }
+
   const printCurrentPosition = async() => {
-    
-    const params = {
-      packageVersion : process.env.REACT_APP_VERSION,
-      platform       : Capacitor.getPlatform()
-    }
+
+    await Geolocation.getCurrentPosition()
+    .then(async(resp) => {
+
+      const params = {
+        packageVersion : process.env.REACT_APP_VERSION,
+        platform       : Capacitor.getPlatform(),
+        userMobile     : await getUserId(),
+        location       : {
+          lat : resp.coords.latitude,
+          lng : resp.coords.longitude
+        }
+      }
+      getLandingData(params)
+
+    })
+    .catch((err) => {
+      requestForLocPermission()
+    })
+  }
+
+  async function getLandingData(params) {
 
     getLanding(params).then(async(resp) => {
-
+  
       if (resp.action == 'UPDATE' && Capacitor.getPlatform() != 'web') {
 
         setBlocker(true)
@@ -413,6 +454,7 @@ function Home() {
           url     : resp.newBuildUrl
         })
         
+        await clearCart()
         await CapacitorUpdater.set(updateData)
         setBlocker(false)
       } else {
@@ -715,13 +757,16 @@ function Home() {
             modules={[Pagination, Autoplay]}
             className= {isDesktop ? null : 'mySwiper' }
           >
-             <SwiperSlide>
+             <SwiperSlide
+              onClick={() => navigate('/categories/eggs')}>
               <img src={isDesktop ? HomeBanner5 : HomeBanner2} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
             </SwiperSlide>
-            <SwiperSlide>
+            <SwiperSlide
+              onClick={() => navigate('/categories/free-range-birds')}>
               <img src={isDesktop ? HomeBanner4 : HomeBanner1} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
             </SwiperSlide>
-            <SwiperSlide>
+            <SwiperSlide
+              onClick={() => navigate('/categories/eggs')}>
               <img src={isDesktop ? HomeBanner6 : HomeBanner3} style={isDesktop ? styles.bannerImgDesk : styles.bannerImg} />
             </SwiperSlide>
           </Swiper>

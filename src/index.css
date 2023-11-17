@@ -43,6 +43,7 @@ code {
 .MuiButton-outlined {
   border-color: #a4243d !important;
   text-transform: none !important;
+  border-radius: 20px !important;
   color: #a4243d !important;
   font-family: 'Sans' !important;
 }

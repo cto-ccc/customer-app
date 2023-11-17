@@ -892,9 +892,22 @@ export const getInputTheme = () => {
 }
 
 export const editAddressApi = (async(addressData) => {
+  
   const addrCollRef = collection(db, `users/${addressData.userId}/address`)
   return new Promise((resolve, reject)=> {
-    updateDoc(doc(addrCollRef, addressData.addressId), {houseDeatils : addressData.houseDeatils,landmark : addressData.landmark,pincode:addressData.pincode,streetDetails:addressData.streetDetails,userName:addressData.userName}).then((querySnapshot) => {
+    updateDoc(doc(addrCollRef, addressData.addressId), addressData).then((querySnapshot) => {
+      resolve({})
+    }).catch((error)=> {
+      reject(error)
+    })
+  })
+})
+
+export const deleteAddress = (async(addressData) => {
+  
+  const addrCollRef = collection(db, `users/${addressData.userId}/address`)
+  return new Promise((resolve, reject)=> {
+    deleteDoc(doc(addrCollRef, addressData.addressId)).then((querySnapshot) => {
       resolve({})
     }).catch((error)=> {
       reject(error)
@@ -904,3 +917,26 @@ export const editAddressApi = (async(addressData) => {
   
 
 
+export const addCartDataToFb = (async(userId, data) => {
+  const cartRef = collection(db, `cart`)
+
+  return new Promise((resolve, reject)=> {
+    setDoc(doc(cartRef, userId), data, { merge: true }).then((querySnapshot) => {
+      resolve({})
+    }).catch((error)=> {
+      reject(error)
+    })
+  })
+})
+
+export const deleteCartDataFromFb = (async(userId) => {
+  const cartRef = collection(db, `cart`)
+
+  return new Promise((resolve, reject)=> {
+    deleteDoc(doc(cartRef, userId)).then((querySnapshot) => {
+      resolve({})
+    }).catch((error)=> {
+      reject(error)
+    })
+  })
+})

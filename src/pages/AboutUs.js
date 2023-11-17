@@ -7,7 +7,6 @@ import Hygenic from '../assets/hygienic.png'
 import Premium from '../assets/premium-meat.png'
 import Protocol from '../assets/red-protocol.png'
 import Exprerience from '../assets/experince.png'
-import Suri from '../assets/suri.png'
 import Saikesh from '../assets/saikesh.png'
 import Sami from '../assets/sami.png'
 import HowWeStarted from '../assets/how-we-started.png'
@@ -63,7 +62,8 @@ function AboutUs() {
                   OUR HUMBLE BEGINNING
                 </Box>
                 <Box>
-                  Our journey began in 2009. It's when Mr. Suribabu realizes his love and desire to raise Country Chickens. With his insightful knowledge regarding them and how the meat industry should work, he joined hands with Mr. Saikesh & Mr. Sami to bring about Country Chicken Co. Our collective goal has always been to support local farmers and bring natural, wholesome Country Chickens to each home in India. After 12 years in the business, we produce some of the highest quality Country Chicken meat. And our mission continues to create a healthier future.                </Box>
+                  Country Chicken Co was founded in April 2021 with the goal of revolutionizing the chicken industry through its unique approach to naturally raised chicken and eggs. Saikesh and Sami came together to establish this company, aiming to create a healthier future while also  support farmers in cultivating the finest naturally raised country chickens.
+                </Box>
               </Box>
             </Box>
           </Grid>
@@ -148,7 +148,7 @@ function AboutUs() {
               </Box>
             </Grid>
 
-            <Grid xs={12} sm={12} md={12} lg={12} sx={{display:'flex', justifyContent:'center'}}>
+            {/* <Grid xs={12} sm={12} md={12} lg={12} sx={{display:'flex', justifyContent:'center'}}>
               <Box style={styles.portCont}>
                 <Box>
                   <img src={Suri} style={styles.portImg} />
@@ -162,7 +162,7 @@ function AboutUs() {
                   </Box>
                 </Box>
               </Box>
-            </Grid>
+            </Grid> */}
 
           </Grid>
         </Box>

@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import { getAllRecipiesData, getCustomizedProducts, getImgMap, getProductData, getRecepieVideos, logAction } from '../services/api';
+import { addCartDataToFb, getAllRecipiesData, getCustomizedProducts, getImgMap, getProductData, getRecepieVideos, logAction } from '../services/api';
 import Grid from '@mui/material/Unstable_Grid2';
 import { CommonContext } from '../contexts/CommonContext';
 import Button from '@mui/material/Button'
@@ -14,6 +14,7 @@ import ComponentLoader from '../components/ComponentLoader';
 import { Checkbox } from '@mui/material';
 import { Capacitor } from '@capacitor/core';
 import Recipeies from './Recipies';
+import { AuthContext } from '../contexts/AuthContext';
 
 
 const styles = {
@@ -107,6 +108,7 @@ function ItemDetail() {
 
   const navigate = useNavigate()
   const {isDesktop, cartData, updateCart, showPopup} = useContext(CommonContext)
+  const {getUserMobile} = useContext(AuthContext)
   const { id }   = useParams()
 
   const [anchor, setAnchor] = useState(false)
@@ -128,6 +130,15 @@ function ItemDetail() {
       setSelectedItem(item)
     } else {
       updateCart(item, true)
+    }
+
+    const userId = await getUserMobile()
+    if (userId) {
+      let cartObj = {
+        platform : Capacitor.getPlatform()
+      }
+      cartObj[item.id] = 1
+      addCartDataToFb(""+userId, cartObj)
     }
   }
 
@@ -386,7 +397,7 @@ function ItemDetail() {
                     Live Weight*: 1.5kg 
                   </Box>
                   <Box>
-                    Meat Weight*: 1kg
+                    Meat Weight*: 900gms - 1000gms
                   </Box>
                 </Box>
               </> : null
@@ -441,10 +452,10 @@ function ItemDetail() {
 
                     <Box sx={{borderLeft:'1px solid #a4243d', borderRight:'1px solid #a4243d', padding : '0 10px', margin:'0 10px', width:'40%', textAlign:'center'}}>
                       <Box sx={{fontSize:'15px'}}>
-                        Live Bird : 1.5Kg =
+                        Live Bird : 
                       </Box>
                       <Box sx={{fontSize:'13px'}}>
-                        1Kg Meat
+                      1.5Kg   = 900gms - 1000gms Meat
                       </Box>
                     </Box>
 
@@ -452,9 +463,9 @@ function ItemDetail() {
                       <Box sx={{fontSize:'20px', fontWeight:'bold'}}>
                         ₹{productData.price}/kg
                       </Box>
-                      <Box sx={{fontSize:'10px', color:'black', opacity:'0.3'}}>
+                      {/* <Box sx={{fontSize:'10px', color:'black', opacity:'0.3'}}>
                         Apply coupon and get 1kg meat FREE
-                      </Box>
+                      </Box> */}
                     </Box>
                   </Box>
                 </Box>
