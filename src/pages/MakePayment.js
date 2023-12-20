@@ -52,7 +52,7 @@ function MakePayment() {
       customerId     : await getCustomerId(),
       deliveryDate   : location.state.delDate,
       deliverySlot   : location.state.delSlotId,
-      shippingCost   : getDeliveryCharge(location.state.delType),
+      shippingCost   : await getDeliveryCharge(location.state.delType),
       platform       : Capacitor.getPlatform()
     } 
 

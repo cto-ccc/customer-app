@@ -205,6 +205,7 @@ function Authentication(props) {
         const userData = {
           userId      : userProfile.mobileNo,
           deviceToken : deviceToken,
+          timeStamp   : Date.now(),
           ...userProfile
         }
 

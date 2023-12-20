@@ -53,20 +53,26 @@ function Cart() {
 
   const navigate = useNavigate()
 
-  const { updateCart, getCartData, clearCart, isDesktop, cartData, getCouponData, couponCacheData, clearCouponData } = useContext(CommonContext)
+  const { updateCart, getCartData, clearCart, isDesktop, cartData, getCouponData, couponCacheData, clearCouponData, showLoader, hideLoader } = useContext(CommonContext)
   const [instructions, setInstructions] = useState('')
   const { isUserLoggedIn } = useContext(AuthContext)
   // const [cartData, setCartData] = useState({})
   const [loading, setLoading] = useState(true)
+  const [deliveryCharge, setDeliveryCharge] = useState(0)
 
 
   useEffect(() => {
     // fetchCartData()
     logAction('PAGE_VIEW', 'cart')
+    fetchDeliveryCharge()
     setTimeout(() => {
       setLoading(false)
     }, 1000)
   }, [])
+
+  const fetchDeliveryCharge = async() => {
+    setDeliveryCharge(await getDeliveryCharge())
+  } 
   
 
   const checkout = async() => {
@@ -77,10 +83,10 @@ function Cart() {
     }
   }
 
-  // const fetchCartData = async() => {
-  //   console.log("======", await getCartData())
-  //   setCartData(await getCartData())
-  // }
+  const removeCoupon = async() => {
+    clearCouponData()
+    fetchDeliveryCharge()  
+  }
 
 
   return (
@@ -152,12 +158,12 @@ function Cart() {
                     <Box sx={{padding:'5px 15px'}}>
                       <Box sx={{borderTop:'1px solid #ebebeb',display:'flex', paddingTop:'20px', justifyContent:'space-between', alignItems:'center', fontSize:'13px'}}>
                         <Box sx={{display:'flex', alignItems:'center'}}
-                          onClick={() => clearCouponData()}>
-                          Coupon Discount [ {couponCacheData.couponCode} ]
+                          onClick={() => removeCoupon()}>
+                          Coupon Applied : [ {couponCacheData.couponCode} ]
                           <HighlightOffIcon sx={{fontSize:'15px', marginLeft:'10px'}}/>
                         </Box>
                         <Box>
-                        - ₹ {couponCacheData.couponValue}
+                          ₹ {couponCacheData.couponValue}/- Off
                         </Box>
                       </Box>
                     </Box> : 
@@ -217,27 +223,55 @@ function Cart() {
                   </Box> : null
                 }
 
+                {
+                  couponCacheData && couponCacheData.couponCode ?
+                  <Box sx={{paddingTop:'8px'}}>
+                    <Box sx={{display:'flex',justifyContent:'space-between', alignItems:'center', fontSize:'11px'}}>
+                      <Box sx={{display:'flex', alignItems:'center'}}>
+                        Coupon Discount [ {couponCacheData.couponCode} ]
+                      </Box>
+                      <Box sx={{color:'#a4243d'}}>
+                      - ₹{couponCacheData.couponValue}
+                      </Box>
+                    </Box>
+                  </Box> : null
+                }
                 <Box sx={{padding:'8px 0px'}}>
+
+                </Box>
+
+                {/* <Box sx={{padding:'8px 0px'}}>
                   <Box sx={{display:'flex', justifyContent:'space-between', alignItems:'center', fontSize:'11px', opacity:'0.8'}}>
                     <Box>
-                      Delivery Charge
+                      Delivery charges applicable (calculated at checkout)
                     </Box>
                     <Box>
-                      ₹{getDeliveryCharge()}
+                      ₹{deliveryCharge}
                     </Box>
                   </Box>
-                </Box>
+                </Box> */}
 
                 <Box sx={{borderTop:'1px solid #b1b1b1',display:'flex', paddingTop:'10px', justifyContent:'space-between', alignItems:'center'}}>
                   <Box>
-                    To Pay
+                    Items Total
                   </Box>
                   <Box sx={{fontWeight:'bold'}}>
-                    ₹ {cartData.totalAmount + getDeliveryCharge() - (couponCacheData?.couponValue || 0)}
+                    ₹ {cartData.totalAmount  - (couponCacheData?.couponValue || 0)}
                   </Box>
                 </Box>
                 </Box>
               </Box>
+
+              <Box sx={{padding:'8px 0px'}}>
+                  <Box sx={{display:'flex', justifyContent:'space-between', alignItems:'center', fontSize:'11px', opacity:'0.8'}}>
+                    <Box>
+                      *Delivery charges applicable (calculated at checkout)
+                    </Box>
+                    <Box>
+                      {/* ₹{deliveryCharge} */}
+                    </Box>
+                  </Box>
+                </Box>
 
             <Box sx={{padding:'20px 0'}}>
               <Button fullWidth onClick={() => checkout()} variant="contained">

@@ -37,6 +37,14 @@
   }
 }
 
+@keyframes shine {
+  0% {
+    left: -10%;
+  }
+  100% {
+    left: 110%
+  }
+}
 
 
 .switch-wrapper {

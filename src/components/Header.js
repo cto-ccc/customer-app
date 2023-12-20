@@ -343,7 +343,8 @@ function Header() {
                   onClick={() => navigate('/contactus')}>
                   Contact Us
                 </Box>
-                <Box style={styles.menuSubItem}>
+                <Box style={styles.menuSubItem}
+                onClick={() => navigate('/faqs')}>
                   FAQ's
                 </Box>
                 <Box style={styles.menuSubItem}

@@ -138,7 +138,7 @@ function OrderDetails() {
             </Box>
             <Box sx={{width:'20%', textAlign:'right'}}>
              ₹ {
-                location.state.order_amount + location.state.shipping_cost
+                location.state.order_amount + location.state.shipping_cost - (location.state?.coupon_discount_amount || 0)
               }
             </Box>
           </Box>

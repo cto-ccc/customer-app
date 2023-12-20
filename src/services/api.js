@@ -14,6 +14,8 @@ import ThirtyEggsLogo from '../assets/thirty-eggs.png'
 import ClassicCountry from '../assets/classic-country.png'
 import Nutrisoft from '../assets/nutrisoft.png'
 import { logEvent } from "firebase/analytics";
+import { Preferences } from '@capacitor/preferences';
+
 
 let userDataCache = null
 
@@ -135,17 +137,25 @@ export const getRecepieVideos = () => {
 //   ]
 // }
 
-export const getDeliveryCharge = (type) => {
-  if (type == 'self_pickup') {
-    return 0 
-  } else {
-    return 35
+export const getDeliveryCharge = async(type) => {
+
+  const couponData = await Preferences.get({ key: 'couponData'})
+  if (couponData.value) {
+    if (JSON.parse(couponData.value).couponCode == 'HEALTHYEATS' || JSON.parse(couponData.value).couponCode == 'HEALTHYEGGS') {
+      return type == 'self_pickup' ? 49 : 99
+    } 
   }
+  return type == 'self_pickup' ? 0 : 35
 }
+
 
 export const getMetaData = () => {
   return {
-
+    'exclusive-offers' : {
+      title : 'Exclusive Offers',
+      keywords : 'Country Chicken, Exclusive Offers',
+      description : 'Country Chicken Exclusive Offers'
+    },
     'nutrisoft-chicken' : {
       title : 'Nutrisoft Chicken',
       keywords : 'Nutrisoft Chicken',
@@ -321,7 +331,7 @@ export const getUserProductOrders = (async(userData) => {
 
 export const getLanding = (async(userData) => {
   return new Promise(async(resolve, reject) => {
-    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/v1/getLanding`, {
+    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/v2/getLanding`, {
       "method": "POST",
       "headers": {
         "content-type": "application/json",
@@ -391,7 +401,7 @@ export const getNearestStoreDetails = (async(data) => {
 
 export const getProductData = (async(data) => {
   return new Promise(async(resolve, reject) => {
-    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/v1/getProductData`, {
+    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/v2/getProductData`, {
       "method": "POST",
       "headers": {
         "content-type": "application/json",
@@ -483,13 +493,25 @@ export const getBlogData = (async(id) => {
   })
 })
 
+
 export const getRecipieData = (async(id) => {
 
-  return new Promise((resolve, reject)=> {
-    getDoc(doc(db, `recipies/${id}`)).then((querySnapshot) => {
-      resolve(querySnapshot.data())
-    }).catch((error)=> {
-      reject(null)
+  return new Promise(async(resolve, reject) => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/v1/getRecipieDetail
+    `, {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      "body": JSON.stringify({recipieId : id})
+    }).then((response) => response.json())
+    .then(function(data) { 
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
     })
   })
 })

@@ -13,7 +13,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Preferences } from '@capacitor/preferences';
 import { CommonContext } from '../contexts/CommonContext';
 import { motion } from 'framer-motion'
-import { addNewAddress, getAllUserAddress, getBranchInfo, getNearestStoreDetails, getUserDeliveryData, logAction } from '../services/api';
+import { addNewAddress, getAllUserAddress, getBranchInfo, getDeliveryCharge, getNearestStoreDetails, getUserDeliveryData, logAction } from '../services/api';
 import { getFirebaseError } from '../services/error-codes';
 import { AuthContext } from '../contexts/AuthContext';
 import  ComponentLoader from '../components/ComponentLoader'
@@ -51,7 +51,7 @@ function Delivery() {
 
   const [showNewAddress, setShowNewAddress] = useState(false)
   const { register, handleSubmit, control, reset, formState : {errors} } = useForm()
-  const { showLoader, hideLoader, showAlert, showSnackbar } = useContext(CommonContext)
+  const { showLoader, hideLoader, showAlert, showSnackbar, cartData } = useContext(CommonContext)
   const { getUserId } = useContext(AuthContext)
   const [newAddressDetail, setNewAddressDetail] = useState({})
   const [deliveryAddress, setDeliveryAddress] = useState(null)
@@ -73,6 +73,8 @@ function Delivery() {
 
   const [allDeliverySlots, setAllDeliverySlots] = useState([])
   const [filteredSlots, setFilteredSlots] = useState([])
+  const [deliveryCharge, setDeliveryCharge] = useState(0)
+  const [hasCoupon, setHasCoupon] = useState(false)
 
   const onDelDateChange = (event, newDate) => {
     setDelSlot(null)
@@ -92,6 +94,17 @@ function Delivery() {
     libraries: placesLibrary
   })
 
+
+
+  const fetchDeliveryCharge = async() => {
+    setDeliveryCharge(await getDeliveryCharge())
+    const couponData = await Preferences.get({ key: 'couponData'})
+    if (couponData.value) {
+      if (JSON.parse(couponData.value).couponCode == 'HEALTHYEATS' || JSON.parse(couponData.value).couponCode == 'HEALTHYEGGS') {
+        setHasCoupon(true)
+      } 
+    }
+  } 
 
   const onUnmount = useCallback(function callback(map) {
     setMap(null)
@@ -132,6 +145,7 @@ function Delivery() {
   useEffect(() => {
     logAction('PAGE_VIEW', 'delivery')
     getUserAddress()
+    fetchDeliveryCharge()
     window['currentLocation'] = undefined
   }, [])
 
@@ -559,10 +573,10 @@ function Delivery() {
             onChange={(e) => setDelType(e.target.value)}>
 
             <MenuItem key="delivery" value="delivery">
-              Home delivery 
+              Home delivery (₹{deliveryCharge})
             </MenuItem>
             <MenuItem key="self_pickup" value="self_pickup">
-              Self pickup from store 
+              Self pickup from store  (₹{deliveryCharge - (hasCoupon ? 50 : 35)})
             </MenuItem>
 
           </Select>

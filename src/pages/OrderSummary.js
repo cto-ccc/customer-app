@@ -36,14 +36,20 @@ function OrderSummary() {
   const navigate = useNavigate()
   const location = useLocation()
   const { getUserId, getCustomerId } = useContext(AuthContext)
-  const { showLoader, hideLoader, showAlert, showSnackbar, couponCacheData } = useContext(CommonContext)
+  const { showLoader, hideLoader, showAlert, showSnackbar, couponCacheData, clearCouponData } = useContext(CommonContext)
   const [loading, setLoading] = useState(true)
+  const [deliveryCharge, setDeliveryCharge] = useState(0)
 
   useEffect(() => {
+    fetchDeliveryCharge()
     setTimeout(() => {
       setLoading(false)
     }, 1000)
   }, [])
+
+  const fetchDeliveryCharge = async() => {
+    setDeliveryCharge(await getDeliveryCharge(location.state.delType))
+  } 
 
   const placeOrder = async() => {
     window.scrollTo(0,0)
@@ -62,7 +68,7 @@ function OrderSummary() {
       storeDetails   : location.state.storeDetails,
       instructions   : location.state.instructions,
       deliveryType   : location.state.delType,
-      shippingCost   : getDeliveryCharge(location.state.delType),
+      shippingCost   : deliveryCharge,
       platform       : Capacitor.getPlatform()
     } 
 
@@ -91,6 +97,7 @@ function OrderSummary() {
       logAction('PLACE_ORDER', item.urlId)
     })
     showLoader()
+    await clearCouponData()
     createNewOrder(orderData).then((response) => {
       navigate('/orderStatus', {state:{...response, orderData : orderData}, replace:true})
       hideLoader()
@@ -191,28 +198,28 @@ function OrderSummary() {
               </Box> : null
           }
           
-          <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 0', color:'#404040'}}>
-            <Box>
-              Delivery Fee
-            </Box>
-            <Box>
-              ₹ {getDeliveryCharge(location.state.delType)} 
-            </Box>
-          </Box>
-          
+
           {
             couponCacheData && couponCacheData.couponCode ?
-            <Box sx={{padding:'5px 15px'}}>
-              <Box sx={{borderTop:'1px solid #ebebeb',display:'flex', padding:'10px 0', justifyContent:'space-between', alignItems:'center', fontSize:'13px'}}>
-                <Box sx={{display:'flex', alignItems:'center'}}>
-                  Coupon Discount [ {couponCacheData.couponCode} ]
-                </Box>
-                <Box>
-                - ₹ {couponCacheData.couponValue}
-                </Box>
+            <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 0', color:'#404040'}}>
+              <Box>
+                Coupon Discount [ {couponCacheData.couponCode} ]
               </Box>
-            </Box> : null
+              <Box sx={{color:'#a4243d'}}>
+              - ₹ {couponCacheData.couponValue}
+              </Box>
+            </Box>
+            : null
           }
+
+          <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 0', color:'#404040'}}>
+            <Box>
+              {location.state.delType == 'self_pickup' ? 'Handling Charges' : 'Delivery Fee + Eco friendly packing'}
+            </Box>
+            <Box>
+              ₹ {deliveryCharge} 
+            </Box>
+          </Box>
 
           <Box sx={{display:'flex', justifyContent:'space-between',  borderTop:'1px solid #eaeaea', padding:'5px 0'}}>
             <Box>
@@ -220,7 +227,7 @@ function OrderSummary() {
             </Box>
             <Box sx={{fontWeight:'bold'}}>
               ₹ {location.state.itemDetails.totalAmount 
-                + (getDeliveryCharge(location.state.delType))
+                + (deliveryCharge)
                 - (couponCacheData?.couponValue || 0)}
             </Box>
           </Box>

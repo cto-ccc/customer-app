@@ -70,6 +70,9 @@ import { CapacitorUpdater } from '@capgo/capacitor-updater'
 import { App as CapApp } from '@capacitor/app';
 import AppBlocker from '../components/AppBlocker';
 
+import OfferPopup from '../assets/offer-popup.png'
+import "../App.css"
+
 
 const styles = {
   navbar : {
@@ -360,6 +363,29 @@ const styles = {
   },
   mobMenuItem : {
     padding:'10px 20px'
+  },
+  popupImg : {
+    width:'-webkit-fill-available'
+  },
+  catTitleCont : {
+    position: 'relative',
+    overflow: 'hidden'
+  },
+  catTitle : {
+    fontSize: '20px',
+    lineHeight: '35px',
+    cursor: 'pointer'
+  },
+  catDummyCont : {
+    position: 'absolute',
+    top: 0,
+    height: '100%',
+    left: '-100px',
+    width: '30%',
+    background: 'linear-gradient(to right, white, transparent 50%)',
+    webkitTextFillColor: 'transparent',
+    animation: 'shine 2.5s infinite',
+    overflow: 'hidden'
   }
 }
 
@@ -368,8 +394,9 @@ let updateData = null
 function Home() {
 
   const navigate = useNavigate()
-  const { updateCart, cartData, isDesktop, showAlert, showPopup, setBlocker, setUpdatePercent, clearCart } = useContext(CommonContext)
-  const { isUserLoggedIn, getCustomerIdFromCache, getUserId } = useContext(AuthContext)
+  const { updateCart, cartData, isDesktop, showAlert, showPopup, setBlocker, setUpdatePercent, clearCart, 
+          setPopup, hideAlert, showSnackbar,landingPopupShown, setLandingPopupShown, clearCouponData } = useContext(CommonContext)
+  const { isUserLoggedIn, getCustomerId, getUserId, getUserMobile } = useContext(AuthContext)
   const [anchor, setAnchor] = useState(false)
   const [sideNavAnchor, setSideNavAnchor] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -388,6 +415,7 @@ function Home() {
 
   const [latLong, setLatLong] = useState(null)
   const [metaData, setMetaData] = useState(getMetaData()['home'])
+  const [hasOfferItems, setHasOfferItems] = useState(false)
 
 
   CapacitorUpdater.addListener('download', (event) => {
@@ -441,9 +469,33 @@ function Home() {
     })
   }
 
+  const closePopup = async() => {
+
+    if (await isUserLoggedIn()) {
+      hideAlert()
+      showSnackbar("Login successfull, continue to order")
+    } else {
+      hideAlert()
+      navigate('/auth')
+    }
+  }
+
   async function getLandingData(params) {
 
     getLanding(params).then(async(resp) => {
+
+      if (window.location.pathname == '/home' || (!isDesktop && window.location.pathname == '/')) {
+        if (resp.showLandingPopup && !landingPopupShown) {
+          showPopup(<>
+            <Box
+              onClick={() => closePopup()}>
+              <img src={OfferPopup} style={styles.popupImg} />
+            </Box>
+          </>)
+          setLandingPopupShown(true)
+        }
+      }
+
   
       if (resp.action == 'UPDATE' && Capacitor.getPlatform() != 'web') {
 
@@ -458,12 +510,16 @@ function Home() {
         await CapacitorUpdater.set(updateData)
         setBlocker(false)
       } else {
-       
         setItemsData(resp.productsData)
         let allCatItems = []
         resp.productsData.forEach((item) => {
           allCatItems = allCatItems.concat(item.data)
         })
+        if(resp.clearCart) {
+          await clearCart()
+          await clearCouponData()
+        } 
+        setHasOfferItems(resp.hasOfferItems)
         setAllItemsData(allCatItems)
         setLoading(false)
       }
@@ -562,7 +618,8 @@ function Home() {
     const params = {
       packageVersion : process.env.REACT_APP_VERSION,
       platform       : Capacitor.getPlatform(),
-      userMobile     : await getUserId()
+      userMobile     : await getUserMobile(),
+      customerId     : await getCustomerId()
     }
     getLandingData(params)
   }
@@ -665,12 +722,14 @@ function Home() {
 
   useEffect(() => {
     logAction('PAGE_VIEW', 'home')
-    if (Capacitor.getPlatform() == 'ios') {
+    // if (Capacitor.getPlatform() == 'ios') {
       //Immediate fix for ver 3 as there is no location access
-      getLandingForIos()
-    } else {
-      printCurrentPosition()
-    }
+    //   getLandingForIos()
+    // } else {
+    //   printCurrentPosition()
+    // }
+    logAction('APP_OPEN', Capacitor.getPlatform())
+    getLandingForIos()
     
   }, [])
 
@@ -690,7 +749,6 @@ function Home() {
           null
         }
         
-    
         {
           isDesktop ? 
           null : 
@@ -706,7 +764,6 @@ function Home() {
             </Box>
           </Box>
         }
-
 
       {
         loading ?
@@ -841,8 +898,12 @@ function Home() {
             return <Box key={index}>
             
             <Box style={isDesktop ? styles.productCatTitleDesk : styles.productCatTitle}>
-              <Box>
+              <Box style={styles.catTitleCont}>
+                <Box style={styles.catTitle}>
                 {category.title}
+                </Box>
+                <Box style={hasOfferItems && index == 0 ? styles.catDummyCont : null}>
+                </Box>
               </Box>
               {
                 isDesktop ? null : 
@@ -865,6 +926,7 @@ function Home() {
                       </Box> */}
                       <img src={getImgMap()[item.imgUrl]} style={isDesktop ? styles.productImgDesk : styles.productImg}/>
                     </Box>
+
                     <div style={styles.productDescCont}>
                       <Box sx={styles.prodName}
                         onClick={() => navigate(`/products/${item.urlId}`, {state : item})}>
@@ -883,65 +945,92 @@ function Home() {
                       {/* <Box sx={{textAlign:'left', marginBottom:'5px', fontWeight:'450', fontSize:'15px'}}>
                         {item.qty}
                       </Box> */}
+
                       {
-                        item.livePrice ? 
-                        <Box sx={{fontSize:'10px', opacity:'0.5'}}>
-                          Starting From
-                        </Box> : null
-                      }
-                      
-                      <Box sx={{textAlign:'left', marginBottom:'5px', fontSize:'20px', display:'flex', alignItems:'end'}}>
-                      ₹ {item.livePrice || item.price}
-                        {
-                          item.enableBogo ? null : 
-                          <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.2'}}><s>₹ {item.mrp}</s></Box> 
-                        }
-                      
-                        <Box sx={{fontSize:'12px', marginLeft:'5px', color:'#f47f13', borderLeft:'1px solid #eaeaea', paddingLeft:'5px'}}>
-                        {
-                          item?.enableBogo ? 
-                            <Box sx={{marginBottom:'5px'}}>Buy One Get One FREE</Box> : 
-                            <>{Math.trunc(((item.mrp - (item.livePrice || item.price)) / item.mrp) * 100)}% Off</>
-                        }                    
-                        </Box>
-                      </Box>
-                      {
-                        cartData && cartData[item.id] && cartData[item.id].count ?
-                        <Box style={styles.incCont}>
-                          <Box sx={{border:'1px solid #dddddd', 
-                                    display:'flex', 
-                                    borderRadius:'5px', 
-                                    
-                                    background:'white', border:'1px solid #c3c3c3'}}>
-                            <Box onClick={() => modifyCart(item, false)}
-                              sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
-                              -
+                        category.type == 'OFFER_PRODUCT' ? 
+                        <>
+                          <Box>
+                            <Box sx={{fontSize:'12px', color:'#f47f13', borderLeft:'1px solid #eaeaea'}}>
+                                <Box sx={{marginBottom:'15px'}}>Offer only for you</Box> 
                             </Box>
-                            <Box sx={{padding:'5px 10px', 
-                                      borderRight:'1px solid #bababa', 
-                                      borderLeft:'1px solid #bababa', fontSize:'15px',
-                                      background:'#a4243d !important', color:'white'}}>
-                              {cartData[item.id].count}
-                            </Box>
-                            <Box  onClick={() => modifyCart(item, true)}
-                              sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
-                              +
+                              <Button variant="contained" style={styles.mainBtn} size='small' fullWidth 
+                              onClick={() => navigate(`/products/${item.urlId}`)}>
+                                Claim Now
+                              </Button>  
+                          </Box>
+                        </> 
+                        : 
+                        <>
+                          {
+                            item.livePrice ? 
+                            <Box sx={{fontSize:'10px', opacity:'0.5'}}>
+                              Starting From
+                            </Box> : null
+                          }
+
+                          <Box sx={{textAlign:'left', marginBottom:'5px', fontSize:'20px', display:'flex', alignItems:'end'}}>
+                            ₹ {item.livePrice || item.price}
+                            {
+                              item.enableBogo ? null : 
+                              <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.2'}}><s>₹ {item.mrp}</s></Box> 
+                            }
+                          
+                            <Box sx={{fontSize:'12px', marginLeft:'5px', color:'#f47f13', borderLeft:'1px solid #eaeaea', paddingLeft:'5px'}}>
+                            {
+                              item?.enableBogo ? 
+                                <Box sx={{marginBottom:'5px'}}>Buy One Get One FREE</Box> : 
+                                <>{Math.trunc(((item.mrp - (item.livePrice || item.price)) / item.mrp) * 100)}% Off</>
+                            }                    
                             </Box>
                           </Box>
-                        </Box> : 
-                        <Box sx={{textAlign:'right'}}>
+
                           {
-                            item.stockQty == 0 ?
-                            <Button variant='outlined' style={styles.mainBtn} size='small' fullWidth disabled sx={{opacity:'0.6'}}>
-                              Out of stock
-                            </Button> :
-                            <Button variant="contained" style={styles.mainBtn} size='small' fullWidth 
-                            onClick={() => navigate(`/products/${item.urlId}`)}>
-                              Shop Now
-                            </Button>  
-                          }      
-                        </Box>
+                            cartData && cartData[item.id] && cartData[item.id].count ?
+                            <Box style={styles.incCont}>
+                              <Box sx={{border:'1px solid #dddddd', 
+                                        display:'flex', 
+                                        borderRadius:'5px', 
+                                        
+                                        background:'white', border:'1px solid #c3c3c3'}}>
+                                <Box onClick={() => modifyCart(item, false)}
+                                  sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
+                                  -
+                                </Box>
+                                <Box sx={{padding:'5px 10px', 
+                                          borderRight:'1px solid #bababa', 
+                                          borderLeft:'1px solid #bababa', fontSize:'15px',
+                                          background:'#a4243d !important', color:'white'}}>
+                                  {cartData[item.id].count}
+                                </Box>
+                                <Box  onClick={() => modifyCart(item, true)}
+                                  sx={{padding:'5px 10px 5px 10px', fontSize:'15px', cursor:'pointer'}}>
+                                  +
+                                </Box>
+                              </Box>
+                            </Box> : 
+                            <Box sx={{textAlign:'right'}}>
+                              {
+                                item.stockQty == 0 ?
+                                <Button variant='outlined' style={styles.mainBtn} size='small' fullWidth disabled sx={{opacity:'0.6'}}>
+                                  Out of stock
+                                </Button> :
+                                <Button variant="contained" style={styles.mainBtn} size='small' fullWidth 
+                                onClick={() => navigate(`/products/${item.urlId}`)}>
+                                  Shop Now
+                                </Button>  
+                              }      
+                            </Box>
+                          }
+                        
+                        </>
                       }
+
+                      
+                      
+                     
+
+
+
                     </div>
                   </Box>)
                 })
@@ -1033,7 +1122,7 @@ function Home() {
             Contact Us
           </Box>
 
-          <Box style={styles.mobMenuItem}>
+          <Box style={styles.mobMenuItem} onClick={() => navigate('/faqs')}>
             FAQ's
           </Box>
 

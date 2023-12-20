@@ -20,6 +20,7 @@ export const CommonProvider = (props) => {
 
   const [popup, setPopup] = useState(false)
   const [blocker, setBlocker] = useState(false)
+  const [landingPopupShown, setLandingPopupShown] = useState(false)
 
   const [updatePercent, setUpdatePercent] = useState(10)
 
@@ -47,8 +48,8 @@ export const CommonProvider = (props) => {
     // Item present in cart
     if (newCartData[itemData.id]) {
 
-      if (isIncrease && newCartData[itemData.id].count == 15) {
-        showAlert("Maximum quantity you can order is 15")
+      if (isIncrease && newCartData[itemData.id].count == (itemData?.maxOrderLimit || 15)) {
+        showAlert(`Maximum quantity you can order is ${(itemData?.maxOrderLimit || 15)}`)
         return
       }
       
@@ -57,7 +58,11 @@ export const CommonProvider = (props) => {
       let itemQty = itemData?.enableBogo ? 2 : 1
       newCartData[itemData.id].count = newCartData[itemData.id].count + (isIncrease ? itemQty : -itemQty)
 
-      if (newCartData[itemData.id].count <= 0) delete newCartData[itemData.id]
+      if (newCartData[itemData.id].count <= 0)
+      {
+        if (itemData.id == 'C091' || itemData.id == 'C090') clearCouponData()
+        delete newCartData[itemData.id]
+      } 
     } 
 
     // Item not present in cart
@@ -212,7 +217,9 @@ export const CommonProvider = (props) => {
     blocker, 
     setBlocker,
     updatePercent,
-    setUpdatePercent
+    setUpdatePercent,
+    landingPopupShown,
+    setLandingPopupShown
   }
 
   return <CommonContext.Provider value={value}> {props.children} </CommonContext.Provider>

@@ -1,6 +1,6 @@
 {
   "name": "Country-Chicken-Co",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "private": true,
   "homepage": "https://countrychickenco.in/",
   "dependencies": {
@@ -39,7 +39,8 @@
     "start": "env-cmd -f .env.development react-scripts start",
     "build": "env-cmd -f .env.development react-scripts build && cp sitemap.xml build/ && cp .htaccess build/",
     "start:prod": "env-cmd -f .env.production react-scripts start && cp sitemap.xml build/ && cp .htaccess build/",
-    "build:prod": "env-cmd -f .env.production react-scripts build && cp sitemap.xml build/ && cp .htaccess build/"
+    "build:prod": "env-cmd -f .env.production react-scripts build && cp sitemap.xml build/ && cp .htaccess build/",
+    "build:stage": "env-cmd -f .env.stage react-scripts build && cp sitemap.xml build/ && cp .htaccess build/"
   },
   "eslintConfig": {
     "extends": [

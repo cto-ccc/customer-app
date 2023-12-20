@@ -446,7 +446,7 @@ function ItemDetail() {
                         Meat
                       </Box>
                       <Box sx={{marginRight:'10px'}}>
-                        ₹{productData.price}/Kg
+                        ₹{productData.price}/{productData.qty}
                       </Box>
                     </Box>
 
@@ -461,7 +461,7 @@ function ItemDetail() {
 
                     <Box sx={{display:'flex', flexDirection:'column', width:'30%'}}>
                       <Box sx={{fontSize:'20px', fontWeight:'bold'}}>
-                        ₹{productData.price}/kg
+                        ₹{productData.price}/{productData.qty}
                       </Box>
                       {/* <Box sx={{fontSize:'10px', color:'black', opacity:'0.3'}}>
                         Apply coupon and get 1kg meat FREE

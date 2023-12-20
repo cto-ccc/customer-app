@@ -33,6 +33,7 @@ import RecipieDetail from '../pages/RecipieDetail';
 import AllCategories from '../pages/AllCategories';
 import MyAddresses from '../pages/MyAddresses';
 import EditAddress from '../pages/EditAddress';
+import Faqs from '../pages/Faqs';
 
 function AnimatedRoutes() {
   
@@ -79,6 +80,7 @@ function AnimatedRoutes() {
               <Route path="/refundPolicy" element={<RefundPolicy />}/>
               <Route path="/myAddresses" element={<MyAddresses />}/>
               <Route path="/editAddress" element={<EditAddress />}/>
+              <Route path="/faqs" element={<Faqs />}/>
             </Route>
           </Route>
           </Route>
