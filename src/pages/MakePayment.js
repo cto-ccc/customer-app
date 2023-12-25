@@ -88,7 +88,7 @@ function MakePayment() {
         "accept"        : "application/json"
       },
       "body": JSON.stringify({
-        amount       : location.state.itemDetails.totalAmount + getDeliveryCharge(location.state.delType),
+        amount       : location.state.itemDetails.totalAmount + await getDeliveryCharge(location.state.delType),
         mobileNo     : await getUserId(),
         customerId   : await getCustomerId(),
         platform     : Capacitor.getPlatform(),

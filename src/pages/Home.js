@@ -365,7 +365,7 @@ const styles = {
     padding:'10px 20px'
   },
   popupImg : {
-    width:'-webkit-fill-available'
+    width:'80vw'
   },
   catTitleCont : {
     position: 'relative',
