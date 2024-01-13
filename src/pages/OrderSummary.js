@@ -214,7 +214,7 @@ function OrderSummary() {
 
           <Box sx={{display:'flex', justifyContent:'space-between', padding:'5px 0', color:'#404040'}}>
             <Box>
-              {location.state.delType == 'self_pickup' ? 'Handling Charges' : 'Delivery Fee + Eco friendly packing'}
+              {location.state.delType == 'self_pickup' ? 'Handling Charges' : 'Delivery Fee'}
             </Box>
             <Box>
               ₹ {deliveryCharge} 

@@ -22,7 +22,7 @@ function ApplyCoupon() {
     // showLoader()
     let userCoupon = false
     coupons.map((coupon) => {
-      userCoupon = coupon.couponCode == couponData.couponCode ? coupon : false
+      if (coupon.couponCode == couponData.couponCode) userCoupon =  coupon 
     })
 
     if (couponData.couponCode == 'HEALTHYEATS') {
@@ -221,9 +221,11 @@ function ApplyCoupon() {
               {
                 coupons.length ?
                 coupons.map((coupon) => {
+                  if (!coupon.hideCoupon)
                   return (
                     <Box key={coupon.iD} sx={{
                           border:'1px solid #8f8f8f', borderRadius:'10px', padding:'20px', display:'flex', 
+                          marginBottom:'10px',
                           justifyContent:'space-between', alignItems:'center'}}>
                       <Box sx={{width:'60%'}}>
                         {coupon.couponTitle}
