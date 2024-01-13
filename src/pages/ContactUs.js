@@ -213,7 +213,20 @@ function ContactUs() {
                   </Button>
                 </form>
               </Box>
+
+
+
+            <p>
+              Please visit our &nbsp;
+              <a href='privacyPolicy'>  privacy policy </a> &nbsp; page to know more about our policies.
+            </p>
+            <p>
+              To know about our terms and conditions, please visit our &nbsp;
+              <a href='termsAndConditions'>  terms and conditions </a> &nbsp; page. 
+            </p>
+
       </Box>
+
 
     </Box>
   )
