@@ -90,7 +90,7 @@ function Delivery() {
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: "AIzaSyCK7GQwFpewtRosu4F4n8xNShe-sDeAd48",
+    googleMapsApiKey: process.env.REACT_APP_MAP_KEY,
     libraries: placesLibrary
   })
 
