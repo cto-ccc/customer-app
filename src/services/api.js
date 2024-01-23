@@ -377,7 +377,7 @@ export const getCategoryData = (async(key) => {
 
 export const getNearestStoreDetails = (async(data) => {
   return new Promise(async(resolve, reject) => {
-    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/getNearestStoreDetails`, {
+    const landingResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/v1/getNearestStoreDetails`, {
       "method": "POST",
       "headers": {
         "content-type": "application/json",

@@ -261,19 +261,27 @@ function Delivery() {
     event.preventDefault()
 
     showLoader()
-    const resp = await getNearestStoreDetails(address[event.target.value].latLong)
-    
-    if (!resp.branchId || !resp.locCode) {
-      showAlert(<><b>We regret to inform you that delivery is not available for the selected address.</b><br /><br /> Please note that we deliver within a maximum radius of 8km and the selected address lies beyond our delivery range.</>)
-      hideLoader()
-      return
-    } 
-    
-    setSelectedAddrIndex(event.target.value)
-    setStoreDetails(resp)
-    setDeliveryAddress(address[event.target.value])
 
-    await fetchBranchInfo('Today', resp.branchId)
+    if (!address[event.target.value].storeDetails) {
+
+      const resp = await getNearestStoreDetails(address[event.target.value])
+    
+      if (!resp.branchId || !resp.locCode) {
+        showAlert(<><b>We regret to inform you that delivery is not available for the selected address.</b><br /><br /> Please note that we deliver within a maximum radius of 8km and the selected address lies beyond our delivery range.</>)
+        hideLoader()
+        return
+      } 
+
+      setStoreDetails(resp)
+      await fetchBranchInfo('Today', resp.branchId)
+    } else {
+
+      setStoreDetails(address[event.target.value].storeDetails)
+      await fetchBranchInfo('Today', address[event.target.value].storeDetails.branchId)
+    }
+
+    setSelectedAddrIndex(event.target.value)
+    setDeliveryAddress(address[event.target.value])
   }
 
   const fetchBranchInfo = async(deliveryDate, branchId) => {
