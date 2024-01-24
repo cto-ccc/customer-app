@@ -64,7 +64,7 @@ export const AuthContextProvider = (props) => {
     if (value) {
       return value
     } else {
-      logout()
+      return null
     }
   }
 
@@ -73,7 +73,7 @@ export const AuthContextProvider = (props) => {
     if (value) {
       return value
     } else {
-      logout()
+      return null
     }
   }
 

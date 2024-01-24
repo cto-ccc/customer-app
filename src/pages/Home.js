@@ -365,7 +365,8 @@ const styles = {
     padding:'10px 20px'
   },
   popupImg : {
-    width:'80vw'
+    width:'80vw',
+    maxWidth:'400px'
   },
   catTitleCont : {
     position: 'relative',
@@ -392,7 +393,6 @@ const styles = {
 let updateData = null
 
 function Home() {
-
   const navigate = useNavigate()
   const { updateCart, cartData, isDesktop, showAlert, showPopup, setBlocker, setUpdatePercent, clearCart, 
           setPopup, hideAlert, showSnackbar,landingPopupShown, setLandingPopupShown, clearCouponData } = useContext(CommonContext)
@@ -481,9 +481,8 @@ function Home() {
   }
 
   async function getLandingData(params) {
-
+    params.query = window.location.search
     getLanding(params).then(async(resp) => {
-
       if (window.location.pathname == '/home' || (!isDesktop && window.location.pathname == '/')) {
         if (resp.showLandingPopup && !landingPopupShown) {
           showPopup(<>

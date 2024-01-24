@@ -142,7 +142,7 @@ export const getDeliveryCharge = async(type) => {
   const couponData = await Preferences.get({ key: 'couponData'})
   if (couponData.value) {
     if (JSON.parse(couponData.value).couponCode == 'HEALTHYEATS' || JSON.parse(couponData.value).couponCode == 'HEALTHYEGGS') {
-      return type == 'self_pickup' ? 49 : 99
+      return type == 'self_pickup' ? 99 : 99
     } 
   }
   return type == 'self_pickup' ? 0 : 35

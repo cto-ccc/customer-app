@@ -53,6 +53,7 @@ function AnimatedRoutes() {
               <Route element={<CartHolder />}>
                 <Route path="/" element={isDesktop ? < Landing /> : <Home />}/>
                 <Route path="/home" element={<Home />}/>
+                <Route path="/home/:id" element={<Home />}/>
                 <Route path="/categories/:id" element={<Categories />}/>
               </Route>
 

@@ -1,7 +1,7 @@
 import { React, useContext, useEffect, useState, useCallback } from 'react'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button'
-import { addNewAddress, editAddressApi, logAction } from '../services/api';
+import { addNewAddress, editAddressApi, getNearestStoreDetails, logAction } from '../services/api';
 import { getFirebaseError } from '../services/error-codes';
 import { AuthContext } from '../contexts/AuthContext';
 import  ComponentLoader from '../components/ComponentLoader'
@@ -121,7 +121,7 @@ function EditAddress() {
     window['currentLocation'] = undefined
   }, [])
 
-  const editAddress=(data)=>{
+  const editAddress = async(data)=>{
     
     const addressData = {
       addressId     : location.state.addressId,
@@ -130,11 +130,22 @@ function EditAddress() {
       streetDetails : data.streetDetails,
       landmark      : data.landmark,
       pincode       : data.pincode,
-      userId        : location.state.userId
+      userId        : location.state.userId,
+      latLong       : latLong
     }
 
     showLoader()
+
+    const resp = await getNearestStoreDetails(addressData)
+
+    if (!resp.branchId || !resp.locCode) {
+      showAlert(<><b>We regret to inform you that delivery is not available for the selected address.</b><br /><br /> Please note that we deliver within a maximum radius of 8km and the selected address lies beyond our delivery range.</>)
+      hideLoader()
+      return
+    } 
+
     editAddressApi(addressData).then(() => {
+
         showSnackbar("Address updated successfully")
         hideLoader()
         window.history.back()
