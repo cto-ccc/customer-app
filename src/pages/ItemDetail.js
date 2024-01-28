@@ -338,21 +338,20 @@ function ItemDetail() {
             {
               productData.livePrice ? null : 
               <Box sx={{display:'flex',alignItems:'baseline',  mb:1, borderBottom:'1px solid #afa5a5', paddingBottom:'15px'}}>
-                <Box sx={{fontSize:'15px', mr:1}}>
+                {/* <Box sx={{fontSize:'15px', mr:1}}>
                   <s>₹ {productData.mrp}</s> 
-                </Box>
+                </Box> */}
                 <Box sx={{fontSize:'25px', mr:1, fontWeight:'bold', display:'flex', alignItems:'baseline'}}>
                   ₹ {productData.price} 
                   <Box sx={{fontSize:'13px', fontWeight:'100', marginLeft:'2px'}}>
                     /{productData.qty}
                   </Box>
                 </Box>             
-                <Box sx={{fontSize:'15px', marginLeft:'5px', color:'#f47f13'}}>
+                {/* <Box sx={{fontSize:'15px', marginLeft:'5px', color:'#f47f13'}}>
                   {Math.trunc(((productData.mrp - productData.price) / productData.mrp) * 100)}% Off
-                </Box>
+                </Box> */}
               </Box>
             }
-
           
             {
              productData.aka ?

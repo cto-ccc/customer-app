@@ -1002,19 +1002,19 @@ function Home() {
                             {
                               item.enableBogo ? null : 
                               <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.2'}}>
-                              {
+                              {/* {
                                 item.mrp ? <s>₹ {item.mrp}</s> : null
-                              }
+                              } */}
                               </Box> 
                             }
                           
-                            <Box sx={{fontSize:'12px', marginLeft:'5px', color:'#f47f13', borderLeft:'1px solid #eaeaea', paddingLeft:'5px'}}>
+                            {/* <Box sx={{fontSize:'12px', marginLeft:'5px', color:'#f47f13', borderLeft:'1px solid #eaeaea', paddingLeft:'5px'}}>
                             {
                               item?.enableBogo ? 
                                 <Box sx={{marginBottom:'5px'}}>Buy One Get One FREE</Box> : 
                                 <>{item.mrp ? <>{Math.trunc(((item.mrp - (item.livePrice || item.price)) / item.mrp) * 100)} % Off</>  : null}</>
                             }                    
-                            </Box>
+                            </Box> */}
                           </Box>
 
                           {
