@@ -584,7 +584,7 @@ function Delivery() {
               Home delivery (₹{deliveryCharge})
             </MenuItem>
             <MenuItem key="self_pickup" value="self_pickup">
-              Self pickup from store  (₹{deliveryCharge - (hasCoupon ? 50 : 35)})
+              Self pickup from store  (₹{deliveryCharge - (hasCoupon ? 0 : 35)})
             </MenuItem>
 
           </Select>

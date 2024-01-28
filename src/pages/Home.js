@@ -36,6 +36,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper";
+import { Preferences } from '@capacitor/preferences';
+
 
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -52,7 +54,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FooterLogo from '../assets/lan-footer.png'
 
 import * as React from 'react';
-import { getCustomizedProducts, getImgMap, getLanding, getMetaData, logAction } from '../services/api';
+import { getCustomizedProducts, getImgMap, getLanding, getMetaData, handleDeviceToken, logAction } from '../services/api';
 import { Capacitor } from '@capacitor/core';
 import Footer from '../Footer';
 import { Helmet } from 'react-helmet';
@@ -72,6 +74,9 @@ import AppBlocker from '../components/AppBlocker';
 
 import OfferPopup from '../assets/offer-popup.png'
 import "../App.css"
+import {
+  PushNotifications,
+} from '@capacitor/push-notifications';
 
 
 const styles = {
@@ -509,6 +514,15 @@ function Home() {
         await CapacitorUpdater.set(updateData)
         setBlocker(false)
       } else {
+        
+        if (Capacitor.getPlatform != 'web') {
+          const deviceTokenResp = await Preferences.get({ key: 'deviceToken' })
+          if (!deviceTokenResp?.value) {
+            getDeviceToken()
+          }
+        }
+
+
         setItemsData(resp.productsData)
         let allCatItems = []
         resp.productsData.forEach((item) => {
@@ -622,6 +636,22 @@ function Home() {
     }
     getLandingData(params)
   }
+
+  const getDeviceToken = () => {
+    PushNotifications.requestPermissions().then(result => {
+      if (result.receive === 'granted') {
+        PushNotifications.register()
+      } else {
+        // Show some error
+      }
+    })
+
+    PushNotifications.addListener('registration',
+    async(token) => {
+      const resp  = await handleDeviceToken({deviceId : token.value, mobileNo : await getUserMobile()})
+      const resp1 = await Preferences.set({key: 'deviceToken', value: token.value})
+    }
+  )}
 
   const list = (anchor) => (
     <Box sx={{padding:'4vw'}}>
@@ -971,14 +1001,18 @@ function Home() {
                             ₹ {item.livePrice || item.price}
                             {
                               item.enableBogo ? null : 
-                              <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.2'}}><s>₹ {item.mrp}</s></Box> 
+                              <Box sx={{fontSize:'13px', marginLeft:'5px', opacity:'0.2'}}>
+                              {
+                                item.mrp ? <s>₹ {item.mrp}</s> : null
+                              }
+                              </Box> 
                             }
                           
                             <Box sx={{fontSize:'12px', marginLeft:'5px', color:'#f47f13', borderLeft:'1px solid #eaeaea', paddingLeft:'5px'}}>
                             {
                               item?.enableBogo ? 
                                 <Box sx={{marginBottom:'5px'}}>Buy One Get One FREE</Box> : 
-                                <>{Math.trunc(((item.mrp - (item.livePrice || item.price)) / item.mrp) * 100)}% Off</>
+                                <>{item.mrp ? <>{Math.trunc(((item.mrp - (item.livePrice || item.price)) / item.mrp) * 100)} % Off</>  : null}</>
                             }                    
                             </Box>
                           </Box>

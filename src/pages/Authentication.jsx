@@ -114,7 +114,7 @@ function Authentication(props) {
       if (response) {
         showAlert(<>Mobile number already registered. Please login.</>)
       } else {
-        subscribePushNotification()
+        // subscribePushNotification()
         setUserProfile(data)
         data.type        = 'SIGN_UP'
         sendOtp(data)

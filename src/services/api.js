@@ -847,6 +847,26 @@ export const getAllRecipiesData = (async(data) => {
   })
 })
 
+export const handleDeviceToken = (async(data) => {
+  return new Promise(async(resolve, reject) => {
+    const appUpdateResp = await fetch(`${process.env.REACT_APP_SERVER_URL}/handleDeviceToken`, {
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      "body": JSON.stringify(data)
+    }).then((response) => response.json())
+    .then(function(data) { 
+      resolve(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      reject(error)
+    })
+  })
+})
+
 export const getUserProfileData = (async(userId) => {
   return new Promise((resolve, reject) => {
     getDoc(doc(db, `users/${userId}`)).then((querySnapshot) => {
