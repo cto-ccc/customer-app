@@ -426,10 +426,18 @@ function Categories() {
                       <Button variant='outlined' size='small' disabled sx={{opacity:'0.6'}}>
                         Out of stock
                       </Button> :
-                      <Button variant="contained" fullWidth 
-                      onClick={() => navigate(`/products/${chick.urlId}`, {state : chick})}>
-                        Shop Now
-                      </Button>
+                      <>
+                        {
+                          chick?.onlyAtStores ? 
+                          <Button variant='outlined' size='small' disabled sx={{opacity:'0.6'}}>
+                            Available at stores
+                          </Button> : 
+                          <Button variant="contained" fullWidth 
+                          onClick={() => navigate(`/products/${chick.urlId}`, {state : chick})}>
+                            Shop Now
+                          </Button>
+                        }
+                      </>
                     } 
 
                   </div>

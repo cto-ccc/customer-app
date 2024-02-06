@@ -8,6 +8,7 @@ import { App as CapApp } from '@capacitor/app';
 import ScrollToTop from './components/ScrollToTop';
 import './fonts/foregen.ttf'
 import './fonts/roboto.ttf'
+import TagManager from 'react-gtm-module'
 
 
 CapApp.addListener('backButton', ({ canGoBack }) => {
@@ -25,6 +26,11 @@ CapApp.addListener('backButton', ({ canGoBack }) => {
     CapApp.exitApp();
   }
 })
+
+const tagManagerArgs = {
+  gtmId: 'GTM-WMJMQ9M'
+}
+TagManager.initialize(tagManagerArgs)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

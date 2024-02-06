@@ -97,6 +97,19 @@ function OrderSummary() {
       logAction('PLACE_ORDER', item.urlId)
     })
     showLoader()
+
+    window.dataLayer.push({ ecommerce: null })
+    window.dataLayer.push({
+      event: "purchase",
+      ecommerce: {
+          transaction_id  : Date.now().toString(),
+          value           : location.state.itemDetails.totalAmount,
+          tax             : 0,
+          shipping        : 0,
+          currency        : "INR"
+      }
+    })
+    
     await clearCouponData()
     createNewOrder(orderData).then((response) => {
       navigate('/orderStatus', {state:{...response, orderData : orderData}, replace:true})

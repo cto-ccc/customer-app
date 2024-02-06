@@ -56,6 +56,18 @@ function MakePayment() {
       platform       : Capacitor.getPlatform()
     } 
 
+    window.dataLayer.push({ ecommerce: null })
+    window.dataLayer.push({
+      event: "purchase",
+      ecommerce: {
+          transaction_id  : Date.now().toString(),
+          value           : location.state.itemDetails.totalAmount,
+          tax             : 0,
+          shipping        : 0,
+          currency        : "INR"
+      }
+    })
+
     if (location.state.itemDetails?.bogoDiscount) {
       orderData.couponCode           = 'BOGO'
       orderData.couponDiscountAmount = location.state.itemDetails.bogoDiscount

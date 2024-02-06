@@ -1047,10 +1047,19 @@ function Home() {
                                 <Button variant='outlined' style={styles.mainBtn} size='small' fullWidth disabled sx={{opacity:'0.6'}}>
                                   Out of stock
                                 </Button> :
-                                <Button variant="contained" style={styles.mainBtn} size='small' fullWidth 
-                                onClick={() => navigate(`/products/${item.urlId}`)}>
-                                  Shop Now
-                                </Button>  
+                                <>
+                                  {
+                                    item?.onlyAtStores ? 
+                                    <Button variant='outlined' style={styles.mainBtn} size='small' fullWidth disabled sx={{opacity:'0.6'}}>
+                                      Available at stores
+                                    </Button> :
+                                    <Button variant="contained" style={styles.mainBtn} size='small' fullWidth 
+                                    onClick={() => navigate(`/products/${item.urlId}`)}>
+                                      Shop Now
+                                    </Button>  
+                                  }
+                                </>
+                                
                               }      
                             </Box>
                           }

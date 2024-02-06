@@ -526,8 +526,16 @@ function ItemDetail() {
                             <Button variant='outlined' fullWidth disabled>
                               Out of stock
                             </Button> :
-                            <Button fullWidth variant='contained'
-                              onClick={() => addToCart(productData)}>Add To Cart</Button>
+                            <>
+                              {
+                                productData?.onlyAtStores ?
+                                <Button variant='outlined' fullWidth disabled
+                                >Available at stores</Button> :
+                                <Button fullWidth variant='contained'
+                                onClick={() => addToCart(productData)}>Add To Cart</Button>
+                              }
+                            </>
+                          
                         }                        
                       </Box>
                     }
