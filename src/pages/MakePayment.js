@@ -44,7 +44,7 @@ function MakePayment() {
       status         : 'pending',
       addressDetails : location.state.addressDetails,
       totalCount     : location.state.itemDetails.totalCount,
-      totalAmount    : location.state.itemDetails.totalAmount,
+      totalAmount    : location.state.itemDetails.totalAmount - (couponCacheData?.couponValue || 0),
       storeDetails   : location.state.storeDetails,
       paymentMode    : location.state.paymentMode,
       deliveryType   : location.state.delType,
@@ -100,7 +100,7 @@ function MakePayment() {
         "accept"        : "application/json"
       },
       "body": JSON.stringify({
-        amount       : location.state.itemDetails.totalAmount + await getDeliveryCharge(location.state.delType),
+        amount       : location.state.itemDetails.totalAmount + await getDeliveryCharge(location.state.delType) - (couponCacheData?.couponValue || 0),
         mobileNo     : await getUserId(),
         customerId   : await getCustomerId(),
         platform     : Capacitor.getPlatform(),
