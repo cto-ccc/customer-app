@@ -11,8 +11,9 @@ import PaymentFailed from '../assets/payment-failed.png'
 import { Capacitor } from '@capacitor/core';
 import CashfreePaymentBridge from '../components/CashfreePaymentBridge';
 import { doc, onSnapshot } from "firebase/firestore";
-import { db } from '../firebase';
+import { analytics, db } from '../firebase';
 import Loading from '../assets/loading.gif'
+import { logEvent } from 'firebase/analytics';
 
 
 const styles = {
@@ -56,16 +57,13 @@ function MakePayment() {
       platform       : Capacitor.getPlatform()
     } 
 
-    window.dataLayer.push({ ecommerce: null })
-    window.dataLayer.push({
-      event: "purchase",
-      ecommerce: {
-          transaction_id  : Date.now().toString(),
-          value           : location.state.itemDetails.totalAmount,
-          tax             : 0,
-          shipping        : 0,
-          currency        : "INR"
-      }
+    logEvent(analytics, 'purchase', {
+      transaction_id  : Date.now().toString(),
+      affiliation     : Capacitor.getPlatform() ,
+      currency        : 'INR',
+      value           : location.state.itemDetails.totalAmount,
+      tax             : 0,
+      shipping        : 0
     })
 
     if (location.state.itemDetails?.bogoDiscount) {

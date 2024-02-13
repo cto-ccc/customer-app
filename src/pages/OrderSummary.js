@@ -12,6 +12,8 @@ import ComponentLoader from '../components/ComponentLoader';
 import ItemsSummary from '../components/ItemsSummary';
 import NavHeader from '../components/NavHeader';
 import { Capacitor } from '@capacitor/core';
+import { logEvent } from 'firebase/analytics';
+import { analytics } from '../firebase';
 
 const styles = {
   cartCont : {
@@ -98,16 +100,13 @@ function OrderSummary() {
     })
     showLoader()
 
-    window.dataLayer.push({ ecommerce: null })
-    window.dataLayer.push({
-      event: "purchase",
-      ecommerce: {
-          transaction_id  : Date.now().toString(),
-          value           : location.state.itemDetails.totalAmount,
-          tax             : 0,
-          shipping        : 0,
-          currency        : "INR"
-      }
+    logEvent(analytics, 'purchase', {
+      transaction_id  : Date.now().toString(),
+      affiliation     : Capacitor.getPlatform() ,
+      currency        : 'INR',
+      value           : location.state.itemDetails.totalAmount,
+      tax             : 0,
+      shipping        : 0
     })
     
     await clearCouponData()
