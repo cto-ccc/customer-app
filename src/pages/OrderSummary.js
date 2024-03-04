@@ -104,7 +104,7 @@ function OrderSummary() {
       transaction_id  : Date.now().toString(),
       affiliation     : Capacitor.getPlatform() ,
       currency        : 'INR',
-      value           : location.state.itemDetails.totalAmount,
+      value           : location.state.itemDetails.totalAmount + await getDeliveryCharge(location.state.delType) - (couponCacheData?.couponValue || 0),
       tax             : 0,
       shipping        : 0
     })

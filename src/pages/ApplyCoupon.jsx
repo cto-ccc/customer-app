@@ -32,7 +32,8 @@ function ApplyCoupon() {
           userCoupon = {
             discount_type   : 'flat',
             couponReduction : 200,
-            couponCode      : 'HEALTHYEATS'
+            couponCode      : 'HEALTHYEATS',
+            discount        : 200
           }
         } else {
           return
@@ -50,7 +51,8 @@ function ApplyCoupon() {
           userCoupon = {
             discount_type   : 'flat',
             couponReduction : 150,
-            couponCode      : 'HEALTHYEGGS'
+            couponCode      : 'HEALTHYEGGS',
+            discount        : 150
           }
         } else {
           return
@@ -66,10 +68,19 @@ function ApplyCoupon() {
       let couponReduction = 0
 
       if (userCoupon.discount_type == 'percentage') {
+        if (cartData.totalAmount < userCoupon.minimumPurchaseAmount) {
+          showAlert(`This coupon is applicable only for orders above Rs.${userCoupon.minimumPurchaseAmount}/-`)
+          return
+        }
+
         couponReduction = Math.trunc((cartData.totalAmount / 100) * userCoupon.discount) 
         couponReduction = (couponReduction > userCoupon.maxDiscount) ?  userCoupon.maxDiscount : couponReduction
       } else {
-        couponReduction = userCoupon.couponReduction
+        if (cartData.totalAmount < userCoupon.minimumPurchaseAmount) {
+          showAlert(`This coupon is applicable only for orders above Rs.${userCoupon.minimumPurchaseAmount}/-`)
+          return
+        }
+        couponReduction = userCoupon.discount
       }
 
       const addedCoupon = {
